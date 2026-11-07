@@ -1265,7 +1265,7 @@
     "grassDairy": {
       "label": "Mleko z trawy (Voisin, NZ)",
       "note": "Dój 1× dziennie, sery",
-      "description": "Mleczarstwo pastwiskowe według zasad wypasu racjonalnego André Voisina i praktyki nowozelandzkiej: krowy jersey prawie wyłącznie na trawie, codziennie świeża kwatera, odpoczynek ok. 35 dni, dój raz dziennie, większość mleka na sery. Nadwyżki trawy kosi się z kwater na siano, zamiast trzymać osobną łąkę. Mniej mleka, ale dużo mniej pracy przy dojarce."
+      "description": "Mleczarstwo pastwiskowe według zasad wypasu racjonalnego André Voisina i praktyki nowozelandzkiej: krowy jersey prawie wyłącznie na trawie, codziennie świeża kwatera, odpoczynek ok. 35 dni, dój raz dziennie, większość mleka na sery. Pastwisko ma tyle hektarów, ile krowy zjedzą; siano na zimę daje koniczyna z trawami na gruntach ornych, bez osobnej łąki. Za krowami mobilny kurnik zjada ziarno z własnych pól. Mniej mleka, ale dużo mniej pracy przy dojarce."
     },
     "sweetSpot": {
       "label": "Sweet spot",
@@ -1483,7 +1483,8 @@
     "supply": "z pól {amount}",
     "hayFromPasture": "Z nadwyżki pastwiska koszonej na siano: ok. {tonnes} t s.m.",
     "wheyForPigs": "Serwatka z serowarni zastępuje ok. {kg} kg ziarna dla świń.",
-    "ownCost": "Koszt własny: ziarno ok. {grain} zł/t, pasza objętościowa ok. {forage} zł/t s.m."
+    "ownCost": "Koszt własny: ziarno ok. {grain} zł/t, pasza objętościowa ok. {forage} zł/t s.m.",
+    "sawdustCovers": "Brakującą słomę ({straw} t) zastępują trociny lub zrębki ({sawdust} t), więc wiersz słomy już je uwzględnia."
   },
   "money": {
     "waterfall": {

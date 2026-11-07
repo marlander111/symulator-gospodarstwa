@@ -36,6 +36,8 @@ function renderLandUse(results) {
 }
 
 function renderFeedBalance(results) {
+  // straw replaced by sawdust or wood chips counts as covered, as in the KPI bar and the model
+  const strawReplacedBySawdust = params.sawdustForStraw ? Math.max(0, -results.strawBalanceBeforeSawdust) : 0;
   const rows = [
     {
       id: 'pasture',
@@ -61,7 +63,7 @@ function renderFeedBalance(results) {
     {
       id: 'straw',
       need: results.strawNeed,
-      supply: results.strawSupply,
+      supply: results.strawSupply + strawReplacedBySawdust,
       color: 'var(--color-sheep)',
       unit: 'tonnes',
     },
@@ -72,6 +74,13 @@ function renderFeedBalance(results) {
   const notes = [];
   if (results.hayFromPasture > 0.1)
     notes.push(t('feedBalance.hayFromPasture', { tonnes: formatNumber(results.hayFromPasture, 1) }));
+  if (strawReplacedBySawdust > 0.05)
+    notes.push(
+      t('feedBalance.sawdustCovers', {
+        straw: formatNumber(strawReplacedBySawdust, 1),
+        sawdust: formatNumber(results.sawdustTonnes, 1),
+      })
+    );
   if (results.wheyGrainSaved > 0.005)
     notes.push(t('feedBalance.wheyForPigs', { kg: formatNumber(results.wheyGrainSaved * 1000, 0) }));
   notes.push(
