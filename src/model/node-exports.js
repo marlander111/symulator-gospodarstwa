@@ -13,6 +13,8 @@ if (typeof module !== 'undefined')
     computeMonthlyCashflow,
     migrateLegacyParameterIds,
     readSettingsFile,
+    migrateChangedDefaults,
+    DEFAULTS_VERSION,
     formatNumber,
     t,
   };

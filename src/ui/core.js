@@ -7,13 +7,20 @@ const STORAGE_KEY = 'gosp-lwowek-v1';
 let params = loadSavedParams();
 
 function loadSavedParams() {
-  const loaded = defaultParams();
+  let saved = null;
+  let savedDefaultsVersion = 1;
   try {
-    const saved = migrateLegacyParameterIds(JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'));
-    for (const id in saved) if (id in loaded) loaded[id] = saved[id];
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    if (stored) saved = migrateLegacyParameterIds(stored);
+    savedDefaultsVersion = +(localStorage.getItem(DEFAULTS_VERSION_STORAGE_KEY) || 1);
   } catch (error) {
-    // storage unavailable (private window, preview): start from the defaults
+    // storage unavailable (private window, preview): start like a first visit
   }
+
+  const known = defaultParams();
+  const loaded = startupParams(saved, savedDefaultsVersion);
+  for (const id in loaded) if (!(id in known)) delete loaded[id];
+  rememberDefaultsVersion();
   return loaded;
 }
 

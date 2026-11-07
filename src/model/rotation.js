@@ -39,7 +39,7 @@ const isCerealBeforeWinterCereal = (crop, nextCrop) =>
  *   distinctCrops: number, cerealShare: number, diversityOk: boolean}}
  */
 function computeRotation(params) {
-  const fieldCount = params.rotationFields;
+  const fieldCount = Math.round(params.rotationFields);
   const cloverYears = Math.min(
     fieldCount - 1,
     Math.max(1, Math.round((1 - params.cerealShare / 100) * fieldCount))

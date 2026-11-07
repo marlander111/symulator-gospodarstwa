@@ -2,7 +2,7 @@
 // pessimistic scenario, with a button that loads it.
 
 function renderComparison() {
-  const realistic = ASSUMPTION_SETS.find(set => set.id === 'realistic').params;
+  const realistic = assumptionSetById('realistic').params;
   const target = computeIncomeTarget(params);
   const columns = [
     'variant',

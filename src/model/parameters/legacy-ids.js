@@ -277,3 +277,30 @@ function readSettingsFile(contents) {
   const settings = contents.settings || contents.ustawienia || contents;
   return { name, settings: migrateLegacyParameterIds(settings) };
 }
+
+/** Version of the default values; settings saved before it are moved to the new defaults below. */
+const DEFAULTS_VERSION = 2;
+
+/** Defaults changed in version 2: id → [old default, new default]. */
+const CHANGED_DEFAULTS = {
+  fullTimeWorkers: [2, 1],
+  halfTimeWorkers: [2, 1],
+  quarterTimeWorkers: [3, 0],
+  householdMonthlySpending: [5100, 5000],
+  pessimisticYieldDrop: [17, 20],
+  minimumNetIncome: [120000, 60000],
+};
+
+/**
+ * Returns settings saved with older defaults, with every value the user never changed (still at
+ * the old default) moved to the new default.
+ * @param {object} saved - settings keyed by current parameter ids
+ * @param {number} savedVersion - DEFAULTS_VERSION the settings were saved with (1 if unknown)
+ */
+function migrateChangedDefaults(saved, savedVersion) {
+  if (savedVersion >= DEFAULTS_VERSION) return saved;
+  const migrated = { ...saved };
+  for (const [id, [oldDefault, newDefault]] of Object.entries(CHANGED_DEFAULTS))
+    if (migrated[id] === oldDefault) migrated[id] = newDefault;
+  return migrated;
+}

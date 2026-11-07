@@ -2,7 +2,7 @@
 
 defineParameterGroup('household', [
   { id: 'targetFromHouseholdBudget', type: 'boolean', defaultValue: false },
-  { id: 'householdMonthlySpending', min: 2000, max: 15000, step: 100, defaultValue: 5100 },
+  { id: 'householdMonthlySpending', min: 2000, max: 15000, step: 100, defaultValue: 5000 },
   { id: 'householdSafetyMargin', min: 0, max: 50, step: 5, defaultValue: 20 },
   { id: 'householdSavings', min: 0, max: 40000, step: 1000, defaultValue: 10000 },
   { id: 'openingCash', min: 0, max: 200000, step: 1000, defaultValue: 20000 },

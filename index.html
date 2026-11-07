@@ -1448,11 +1448,11 @@ function parameterById(id) {
 // Parameters of the "people" group. Labels, units and hints: locales/pl.json → parameters.<id>.
 
 defineParameterGroup('people', [
-  { id: 'fullTimeWorkers', min: 0, max: 6, step: 1, defaultValue: 2 },
-  { id: 'halfTimeWorkers', min: 0, max: 6, step: 1, defaultValue: 2 },
-  { id: 'quarterTimeWorkers', min: 0, max: 8, step: 1, defaultValue: 3 },
+  { id: 'fullTimeWorkers', min: 0, max: 6, step: 1, defaultValue: 1 },
+  { id: 'halfTimeWorkers', min: 0, max: 6, step: 1, defaultValue: 1 },
+  { id: 'quarterTimeWorkers', min: 0, max: 8, step: 1, defaultValue: 0 },
   { id: 'weeklyHoursLimit', min: 40, max: 160, step: 5, defaultValue: 80 },
-  { id: 'minimumNetIncome', min: 0, max: 250000, step: 5000, defaultValue: 120000 },
+  { id: 'minimumNetIncome', min: 0, max: 250000, step: 5000, defaultValue: 60000 },
   { id: 'fullTimeHoursPerYear', min: 1600, max: 2800, step: 50, defaultValue: 2000 },
 ]);
 
@@ -1786,7 +1786,7 @@ defineParameterGroup('labour', [
 
 defineParameterGroup('household', [
   { id: 'targetFromHouseholdBudget', type: 'boolean', defaultValue: false },
-  { id: 'householdMonthlySpending', min: 2000, max: 15000, step: 100, defaultValue: 5100 },
+  { id: 'householdMonthlySpending', min: 2000, max: 15000, step: 100, defaultValue: 5000 },
   { id: 'householdSafetyMargin', min: 0, max: 50, step: 5, defaultValue: 20 },
   { id: 'householdSavings', min: 0, max: 40000, step: 1000, defaultValue: 10000 },
   { id: 'openingCash', min: 0, max: 200000, step: 1000, defaultValue: 20000 },
@@ -1798,7 +1798,7 @@ defineParameterGroup('household', [
 
 defineParameterGroup('pessimistic', [
   { id: 'pessimisticPriceDrop', min: 0, max: 40, step: 1, defaultValue: 15 },
-  { id: 'pessimisticYieldDrop', min: 0, max: 50, step: 1, defaultValue: 17 },
+  { id: 'pessimisticYieldDrop', min: 0, max: 50, step: 1, defaultValue: 20 },
   { id: 'pessimisticAnimalOutputDrop', min: 0, max: 30, step: 1, defaultValue: 10 },
   { id: 'pessimisticExtraHours', min: 0, max: 60, step: 1, defaultValue: 10 },
   { id: 'pessimisticCostIncrease', min: 0, max: 60, step: 1, defaultValue: 10 },
@@ -2085,6 +2085,33 @@ function readSettingsFile(contents) {
   return { name, settings: migrateLegacyParameterIds(settings) };
 }
 
+/** Version of the default values; settings saved before it are moved to the new defaults below. */
+const DEFAULTS_VERSION = 2;
+
+/** Defaults changed in version 2: id → [old default, new default]. */
+const CHANGED_DEFAULTS = {
+  fullTimeWorkers: [2, 1],
+  halfTimeWorkers: [2, 1],
+  quarterTimeWorkers: [3, 0],
+  householdMonthlySpending: [5100, 5000],
+  pessimisticYieldDrop: [17, 20],
+  minimumNetIncome: [120000, 60000],
+};
+
+/**
+ * Returns settings saved with older defaults, with every value the user never changed (still at
+ * the old default) moved to the new default.
+ * @param {object} saved - settings keyed by current parameter ids
+ * @param {number} savedVersion - DEFAULTS_VERSION the settings were saved with (1 if unknown)
+ */
+function migrateChangedDefaults(saved, savedVersion) {
+  if (savedVersion >= DEFAULTS_VERSION) return saved;
+  const migrated = { ...saved };
+  for (const [id, [oldDefault, newDefault]] of Object.entries(CHANGED_DEFAULTS))
+    if (migrated[id] === oldDefault) migrated[id] = newDefault;
+  return migrated;
+}
+
 // ===== model/presets.js =====
 // Ready-made farm variants and assumption sets. Labels: locales/pl.json → presets, assumptionSets.
 //
@@ -2240,21 +2267,21 @@ const PRESETS = [
       kitchenGardenHa: 0.15,
       leasedHa: 3,
       marketGardenHa: 0,
-      pastureHa: 5.25,
-      meadowHa: 1,
-      cerealShare: 62,
+      pastureHa: 6,
+      meadowHa: 0.5,
+      cerealShare: 54,
       dairyCows: 5,
       cheeseShare: 60,
-      layingHens: 350,
-      sheep: 6,
+      layingHens: 260,
+      sheep: 12,
       lambingsPerEwe: 1.5,
       lambsPerLambing: 1.3,
       goats: 3,
-      geese: 13,
+      geese: 30,
       pigsForHome: 2,
       horses: 2,
-      broilers: 125,
-      rabbits: 4,
+      broilers: 175,
+      rabbits: 3,
       beehives: 4,
       ducks: 0,
       turkeys: 0,
@@ -2284,13 +2311,13 @@ const PRESETS = [
       kitchenGardenHa: 0.15,
       leasedHa: 3,
       marketGardenHa: 0,
-      pastureHa: 6.25,
-      meadowHa: 1,
+      pastureHa: 6,
+      meadowHa: 2,
       cerealShare: 52,
-      dairyCows: 6,
+      dairyCows: 5,
       cheeseShare: 60,
-      layingHens: 250,
-      sheep: 6,
+      layingHens: 210,
+      sheep: 16,
       lambingsPerEwe: 1.5,
       lambsPerLambing: 1.3,
       goats: 3,
@@ -2300,9 +2327,9 @@ const PRESETS = [
       broilers: 0,
       rabbits: 2,
       beehives: 4,
-      ducks: 20,
+      ducks: 30,
       turkeys: 0,
-      guineaFowl: 20,
+      guineaFowl: 15,
       fruitSoldShare: 50,
       mushroomLogs: 100,
       geeseProcessedShare: 0,
@@ -2329,11 +2356,11 @@ const PRESETS = [
       leasedHa: 3,
       marketGardenHa: 0,
       pastureHa: 5.5,
-      meadowHa: 1,
-      cerealShare: 60,
+      meadowHa: 0,
+      cerealShare: 58,
       dairyCows: 5,
       cheeseShare: 70,
-      layingHens: 340,
+      layingHens: 170,
       sheep: 8,
       lambingsPerEwe: 1.5,
       lambsPerLambing: 1.3,
@@ -2389,10 +2416,10 @@ const PRESETS = [
       lambProcessedShare: 0,
       dairyCows: 3,
       cheeseShare: 0,
-      layingHens: 70,
+      layingHens: 80,
       broilers: 0,
       ducks: 200,
-      geese: 44,
+      geese: 42,
       sheep: 0,
       pastureHa: 3.25,
       meadowHa: 0,
@@ -2433,10 +2460,10 @@ const PRESETS = [
       lambProcessedShare: 0,
       dairyCows: 0,
       cheeseShare: 0,
-      layingHens: 50,
+      layingHens: 60,
       broilers: 225,
       ducks: 200,
-      geese: 28,
+      geese: 24,
       sheep: 34,
       pastureHa: 4.25,
       meadowHa: 0,
@@ -2453,7 +2480,7 @@ const PRESETS = [
       stubbleCrop: false,
       kidsSoldShare: 0,
       pigsForSale: 0,
-      sucklerCows: 0,
+      sucklerCows: 1,
       ownedHa: 14,
       leasedHa: 0,
       farmyardHa: 2,
@@ -2466,25 +2493,25 @@ const PRESETS = [
       lambsPerLambing: 1.3,
       turkeys: 0,
       lambProcessedShare: 0,
-      dairyCows: 4,
+      dairyCows: 5,
       cheeseShare: 70,
-      layingHens: 100,
+      layingHens: 0,
       broilers: 300,
-      ducks: 175,
-      guineaFowl: 300,
-      geese: 40,
-      sheep: 0,
+      ducks: 250,
+      guineaFowl: 0,
+      geese: 50,
+      sheep: 2,
       rabbits: 0,
-      beehives: 15,
-      marketGardenHa: 1.45,
+      beehives: 2,
+      marketGardenHa: 0.05,
       fruitSoldShare: 90,
       mushroomLogs: 400,
       geeseProcessedShare: 0,
       ducksProcessedShare: 0,
       lambsSoldAsMeatShare: 0,
-      pastureHa: 4,
-      meadowHa: 0,
-      cerealShare: 58,
+      pastureHa: 5.25,
+      meadowHa: 1.25,
+      cerealShare: 42,
     },
   },
   {
@@ -2758,11 +2785,29 @@ function presetById(id) {
 const isPhilosophyPreset = preset => preset.group === 'philosophy';
 
 /**
+ * Practices that change the feed balance. Every preset sets them (to the default unless it says
+ * otherwise), so a preset gives the same result whatever these switches were before.
+ */
+const PRESET_PRACTICE_IDS = [
+  'ownHatching',
+  'winterPolytunnel',
+  'rootCrops',
+  'rotationFields',
+  'catchCrops',
+  'stubbleCrop',
+  'onceADayMilking',
+  'sawdustForStraw',
+];
+
+/**
  * Gives every preset a value for each parameter that any preset sets (the default when it does
  * not say otherwise), so that switching presets never leaves a value from the previous one.
  */
 function completePresetParams(presets) {
-  const presetParameterIds = new Set(presets.flatMap(preset => Object.keys(preset.params)));
+  const presetParameterIds = new Set([
+    ...PRESET_PRACTICE_IDS,
+    ...presets.flatMap(preset => Object.keys(preset.params)),
+  ]);
   const defaults = defaultParams();
   for (const preset of presets)
     for (const id of presetParameterIds) if (!(id in preset.params)) preset.params[id] = defaults[id];
@@ -2941,7 +2986,7 @@ const isCerealBeforeWinterCereal = (crop, nextCrop) =>
  *   distinctCrops: number, cerealShare: number, diversityOk: boolean}}
  */
 function computeRotation(params) {
-  const fieldCount = params.rotationFields;
+  const fieldCount = Math.round(params.rotationFields);
   const cloverYears = Math.min(
     fieldCount - 1,
     Math.max(1, Math.round((1 - params.cerealShare / 100) * fieldCount))
@@ -4734,6 +4779,73 @@ function computeNetIncome(params, results) {
 </script>
 <script>
 (function () {
+// ===== ui/last-choice.js =====
+// Remembers the last ready-made variant and assumption set chosen in this browser.
+//
+// On the next visit the app starts from the saved settings. If the user has not changed the
+// values a preset set, the current version of that preset is loaded again (presets may have been
+// improved since), so it stays selected. On the first visit the app starts from the realistic
+// assumptions and the recommended variant.
+
+const LAST_CHOICE_STORAGE_KEY = 'gosp-ostatni-wybor';
+const DEFAULTS_VERSION_STORAGE_KEY = 'gosp-wersja-domyslnych';
+const FIRST_VISIT_PRESET_ID = 'recommended';
+const FIRST_VISIT_ASSUMPTION_SET_ID = 'realistic';
+
+/** {preset: {id, values}, assumption: {id, values}} — what was chosen and the values it set. */
+function loadLastChoice() {
+  try {
+    return JSON.parse(localStorage.getItem(LAST_CHOICE_STORAGE_KEY) || '{}') || {};
+  } catch (error) {
+    return {};
+  }
+}
+
+/** Remembers a preset or assumption set right after it was applied. */
+function rememberChoice(kind, id, values) {
+  const choice = { ...loadLastChoice(), [kind]: { id, values } };
+  try {
+    localStorage.setItem(LAST_CHOICE_STORAGE_KEY, JSON.stringify(choice));
+  } catch (error) {
+    // storage unavailable: the choice is simply not remembered
+  }
+}
+
+const assumptionSetById = id => ASSUMPTION_SETS.find(set => set.id === id);
+
+/** Settings to start with: saved ones (with the last choice refreshed) or the first-visit default. */
+function startupParams(saved, savedDefaultsVersion) {
+  if (!saved) {
+    const assumption = assumptionSetById(FIRST_VISIT_ASSUMPTION_SET_ID);
+    const preset = presetById(FIRST_VISIT_PRESET_ID);
+    rememberChoice('assumption', assumption.id, assumption.params);
+    rememberChoice('preset', preset.id, preset.params);
+    return { ...defaultParams(), ...assumption.params, ...preset.params };
+  }
+
+  let params = { ...defaultParams(), ...migrateChangedDefaults(saved, savedDefaultsVersion) };
+  const lastChoice = loadLastChoice();
+  const refresh = (choice, current) => {
+    if (!choice || !current || !choice.values) return;
+    const untouched = Object.entries(choice.values).every(([id, value]) => params[id] === value);
+    if (untouched) {
+      params = { ...params, ...current.params };
+      rememberChoice(choice === lastChoice.preset ? 'preset' : 'assumption', current.id, current.params);
+    }
+  };
+  refresh(lastChoice.assumption, lastChoice.assumption && assumptionSetById(lastChoice.assumption.id));
+  refresh(lastChoice.preset, lastChoice.preset && presetById(lastChoice.preset.id));
+  return params;
+}
+
+function rememberDefaultsVersion() {
+  try {
+    localStorage.setItem(DEFAULTS_VERSION_STORAGE_KEY, String(DEFAULTS_VERSION));
+  } catch (error) {
+    // nothing to do
+  }
+}
+
 // ===== ui/core.js =====
 // Application state and small helpers shared by all panels.
 
@@ -4744,13 +4856,20 @@ const STORAGE_KEY = 'gosp-lwowek-v1';
 let params = loadSavedParams();
 
 function loadSavedParams() {
-  const loaded = defaultParams();
+  let saved = null;
+  let savedDefaultsVersion = 1;
   try {
-    const saved = migrateLegacyParameterIds(JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'));
-    for (const id in saved) if (id in loaded) loaded[id] = saved[id];
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    if (stored) saved = migrateLegacyParameterIds(stored);
+    savedDefaultsVersion = +(localStorage.getItem(DEFAULTS_VERSION_STORAGE_KEY) || 1);
   } catch (error) {
-    // storage unavailable (private window, preview): start from the defaults
+    // storage unavailable (private window, preview): start like a first visit
   }
+
+  const known = defaultParams();
+  const loaded = startupParams(saved, savedDefaultsVersion);
+  for (const id in loaded) if (!(id in known)) delete loaded[id];
+  rememberDefaultsVersion();
   return loaded;
 }
 
@@ -4981,16 +5100,26 @@ function buildPresets() {
   });
   document
     .querySelectorAll('[data-preset]')
-    .forEach(button =>
-      button.addEventListener('click', () => applyParams(presetById(button.dataset.preset).params))
-    );
+    .forEach(button => button.addEventListener('click', () => choosePreset(button.dataset.preset)));
   document
     .querySelectorAll('[data-assumption]')
     .forEach(button =>
-      button.addEventListener('click', () =>
-        applyParams(ASSUMPTION_SETS.find(set => set.id === button.dataset.assumption).params)
-      )
+      button.addEventListener('click', () => chooseAssumptionSet(button.dataset.assumption))
     );
+}
+
+/** Applies a ready-made variant and remembers it for the next visit. */
+function choosePreset(id) {
+  const preset = presetById(id);
+  applyParams(preset.params);
+  rememberChoice('preset', id, preset.params);
+}
+
+/** Applies an assumption set (prices, yields, work norms) and remembers it. */
+function chooseAssumptionSet(id) {
+  const set = assumptionSetById(id);
+  applyParams(set.params);
+  rememberChoice('assumption', id, set.params);
 }
 
 function applyParams(values) {
@@ -5102,7 +5231,7 @@ function markActivePresets() {
     document.querySelectorAll(selector).forEach(button => button.classList.toggle('on', isActive(button)));
   highlight('[data-preset]', button => matchesCurrentParams(presetById(button.dataset.preset).params));
   highlight('[data-assumption]', button =>
-    matchesCurrentParams(ASSUMPTION_SETS.find(set => set.id === button.dataset.assumption).params)
+    matchesCurrentParams(assumptionSetById(button.dataset.assumption).params)
   );
   highlight('[data-saved-variant]', button =>
     equalsCurrentParams(savedVariants[+button.dataset.savedVariant].params)
@@ -6383,7 +6512,7 @@ function setInvestmentTotal(results, input) {
 // pessimistic scenario, with a button that loads it.
 
 function renderComparison() {
-  const realistic = ASSUMPTION_SETS.find(set => set.id === 'realistic').params;
+  const realistic = assumptionSetById('realistic').params;
   const target = computeIncomeTarget(params);
   const columns = [
     'variant',

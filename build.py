@@ -72,6 +72,7 @@ NODE_EXPORTS_FILE = 'model/node-exports.js'
 
 # Interface scripts, wrapped together in one function so they share private names.
 UI_FILES = [
+    'ui/last-choice.js',  # first: core.js reads the saved settings through it
     'ui/core.js',
     'ui/markup.js',
     'ui/controls.js',

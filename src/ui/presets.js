@@ -45,16 +45,26 @@ function buildPresets() {
   });
   document
     .querySelectorAll('[data-preset]')
-    .forEach(button =>
-      button.addEventListener('click', () => applyParams(presetById(button.dataset.preset).params))
-    );
+    .forEach(button => button.addEventListener('click', () => choosePreset(button.dataset.preset)));
   document
     .querySelectorAll('[data-assumption]')
     .forEach(button =>
-      button.addEventListener('click', () =>
-        applyParams(ASSUMPTION_SETS.find(set => set.id === button.dataset.assumption).params)
-      )
+      button.addEventListener('click', () => chooseAssumptionSet(button.dataset.assumption))
     );
+}
+
+/** Applies a ready-made variant and remembers it for the next visit. */
+function choosePreset(id) {
+  const preset = presetById(id);
+  applyParams(preset.params);
+  rememberChoice('preset', id, preset.params);
+}
+
+/** Applies an assumption set (prices, yields, work norms) and remembers it. */
+function chooseAssumptionSet(id) {
+  const set = assumptionSetById(id);
+  applyParams(set.params);
+  rememberChoice('assumption', id, set.params);
 }
 
 function applyParams(values) {
@@ -166,7 +176,7 @@ function markActivePresets() {
     document.querySelectorAll(selector).forEach(button => button.classList.toggle('on', isActive(button)));
   highlight('[data-preset]', button => matchesCurrentParams(presetById(button.dataset.preset).params));
   highlight('[data-assumption]', button =>
-    matchesCurrentParams(ASSUMPTION_SETS.find(set => set.id === button.dataset.assumption).params)
+    matchesCurrentParams(assumptionSetById(button.dataset.assumption).params)
   );
   highlight('[data-saved-variant]', button =>
     equalsCurrentParams(savedVariants[+button.dataset.savedVariant].params)
