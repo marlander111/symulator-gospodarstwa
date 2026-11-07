@@ -56,7 +56,7 @@ function renderFeedBalance(results) {
     {
       id: 'grain',
       need: results.grainNeed,
-      supply: results.grainSupply,
+      supply: results.grainSupply - results.grainSoldTonnes,
       color: 'var(--color-cereal)',
       unit: 'tonnes',
     },
@@ -74,6 +74,16 @@ function renderFeedBalance(results) {
   const notes = [];
   if (results.hayFromPasture > 0.1)
     notes.push(t('feedBalance.hayFromPasture', { tonnes: formatNumber(results.hayFromPasture, 1) }));
+  if (results.grainSoldTonnes > 0.05)
+    notes.push(
+      t(results.grainNeed < 0.05 ? 'feedBalance.grainSoldAll' : 'feedBalance.grainSold', {
+        harvest: formatNumber(results.grainSupply, 1),
+        sold: formatNumber(results.grainSoldTonnes, 1),
+        reserve: params.feedReserveShare,
+      })
+    );
+  if (results.strawPloughedTonnes > 0.05 && results.grainNeed >= 0.05)
+    notes.push(t('feedBalance.strawPloughed', { tonnes: formatNumber(results.strawPloughedTonnes, 1) }));
   if (strawReplacedBySawdust > 0.05)
     notes.push(
       t('feedBalance.sawdustCovers', {

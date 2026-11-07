@@ -49,7 +49,15 @@ function addLandAndFeedWarnings(params, results, add) {
       cubicMetres: number(results.sawdustTonnes / 0.22, 0),
       cost: number(results.sawdustTonnes * params.sawdustPrice, 0),
     });
-  if (grainBalance > 2)
+  if (results.grainSoldTonnes > 0.05)
+    add('info', results.grainNeed < 0.05 ? 'grainSoldAll' : 'grainSold', {
+      tonnes: number(results.grainSoldTonnes, 1),
+      price: number(params.grainSalePrice, 0),
+      revenue: number(results.revenueItems.grainSales, 0),
+      reserve: number(params.feedReserveShare, 0),
+    });
+  // grain kept as the reserve after a sale is not a surplus to use up
+  else if (grainBalance > 2)
     add('info', 'grainSurplus', {
       tonnes: number(grainBalance, 1),
       hens: number(grainBalance / grainPerHen, 0),

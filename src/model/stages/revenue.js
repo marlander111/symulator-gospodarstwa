@@ -18,6 +18,7 @@ function computeRevenue(params, results) {
 
   const revenueItems = {
     milk: results.freshMilkSold * params.milkPrice,
+    grainSales: results.grainSoldTonnes * params.grainSalePrice,
     cheese: results.cheeseSold * params.cheesePrice,
     calves: calvesSold * params.calfPrice + cowReplacements * params.cullCowPrice,
     eggs: eggsSold * params.eggPrice + henReplacements * 10,

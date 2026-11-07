@@ -113,6 +113,7 @@ function renderRevenueTable(results) {
   const n = formatNumber;
   const details = {
     milk: { litres: n(results.freshMilkSold, 0), price: n(params.milkPrice, 2) },
+    grainSales: { tonnes: n(results.grainSoldTonnes, 1), price: n(params.grainSalePrice, 0) },
     cheese: { kg: n(results.cheeseSold, 0), price: n(params.cheesePrice, 0) },
     calves: { calves: n(results.calvesSold, 1), cows: n(results.cowReplacements, 1) },
     eggs: { eggs: n(results.eggsSold, 0), price: n(params.eggPrice, 2) },

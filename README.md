@@ -30,7 +30,7 @@ src/
     parameters/legacy-ids.js stare (polskie) nazwy parametrów i odczyt plików z wersji 1
     presets.js               gotowe warianty, filozofie gospodarstw, sweet spot, zestawy założeń
     simulate-farm.js         simulateFarm(params): kolejne etapy obliczeń
-    stages/*.js              etapy: ziemia i zwierzęta, pasze, produkty, przychody, koszty,
+    stages/*.js              etapy: ziemia i zwierzęta, pasze (ze sprzedażą nadwyżki zboża), produkty, przychody, koszty,
                              inwestycje, dopłaty, praca, kierunki, rynek
     warnings.js              ostrzeżenia i podpowiedzi do planu
     cashflow.js              przepływy gotówki miesiąc po miesiącu

@@ -58,12 +58,20 @@ function renderFeedKpi(results) {
         t('kpi.feedItem', { feed: t(`feeds.${feed}`), tonnes: formatNumber(amount(balance), 1) })
       )
       .join(', ');
+  const grainForSale =
+    results.grainSoldTonnes > 0.05
+      ? t('kpi.grainForSale', { tonnes: formatNumber(results.grainSoldTonnes, 1) })
+      : '';
   const sawdust =
     results.sawdustTonnes > 0.05 ? t('kpi.sawdust', { tonnes: formatNumber(results.sawdustTonnes, 1) }) : '';
 
   if (feedOk) {
     const need = results.hayNeed + results.grainNeed + results.strawNeed;
-    const supply = results.haySupply + results.grainSupply + results.strawSupply;
+    // sold grain is not kept; straw replaced by sawdust counts as covered
+    const strawCovered =
+      results.strawSupply +
+      Math.max(0, -results.strawBalanceBeforeSawdust) * (params.sawdustForStraw ? 1 : 0);
+    const supply = results.haySupply + results.grainSupply - results.grainSoldTonnes + strawCovered;
     // without animals there is nothing to feed, so a percentage would mean nothing
     const surplusPercent = Math.max(0, ((supply - need) / Math.max(0.1, need)) * 100);
     byId('kpi-feed').textContent =
@@ -71,7 +79,9 @@ function renderFeedKpi(results) {
         ? t('kpi.feedNoAnimals')
         : t('kpi.feedSurplus', { percent: formatNumber(surplusPercent, 0) });
     byId('kpi-feed-detail').textContent =
-      t('kpi.feedReserve', { items: describe(balances, balance => Math.max(0, balance)) }) + sawdust;
+      t('kpi.feedReserve', { items: describe(balances, balance => Math.max(0, balance)) }) +
+      sawdust +
+      grainForSale;
   } else {
     const shortages = balances.filter(([, balance]) => balance < tolerance);
     const missing = shortages.reduce((sum, [, balance]) => sum - balance, 0);

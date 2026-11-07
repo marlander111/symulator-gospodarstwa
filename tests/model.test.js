@@ -45,3 +45,21 @@ test('settings files of version 1 (Polish field names) are read', () => {
   const file = { app: 'symulator-gospodarstwa', wersja: 1, nazwa: 'Mój wariant', ustawienia: { etaty: 2 } };
   assert.deepEqual(model.readSettingsFile(file), { name: 'Mój wariant', settings: { fullTimeWorkers: 2 } });
 });
+
+test('a farm without animals sells its grain and does not run at a loss', () => {
+  const animals = ['dairyCows', 'layingHens', 'sheep', 'goats', 'geese', 'pigsForHome'];
+  const params = { ...model.defaultParams(), pastureHa: 0, meadowHa: 0, cerealShare: 100 };
+  for (const id of animals) params[id] = 0;
+  const results = model.simulateFarm(params);
+  assert.ok(results.grainSoldTonnes > 0, 'grain should be sold');
+  assert.ok(results.netIncome > 0, `net income ${results.netIncome}`);
+});
+
+test('every preset keeps every feed without a shortage', () => {
+  for (const preset of model.PRESETS) {
+    const results = model.simulateFarm({ ...model.defaultParams(), ...preset.params });
+    for (const balance of ['grainBalance', 'hayBalance', 'strawBalance'])
+      assert.ok(results[balance] >= -0.05, `${preset.id}: ${balance} ${results[balance].toFixed(2)}`);
+    assert.ok(results.grazingSupply >= results.grazingNeed, `${preset.id}: pasture shortage`);
+  }
+});

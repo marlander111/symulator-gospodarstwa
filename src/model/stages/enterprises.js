@@ -285,6 +285,13 @@ function listEnterprises(params, results, feed) {
       hours: hours.mushrooms,
     },
     {
+      id: 'grainForSale',
+      active: results.grainSoldTonnes > 0,
+      revenue: revenue.grainSales,
+      cost: results.grainSoldTonnes * feed.grainCostPerTonne,
+      hours: results.grainSupply > 0 ? (hours.cereals * results.grainSoldTonnes) / results.grainSupply : 0,
+    },
+    {
       id: 'beehives',
       active: params.beehives > 0,
       revenue: revenue.honey,
@@ -321,5 +328,6 @@ function landUsedByEnterprise(params, results) {
     guineaFowl: forageHa(forage.guineaFowl) + grainHa(grain.guineaFowl),
     fruit: (results.orchardHa * params.fruitSoldShare) / 100,
     mushrooms: 0,
+    grainForSale: results.grainSoldTonnes / params.cerealYield,
   };
 }

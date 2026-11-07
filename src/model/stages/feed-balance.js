@@ -107,13 +107,25 @@ function computeGrainBalance(params, results) {
   const grainNeed = sumValues(grainNeedByAnimal);
   // fodder beet and potatoes replace grain in the rations at about their dry-matter energy
   const grainSupply = results.cerealHa * params.cerealYield + results.rootCropHa * params.rootCropYield;
+  const grainSoldTonnes = surplusGrainForSale(params, grainSupply, grainNeed);
   return {
     grainNeedByAnimal,
     wheyGrainSaved: pigGrainWithoutWhey - grainNeedByAnimal.pigs,
     grainNeed,
     grainSupply,
-    grainBalance: grainSupply - grainNeed,
+    grainSoldTonnes,
+    grainBalance: grainSupply - grainSoldTonnes - grainNeed,
   };
+}
+
+/**
+ * Grain sold after harvest: everything above the animals' need plus a reserve for a poor year
+ * (`feedReserveShare` percent of the need). Without animals all the grain is sold.
+ */
+function surplusGrainForSale(params, grainSupply, grainNeed) {
+  if (!params.sellSurplusGrain) return 0;
+  const kept = grainNeed * (1 + params.feedReserveShare / 100);
+  return Math.max(0, grainSupply - kept);
 }
 
 function computeStrawBalance(params, results) {
@@ -136,7 +148,10 @@ function computeStrawBalance(params, results) {
     rabbits: params.rabbits * 0.05,
   };
   const strawNeed = sumValues(strawNeedByAnimal);
-  const strawSupply = results.cerealHa * params.strawYield;
+  // straw beyond the need and the reserve stays on the field and is ploughed in
+  const strawHarvest = results.cerealHa * params.strawYield;
+  const strawPloughedTonnes = Math.max(0, strawHarvest - strawNeed * (1 + params.feedReserveShare / 100));
+  const strawSupply = strawHarvest - strawPloughedTonnes;
   const strawBalanceBeforeSawdust = strawSupply - strawNeed;
   const sawdustTonnes =
     params.sawdustForStraw && strawBalanceBeforeSawdust < 0
@@ -148,6 +163,8 @@ function computeStrawBalance(params, results) {
   return {
     strawNeedByAnimal,
     strawNeed,
+    strawHarvest,
+    strawPloughedTonnes,
     strawSupply,
     strawBalance,
     strawBalanceBeforeSawdust,

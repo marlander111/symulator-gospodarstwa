@@ -850,6 +850,20 @@
       "label": "Ziarno eko kupowane (gdy brakuje)",
       "unit": "zł/t"
     },
+    "sellSurplusGrain": {
+      "label": "Sprzedawaj nadwyżkę zboża po żniwach",
+      "hint": "Ziarno ponad potrzeby zwierząt i zapas na słabszy rok idzie do skupu albo do sąsiada. Bez zwierząt sprzedaje się całe zboże."
+    },
+    "grainSalePrice": {
+      "label": "Cena sprzedaży zboża eko",
+      "unit": "zł/t",
+      "hint": "Konwencjonalne pszenżyto w skupie: ok. 760–785 zł/t (KOWR, IX–X 2026), żyto ok. 660–680 zł/t. Ziarno ekologiczne zwykle o 30–50% drożej, ale małe partie trzeba dowieźć albo sprzedać sąsiadom z gospodarstw eko."
+    },
+    "feedReserveShare": {
+      "label": "Zapas ziarna i słomy ponad potrzeby",
+      "unit": "%",
+      "hint": "Tyle ponad roczne potrzeby zwierząt zostaje w magazynie na słabszy rok. Nadwyżkę ziarna ponad ten zapas się sprzedaje, a nadmiar słomy przyorywuje."
+    },
     "hayPurchasePrice": {
       "label": "Siano kupowane (gdy brakuje)",
       "unit": "zł/t s.m."
@@ -1270,7 +1284,7 @@
     "sweetSpot": {
       "label": "Sweet spot",
       "note": "Całe 14 ha, najwięcej zł/h",
-      "description": "Wynik przeszukania tysięcy kombinacji na 14 ha bez dzierżawy: najwyższy dochód na godzinę pracy, gdy cała ziemia jest wykorzystana (każda pasza najwyżej 10% ponad potrzeby zwierząt), przy co najmniej takim dochodzie jak poprzednio, paszach z własnych pól i szczycie poniżej 60 h tygodniowo. Wyszły kury nieśne, gęsi, kaczki i kilka mamek z opasem sprzedawanym w paczkach, wypas co 3 dni z długim odpoczynkiem kwater. Krów mlecznych nie ma, bo dojenie zabiera najwięcej godzin. Pasze bilansują się na styk, więc w słabym roku trzeba część dokupić; wynik pesymistyczny już to uwzględnia."
+      "description": "Wynik przeszukania tysięcy kombinacji na 14 ha bez dzierżawy: najwyższy dochód na godzinę pracy przy co najmniej 6,5 tys. zł miesięcznie w wariancie pesymistycznym, całej ziemi w użyciu (każda pasza z ok. 5–10% zapasu, bez braków) i szczycie poniżej 60 h tygodniowo. Wyszły kury nieśne, kaczki, trochę gęsi i kilka mamek z opasem sprzedawanym w paczkach, do tego wypas co 3 dni z długim odpoczynkiem kwater. Krów mlecznych nie ma, bo dojenie zabiera najwięcej godzin."
     }
   },
   "assumptionSets": {
@@ -1325,7 +1339,9 @@
     "pessimisticPeakOverLimit": "W wariancie pesymistycznym najcięższy miesiąc to ok. {peak} h tygodniowo dla całego gospodarstwa, powyżej limitu {limit} h.",
     "planFits": "Pasze, siano i słoma mieszczą się w {area} ha. Na czysto ok. {net} rocznie przy ok. {hours} h pracy ({percent}% czasu rodziny), plus jedzenie dla domu warte ok. {homeValue}.",
     "shortPastureRest": "Kwatery odpoczywają tylko {days} dni. Przy odpoczynku krótszym niż 25 dni trawa nie odbudowuje korzeni i plon pastwiska spada. Latem warto wydłużyć go do 40–60 dni.",
-    "rootCropsNoRoom": "Okopowe są zaznaczone, ale w płodozmianie jest za mało lat zbóż (potrzeba co najmniej dwóch). Zwiększ udział zbóż albo liczbę pól."
+    "rootCropsNoRoom": "Okopowe są zaznaczone, ale w płodozmianie jest za mało lat zbóż (potrzeba co najmniej dwóch). Zwiększ udział zbóż albo liczbę pól.",
+    "grainSold": "Nadwyżka zboża idzie na sprzedaż: ok. {tonnes} t po {price} zł/t, czyli ok. {revenue} zł. W magazynie zostaje zapas {reserve}% ponad potrzeby zwierząt.",
+    "grainSoldAll": "Bez zwierząt całe zboże idzie na sprzedaż: ok. {tonnes} t po {price} zł/t, czyli ok. {revenue} zł. Słoma zostaje na polu i jest przyorywana."
   },
   "investments": {
     "cattleShed": "Wiata dla bydła",
@@ -1369,7 +1385,8 @@
     "vegetables": "Warzywa na sprzedaż",
     "fruit": "Owoce z sadu",
     "mushrooms": "Boczniaki na kłodach",
-    "beehives": "Pszczoły"
+    "beehives": "Pszczoły",
+    "grainForSale": "Zboże na sprzedaż"
   },
   "units": {
     "hours": "{value} h",
@@ -1409,7 +1426,8 @@
     "feedItem": "{feed} {tonnes}",
     "sawdust": "; trociny {tonnes} t",
     "feedExplanation": "Bilans na rok: plus to nadwyżka, minus to brak (siano i pastwisko w t suchej masy).",
-    "feedNoAnimals": "brak zwierząt"
+    "feedNoAnimals": "brak zwierząt",
+    "grainForSale": "; na sprzedaż ziarno {tonnes} t"
   },
   "feeds": {
     "hay": "siano",
@@ -1484,7 +1502,10 @@
     "hayFromPasture": "Z nadwyżki pastwiska koszonej na siano: ok. {tonnes} t s.m.",
     "wheyForPigs": "Serwatka z serowarni zastępuje ok. {kg} kg ziarna dla świń.",
     "ownCost": "Koszt własny: ziarno ok. {grain} zł/t, pasza objętościowa ok. {forage} zł/t s.m.",
-    "sawdustCovers": "Brakującą słomę ({straw} t) zastępują trociny lub zrębki ({sawdust} t), więc wiersz słomy już je uwzględnia."
+    "sawdustCovers": "Brakującą słomę ({straw} t) zastępują trociny lub zrębki ({sawdust} t), więc wiersz słomy już je uwzględnia.",
+    "grainSold": "Ze zbiorów ({harvest} t) ok. {sold} t ziarna idzie na sprzedaż. W magazynie zostaje to, co zjedzą zwierzęta, plus {reserve}% zapasu.",
+    "grainSoldAll": "Nie ma zwierząt do wykarmienia, więc całe zboże ({sold} t) idzie na sprzedaż, a słoma zostaje na polu.",
+    "strawPloughed": "Nadmiar słomy (ok. {tonnes} t) zostaje na polu i jest przyorywany."
   },
   "money": {
     "waterfall": {
@@ -1511,6 +1532,10 @@
     "milk": {
       "label": "Mleko surowe",
       "detail": "{litres} l × {price} zł"
+    },
+    "grainSales": {
+      "label": "Zboże na sprzedaż",
+      "detail": "{tonnes} t × {price} zł/t"
     },
     "cheese": {
       "label": "Sery",
