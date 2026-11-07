@@ -1,0 +1,3198 @@
+{
+  "parameterGroups": {
+    "people": "People and working time",
+    "land": "Land",
+    "dairy": "Dairy cows and cheese",
+    "layingHens": "Laying hens",
+    "poultry": "Meat poultry and rabbits",
+    "beefCattle": "Beef cattle (Angus)",
+    "smallLivestock": "Sheep, goats, pigs",
+    "produce": "Vegetables, fruit, mushrooms, bees",
+    "processing": "Processing and shipping (farm retail)",
+    "yields": "Yields and season",
+    "costs": "Running costs",
+    "investments": "Investments",
+    "subsidies": "Subsidies",
+    "labour": "Work norms",
+    "household": "Household budget",
+    "pessimistic": "Pessimistic scenario"
+  },
+  "subsections": {
+    "dairyCows": "Herd and milk",
+    "cheeseShare": "Cheese and sales",
+    "ownBull": "Breeding and culling",
+    "layingHens": "Laying flock",
+    "ownHatching": "Own hatching",
+    "winterPolytunnel": "Winter in a polytunnel",
+    "pulletPrice": "Buying pullets",
+    "broilers": "Pastured broilers",
+    "geese": "Geese",
+    "ducks": "Ducks",
+    "turkeys": "Turkeys",
+    "guineaFowl": "Guinea fowl",
+    "rabbits": "Rabbits",
+    "sheep": "Sheep",
+    "goats": "Goats",
+    "pigsForHome": "Pigs",
+    "horses": "Horses",
+    "marketGardenHa": "Vegetables",
+    "fruitSoldShare": "Orchard fruit",
+    "mushroomLogs": "Mushrooms on logs",
+    "beehives": "Bees",
+    "geeseProcessedShare": "What you process",
+    "processingMaterialsShare": "Costs and work",
+    "shippedShare": "Shipping",
+    "organicPayment": "Organic farming",
+    "catchCrops": "Eco-scheme: carbon farming",
+    "extensiveGrasslandScheme": "Other eco-schemes and payments",
+    "welfareCowsGrazing": "Animal welfare",
+    "arableCostPerHa": "Fields and grassland",
+    "costPerCow": "Animals",
+    "fixedCosts": "Fixed costs",
+    "grainPurchasePrice": "Buying feed and bedding",
+    "dairyFixedHours": "Cows and cheese",
+    "hensFixedHours": "Poultry",
+    "hoursPerEwe": "Sheep, goats, pigs",
+    "hayHoursPerHa": "Fields and the rest",
+    "investCattleShed": "Buildings and shelters",
+    "investElectricFencing": "Pastures",
+    "investDairy": "Dairy and machinery",
+    "investMarketGarden": "Other",
+    "soilClassIIIShare": "Soil classes",
+    "rotationFields": "Crop rotation",
+    "grazingMoveIntervalDays": "Rotational grazing",
+    "investOther": "Other",
+    "loyalCustomerSpendPerMonth": "Customers",
+    "riskYieldVolatility": "Random years (“Risk” panel)"
+  },
+  "parameters": {
+    "fullTimeWorkers": {
+      "label": "Full-time people",
+      "unit": "people"
+    },
+    "halfTimeWorkers": {
+      "label": "Half-time people",
+      "unit": "people"
+    },
+    "quarterTimeWorkers": {
+      "label": "Quarter-time people",
+      "unit": "people"
+    },
+    "weeklyHoursLimit": {
+      "label": "Work limit in the busiest month",
+      "unit": "h/week",
+      "hint": "For the whole farm together. Checked in the pessimistic scenario (settings at the bottom of the list)."
+    },
+    "minimumNetIncome": {
+      "label": "Minimum net income in the pessimistic scenario",
+      "unit": "PLN/yr"
+    },
+    "fullTimeHoursPerYear": {
+      "label": "Hours of a full-time job per year",
+      "unit": "h",
+      "hint": "About 40 h a week with holidays. On a farm it usually ends up being more."
+    },
+    "ownedHa": {
+      "label": "Own land",
+      "unit": "ha"
+    },
+    "leasedHa": {
+      "label": "Leased land (extra)",
+      "unit": "ha",
+      "hint": "Added to meadow and fields. Rent below."
+    },
+    "leaseRentPerHa": {
+      "label": "Land rent",
+      "unit": "PLN/ha/yr",
+      "hint": "State land (KOWR) in 2024: on average about 12 dt of wheat per ha (about 1,100 PLN). Private meadows can be cheaper."
+    },
+    "farmyardHa": {
+      "label": "Farmyard, orchard, kitchen garden, trees",
+      "unit": "ha"
+    },
+    "orchardHa": {
+      "label": "of which orchard (counts for subsidies)",
+      "unit": "ha"
+    },
+    "kitchenGardenHa": {
+      "label": "of which kitchen garden",
+      "unit": "ha"
+    },
+    "pastureHa": {
+      "label": "Rotational pasture",
+      "unit": "ha"
+    },
+    "meadowHa": {
+      "label": "Hay meadow",
+      "unit": "ha"
+    },
+    "soilClassIIIShare": {
+      "label": "Class III soils",
+      "unit": "%",
+      "hint": "Yields in the “Yields” group are for class IV soil. Class III gives more: cereals about +20%, meadows about +10%."
+    },
+    "soilClassVShare": {
+      "label": "Class V soils",
+      "unit": "%",
+      "hint": "Class V: cereals and clover about −25%, meadows and pastures about −15% (grasses cope with poorer soil better than cereals). The rest is class IV. An estimate."
+    },
+    "soilClassVIShare": {
+      "label": "Class VI soils",
+      "unit": "%",
+      "hint": "Class VI: cereals about −45%, grasses about −30%. Better used for pasture, trees or sheep than for cereals."
+    },
+    "rotationFields": {
+      "label": "Crop rotation: number of fields (years)",
+      "unit": "fields",
+      "hint": "Cereals and clover move one field further every year. Details in the “Crop rotation” section."
+    },
+    "cerealShare": {
+      "label": "Cereals and legumes in the rotation",
+      "unit": "%",
+      "hint": "The rest of the arable land is clover with grass for hay. In organic farming it is the source of nitrogen, so 100% cereals does not work in the long run."
+    },
+    "rootCrops": {
+      "label": "Root crops in the rotation (potatoes, fodder beet)",
+      "hint": "One field of the rotation before the last oats, as in the Norfolk four-course rotation: clover → cereal → root crops → oats with undersown clover. Root crops get the manure, hoeing cleans the field of weeds, and the crop replaces part of the grain fed to cows and pigs. Needs at least two cereal years in the rotation."
+    },
+    "dairyCows": {
+      "label": "Dairy cows (Jersey)",
+      "unit": "head"
+    },
+    "milkPerCow": {
+      "label": "Milk per cow",
+      "unit": "l/yr",
+      "hint": "Jersey without grain: 3,500–4,000 l. 100% grass-fed farms in the US: about 3,800 kg on average."
+    },
+    "onceADayMilking": {
+      "label": "Once-a-day milking (New Zealand style)",
+      "hint": "About 20% less milk, but milking and parlour cleaning once a day: about 35% less work per cow and 40% less fixed work. The cows are in better condition. In New Zealand studies milk falls by 10–30%, and Jerseys lose less than Holsteins."
+    },
+    "milkUsedShare": {
+      "label": "Milk sold and processed",
+      "unit": "%",
+      "hint": "The rest: calves, household, losses."
+    },
+    "cheeseShare": {
+      "label": "Share of that milk made into cheese",
+      "unit": "%"
+    },
+    "milkPrice": {
+      "label": "Price of raw milk sold by the farmer",
+      "unit": "PLN/l",
+      "hint": "Dairies paid about 1.5–2.6 PLN/l in 2026. Raw milk sold by the farmer usually 3–6 PLN/l; A2A2 Jersey milk can fetch more in town. Selling raw milk is a direct sale (registered with the district vet), not farm retail."
+    },
+    "cheesePrice": {
+      "label": "Price of hard cheese",
+      "unit": "PLN/kg",
+      "hint": "An assumption. Aged farmhouse cheeses usually sell for about 60–150 PLN/kg depending on the cheese, its age and the sales channel; current prices could not be confirmed. Enter your own price."
+    },
+    "cheeseYield": {
+      "label": "Cheese yield",
+      "unit": "kg/100 l",
+      "hint": "Cheddar from Jersey milk: about 12.5 kg, from Holstein about 10.1 kg. A little less after ageing."
+    },
+    "lactationsPerCow": {
+      "label": "Average number of lactations per cow"
+    },
+    "ownBull": {
+      "label": "Own bull (otherwise AI or a borrowed bull)"
+    },
+    "oatsPerCow": {
+      "label": "Oats per cow (after calving)",
+      "unit": "kg/yr"
+    },
+    "calfPrice": {
+      "label": "Price of a calf sold",
+      "unit": "PLN"
+    },
+    "cullCowPrice": {
+      "label": "Cull cow for slaughter",
+      "unit": "PLN",
+      "hint": "Slaughter cattle at buyers: 12.55 PLN/kg live weight (July 2026, ZSRIR); cows less. A Jersey weighs about 400 kg."
+    },
+    "layingHens": {
+      "label": "Laying hens",
+      "unit": "head"
+    },
+    "eggsPerHen": {
+      "label": "Laying rate",
+      "unit": "eggs/yr",
+      "hint": "Green-legged Partridge: about 180–200 eggs a year (a conservation breed); other native breeds 190–230; commercial hybrids on range 250–280."
+    },
+    "eggPrice": {
+      "label": "Price of an egg",
+      "unit": "PLN each",
+      "hint": "Median of 49 adverts for farm eggs on OLX (Nov 2026): 1.20 PLN each; ŚODR (May 2026): 1.22 PLN on average (0.60–2.00). Free-range Green-legged eggs usually sell higher to regular customers: 1.4–2 PLN."
+    },
+    "eggsSoldShare": {
+      "label": "Eggs sold",
+      "unit": "%"
+    },
+    "henFeedGramsPerDay": {
+      "label": "Feed per hen",
+      "unit": "g/day",
+      "hint": "A Green-legged hen (about 1.6–2 kg) eats about 100–120 g a day, commercial hens 120–130 g; a good range lowers the amount."
+    },
+    "rangeFeedSaving": {
+      "label": "Feed saved by foraging on the range",
+      "unit": "%"
+    },
+    "flockReplacementYears": {
+      "label": "Replace the flock every",
+      "unit": "years"
+    },
+    "ownHatching": {
+      "label": "Own hatching (cockerels in the flock, incubator)",
+      "hint": "Replacement pullets from your own eggs; cockerels reared and sold as soup birds. Vaccinate the chicks against Marek’s disease (agree it with your vet)."
+    },
+    "cockerelPrice": {
+      "label": "Soup cockerel",
+      "unit": "PLN each",
+      "hint": "An assumption; check locally. Green-legged Partridge: about 16–20 weeks to a carcass of about 1.5 kg."
+    },
+    "cockerelGrainKg": {
+      "label": "Cockerel: grain until slaughter",
+      "unit": "kg"
+    },
+    "pulletGrainKg": {
+      "label": "Pullet: grain until laying",
+      "unit": "kg"
+    },
+    "hatchingCostPerChick": {
+      "label": "Hatching: vaccination, electricity, losses (per chick)",
+      "unit": "PLN"
+    },
+    "hatchingHoursPerChick": {
+      "label": "Hatching and rearing: work per chick",
+      "unit": "h",
+      "hint": "Counts about 2 chicks for every pullet added to the flock (half are cockerels)."
+    },
+    "winterPolytunnel": {
+      "label": "Poultry in a polytunnel in winter (deep litter)",
+      "hint": "The vegetable tunnel from November to March: a place for the poultry during a housing order, compost for spring. Openings covered with netting, a heated drinker, netting dug in along the edges."
+    },
+    "tunnelBeddingCostPerHen": {
+      "label": "Sawdust or wood chips for the tunnel",
+      "unit": "PLN/hen/yr"
+    },
+    "pulletPrice": {
+      "label": "Price of a pullet (point of lay)",
+      "unit": "PLN"
+    },
+    "broilers": {
+      "label": "Pastured broilers",
+      "unit": "birds/yr"
+    },
+    "broilerCarcassKg": {
+      "label": "Carcass weight",
+      "unit": "kg"
+    },
+    "broilerPricePerKg": {
+      "label": "Carcass price",
+      "unit": "PLN/kg",
+      "hint": "Broiler carcasses wholesale: 9.06 PLN/kg (July 2026, ZSRIR). Free-range chicken straight from the farmer: usually about 25–40 PLN/kg."
+    },
+    "broilerFeedKg": {
+      "label": "Feed per broiler",
+      "unit": "kg",
+      "hint": "Slow-growing breeds on range to a carcass of about 2.3 kg: about 7–9 kg of feed per bird; a grassy range gives the lower end."
+    },
+    "geese": {
+      "label": "Geese (for St Martin’s Day)",
+      "unit": "head"
+    },
+    "goosePrice": {
+      "label": "Price of a goose",
+      "unit": "PLN each",
+      "hint": "Fattened geese at buyers: 16.09 PLN/kg live weight (July 2026, ZSRIR). An oat-fed farm goose has a carcass of about 4–4.5 kg."
+    },
+    "ducks": {
+      "label": "Ducks",
+      "unit": "birds/yr",
+      "hint": "They need bathing water (a paddling pool) and foul the drinkers badly. Good at eating slugs."
+    },
+    "duckCarcassKg": {
+      "label": "Duck: carcass weight",
+      "unit": "kg"
+    },
+    "duckPricePerKg": {
+      "label": "Duck: carcass price",
+      "unit": "PLN/kg",
+      "hint": "Organic in online shops about 68 PLN/kg (3.2 kg carcass, Wolny Wypas 2026). Usually cheaper from the farmer."
+    },
+    "duckGrainKg": {
+      "label": "Duck: grain",
+      "unit": "kg/bird"
+    },
+    "turkeys": {
+      "label": "Turkeys",
+      "unit": "birds/yr",
+      "hint": "Keep them apart from hens and on different ground: blackhead (histomoniasis), carried by hens, can kill up to 100% of a turkey flock. There is practically no treatment."
+    },
+    "turkeyCarcassKg": {
+      "label": "Turkey: carcass weight",
+      "unit": "kg"
+    },
+    "turkeyPricePerKg": {
+      "label": "Turkey: carcass price",
+      "unit": "PLN/kg",
+      "hint": "Organic in shops about 82 PLN/kg (carcass about 8 kg). Demand rises for Christmas and Thanksgiving."
+    },
+    "turkeyGrainKg": {
+      "label": "Turkey: grain",
+      "unit": "kg/bird"
+    },
+    "guineaFowl": {
+      "label": "Guinea fowl",
+      "unit": "birds/yr",
+      "hint": "Noisy, but they scare off hawks and eat insects. They grow slowly: at least about 5 months."
+    },
+    "guineaFowlCarcassKg": {
+      "label": "Guinea fowl: carcass weight",
+      "unit": "kg"
+    },
+    "guineaFowlPricePerKg": {
+      "label": "Guinea fowl: carcass price",
+      "unit": "PLN/kg",
+      "hint": "Organic about 65 PLN/kg (Wolny Wypas, a farm described by topagrar in 2024)."
+    },
+    "guineaFowlGrainKg": {
+      "label": "Guinea fowl: grain",
+      "unit": "kg/bird"
+    },
+    "rabbits": {
+      "label": "Rabbits: does",
+      "unit": "head"
+    },
+    "rabbitsRearedPerDoe": {
+      "label": "Young reared per doe",
+      "unit": "per year"
+    },
+    "rabbitPrice": {
+      "label": "Price of a rabbit carcass",
+      "unit": "PLN each",
+      "hint": "Carcass about 1.5–2 kg. Rabbits in the Świętokrzyskie region (May 2026): about 30 PLN/kg on average, from 6.5 to 55 PLN (ŚODR)."
+    },
+    "sucklerCows": {
+      "label": "Suckler cows (Angus)",
+      "unit": "head",
+      "hint": "For comparison: in this model the least profitable per hectare, but little work and good on poorer meadows. Needs a quiet bull or AI."
+    },
+    "weanersSoldShare": {
+      "label": "Calves sold as weaners",
+      "unit": "%",
+      "hint": "Weaners at about 7–8 months, in autumn. The rest stay as finishers until about 2 years."
+    },
+    "weanerWeightKg": {
+      "label": "Weaner: weight",
+      "unit": "kg live"
+    },
+    "weanerPricePerKg": {
+      "label": "Weaner: price",
+      "unit": "PLN/kg live",
+      "hint": "Average price of slaughter cattle in April 2026: 14.13 PLN/kg live weight (KOWR). Beef-breed weaners usually fetch more per kg. An assumption."
+    },
+    "finisherWeightKg": {
+      "label": "Finisher: weight at slaughter",
+      "unit": "kg live",
+      "hint": "About 20–24 months on grass alone."
+    },
+    "finishersSoldAsMeatShare": {
+      "label": "Finishers sold as boxed meat",
+      "unit": "%",
+      "hint": "Slaughter at an abattoir, sale under farm retail rules. The rest sold live."
+    },
+    "beefBoxPricePerKg": {
+      "label": "Boxed beef",
+      "unit": "PLN/kg carcass",
+      "hint": "Average per kg of carcass (mixed cuts). Young-bull quarters at buyers: 27.54 PLN/kg (KOWR, April 2026)."
+    },
+    "finisherLivePricePerKg": {
+      "label": "Finisher sold live",
+      "unit": "PLN/kg"
+    },
+    "finisherKillingOut": {
+      "label": "Finisher killing-out percentage",
+      "unit": "%"
+    },
+    "beefCattleCostPerHead": {
+      "label": "Vet, ear tags, minerals, hoof care",
+      "unit": "PLN/head/yr"
+    },
+    "finisherSlaughterCost": {
+      "label": "Slaughter, butchery, transport of a finisher",
+      "unit": "PLN/head"
+    },
+    "hoursPerSucklerCow": {
+      "label": "Work: suckler cow with calf",
+      "unit": "h/yr"
+    },
+    "hoursPerFinisher": {
+      "label": "Work: finisher",
+      "unit": "h/head"
+    },
+    "sheep": {
+      "label": "Meat sheep (ewes)",
+      "unit": "head"
+    },
+    "lambingsPerEwe": {
+      "label": "Lambings per ewe per year",
+      "hint": "Dorpers can lamb 3 times in 2 years (1.5 a year). Two lambings a year are impossible: pregnancy lasts about 146–150 days. With more frequent lambing, litter size is often about 25% lower, and more hay and work are needed in winter."
+    },
+    "lambsPerLambing": {
+      "label": "Lambs reared per lambing"
+    },
+    "lambLivePrice": {
+      "label": "Price of a lamb sold live",
+      "unit": "PLN each",
+      "hint": "An assumption (about 40 kg live weight at about 13–14 PLN/kg). World sheep-meat prices were at record highs in 2026."
+    },
+    "lambsSoldAsMeatShare": {
+      "label": "Lambs sold as meat (farm retail)",
+      "unit": "%",
+      "hint": "The rest are sold live. Meat: slaughter at an abattoir, a whole carcass or boxes for customers."
+    },
+    "lambLiveWeightKg": {
+      "label": "Lamb weight at sale or slaughter",
+      "unit": "kg live"
+    },
+    "lambMeatPricePerKg": {
+      "label": "Price of lamb for customers",
+      "unit": "PLN/kg carcass",
+      "hint": "Farmers’ adverts: usually 30–60 PLN/kg (median about 40 PLN). Farm shops: 43–52 PLN/kg for a whole carcass."
+    },
+    "lambKillingOut": {
+      "label": "Killing-out percentage (carcass of live weight)",
+      "unit": "%",
+      "hint": "Meat crossbreds about 46%, Dorper about 50%, native sheep kept extensively as little as about 36%."
+    },
+    "lambSlaughterCost": {
+      "label": "Contract slaughter at an abattoir",
+      "unit": "PLN/head",
+      "hint": "An assumption. Ask the abattoir for its price list."
+    },
+    "butcheryCostPerKg": {
+      "label": "Butchery and vacuum packing",
+      "unit": "PLN/kg"
+    },
+    "abattoirDistanceKm": {
+      "label": "Distance to the abattoir (e.g. Siedlęcin)",
+      "unit": "km one way"
+    },
+    "lambsPerAbattoirTrip": {
+      "label": "Lambs in one batch for slaughter",
+      "unit": "head",
+      "hint": "Each batch means 2 trips: delivering the live lambs and collecting the chilled carcasses."
+    },
+    "trailerCostPerKm": {
+      "label": "Cost of driving with a trailer",
+      "unit": "PLN/km"
+    },
+    "eweReplacementShare": {
+      "label": "Ewes replaced each year",
+      "unit": "%"
+    },
+    "goats": {
+      "label": "Goats (scrub, meat for the dog)",
+      "unit": "head"
+    },
+    "kidsSoldShare": {
+      "label": "Kids sold for meat",
+      "unit": "%",
+      "hint": "The other kids become dog food. Goats must be slaughtered at an abattoir and sold under farm retail rules. Kid meat sells mainly at Easter and to customers from the Balkans and the Middle East."
+    },
+    "kidCarcassKg": {
+      "label": "Kid: carcass",
+      "unit": "kg",
+      "hint": "About 4–5 months old."
+    },
+    "kidMeatPricePerKg": {
+      "label": "Kid meat",
+      "unit": "PLN/kg carcass",
+      "hint": "An assumption for direct sales; check locally."
+    },
+    "pigsForHome": {
+      "label": "Pigs for the household",
+      "unit": "per year"
+    },
+    "pigsForSale": {
+      "label": "Pigs for sale",
+      "unit": "per year",
+      "hint": "Half carcasses or boxes under farm retail rules; slaughter only at an abattoir. African swine fever is present in Lower Silesia: ask the district vet whether pigs may be kept outdoors in your district and what the biosecurity rules are (e.g. a double fence)."
+    },
+    "pigCarcassKg": {
+      "label": "Pig: carcass",
+      "unit": "kg",
+      "hint": "About 8–10 months outdoors."
+    },
+    "porkBoxPricePerKg": {
+      "label": "Boxed pork",
+      "unit": "PLN/kg carcass",
+      "hint": "Half carcasses wholesale only 6.96 PLN/kg, live pigs 4.83 PLN/kg (July 2026, ZSRIR). Outdoor pork in boxes for regular customers: about 15–35 PLN/kg. An assumption."
+    },
+    "pigSlaughterCost": {
+      "label": "Pig: slaughter, butchery, transport",
+      "unit": "PLN/head"
+    },
+    "kidSlaughterCost": {
+      "label": "Kid: slaughter and transport",
+      "unit": "PLN/head"
+    },
+    "horses": {
+      "label": "Horses (just in case)",
+      "unit": "head",
+      "hint": "A horse eats about 3 t of dry matter in hay and grass a year and about 200 kg of oats in light work."
+    },
+    "horseCost": {
+      "label": "Horse: farrier, vet, minerals",
+      "unit": "PLN/yr",
+      "hint": "Hoof trimming from about 50 PLN, vaccination 70–90 PLN, worming 40–50 PLN, check-up 200–300 PLN (kb.pl, 2026)."
+    },
+    "hoursPerHorse": {
+      "label": "Horse: work",
+      "unit": "h/yr"
+    },
+    "marketGardenHa": {
+      "label": "Vegetables for sale (CSA, market)",
+      "unit": "ha",
+      "hint": "Land taken from the arable fields. The Dobrzyń Vegetables CSA: about 5 ha and over 530 members paying 1,480–1,740 PLN a season."
+    },
+    "vegetableSalesPerHa": {
+      "label": "Vegetable sales per hectare",
+      "unit": "PLN/ha",
+      "hint": "An assumption. The Dobrzyń CSA takes about 170,000 PLN per ha in shares. The best small market gardens in the US and Canada sell 100,000 USD per acre; typical CSAs there under 40,000 USD."
+    },
+    "vegetableCostShare": {
+      "label": "Vegetable costs (seeds, compost, water, packaging)",
+      "unit": "% of sales"
+    },
+    "vegetableHoursPerHa": {
+      "label": "Work on vegetables",
+      "unit": "h/ha",
+      "hint": "Hand growing with a tunnel and selling: small market gardens usually need 4,000–6,000 h per hectare (1–1.5 people per half hectare). Less with simpler growing and bigger beds."
+    },
+    "fruitSoldShare": {
+      "label": "Orchard fruit for sale",
+      "unit": "% of harvest",
+      "hint": "Fresh or as juice from a contract press. The rest for the household. The orchard is set under “Land”."
+    },
+    "orchardYield": {
+      "label": "Orchard yield",
+      "unit": "t/ha",
+      "hint": "An assumption for an extensive orchard in full bearing. A new orchard starts bearing after about 4–6 years and then crops more heavily every other year."
+    },
+    "fruitPricePerKg": {
+      "label": "Revenue per kg of fruit",
+      "unit": "PLN/kg",
+      "hint": "An average for fresh fruit and juice. 1 kg of apples gives about 0.6–0.7 l of juice. An assumption."
+    },
+    "fruitCostShare": {
+      "label": "Fruit costs (press, packaging, organic sprays)",
+      "unit": "% of sales"
+    },
+    "fruitHoursPerTonne": {
+      "label": "Picking, pressing and selling fruit",
+      "unit": "h/t"
+    },
+    "mushroomLogs": {
+      "label": "Logs for oyster mushrooms",
+      "unit": "logs",
+      "hint": "Sections 30–40 cm long and 20–50 cm across, almost any hardwood. They lie in the shade under trees and take no field space. The harvest is about 20% of the wood’s weight over 2–5 years (Dr M. Siwulski, Poznań University of Life Sciences)."
+    },
+    "mushroomYieldPerLog": {
+      "label": "Mushrooms per log",
+      "unit": "kg/yr",
+      "hint": "A log of about 20 kg × 20% over about 3 years gives about 1.3 kg a year. Shiitake on oak or beech yields less but sells higher."
+    },
+    "mushroomPrice": {
+      "label": "Mushroom price",
+      "unit": "PLN/kg",
+      "hint": "An assumption for log-grown oyster mushrooms sold direct."
+    },
+    "mushroomLogCost": {
+      "label": "Log: spawn and wood (per year)",
+      "unit": "PLN/yr"
+    },
+    "mushroomLogHours": {
+      "label": "Log: inoculating, soaking, picking, selling",
+      "unit": "h/yr"
+    },
+    "beehives": {
+      "label": "Beehives (colonies)",
+      "unit": "hives",
+      "hint": "They take no land and pollinate the orchard and clover."
+    },
+    "honeyPerHive": {
+      "label": "Honey per hive",
+      "unit": "kg/yr",
+      "hint": "In Poland about 15–20 kg per hive on average; much less in poor years."
+    },
+    "honeyPrice": {
+      "label": "Honey price in direct sales",
+      "unit": "PLN/kg",
+      "hint": "Average retail prices in 2025: multifloral about 35.5 PLN/kg, honeydew about 64 PLN, heather about 91 PLN (INHORT)."
+    },
+    "hiveCost": {
+      "label": "Cash cost of a hive (feed, treatments, jars)",
+      "unit": "PLN/yr"
+    },
+    "hiveHours": {
+      "label": "Work per hive",
+      "unit": "h/yr"
+    },
+    "geeseProcessedShare": {
+      "label": "Geese processed (smoked breast, smoked cuts, lard)",
+      "unit": "%"
+    },
+    "processedValuePerGoose": {
+      "label": "Products from one goose",
+      "unit": "PLN",
+      "hint": "E.g. about 0.8 kg of smoked goose breast at 180–200 PLN plus smoked legs, lard and pâté. Organic smoked breast from pastured geese: 200 PLN/kg (Manufaktura Dobra, 2026)."
+    },
+    "ducksProcessedShare": {
+      "label": "Ducks processed (smoked breasts, confit legs)",
+      "unit": "%"
+    },
+    "processedValuePerDuck": {
+      "label": "Products from one duck",
+      "unit": "PLN"
+    },
+    "lambProcessedShare": {
+      "label": "Lamb processed (sausages, kabanos, ham)",
+      "unit": "% of meat",
+      "hint": "From the lambs that go to the abattoir. Meat of hoofed animals must come from an abattoir."
+    },
+    "processedValuePerLambKg": {
+      "label": "Products per kg of lamb carcass",
+      "unit": "PLN/kg carcass",
+      "hint": "Value of the products per kg of carcass with bones, after losses in butchery and smoking. An assumption."
+    },
+    "processingMaterialsShare": {
+      "label": "Materials: spices, casings, jars, vacuum bags, labels",
+      "unit": "% of value"
+    },
+    "processingHoursPerGoose": {
+      "label": "Work: products from a goose",
+      "unit": "h/bird"
+    },
+    "processingHoursPerDuck": {
+      "label": "Work: products from a duck",
+      "unit": "h/bird"
+    },
+    "processingHoursPerLambKg": {
+      "label": "Work: lamb products",
+      "unit": "h/kg carcass"
+    },
+    "processingFixedHours": {
+      "label": "Fixed work: cleaning, paperwork, tests",
+      "unit": "h/yr"
+    },
+    "shippedShare": {
+      "label": "Products shipped by courier",
+      "unit": "%",
+      "hint": "Polish farm retail (RHD) rules allow distance selling to consumers if the right temperature is kept in transport. The rest is collected in person or sold at the market."
+    },
+    "parcelCost": {
+      "label": "Parcel: insulated box, ice packs, courier",
+      "unit": "PLN",
+      "hint": "An assumption. Ask couriers about chilled food parcels."
+    },
+    "shippingFeeCharged": {
+      "label": "Shipping charged to the customer",
+      "unit": "PLN/parcel"
+    },
+    "parcelWeightKg": {
+      "label": "Average parcel",
+      "unit": "kg"
+    },
+    "hoursPerParcel": {
+      "label": "Packing and handling an order",
+      "unit": "h/parcel"
+    },
+    "grazingDays": {
+      "label": "Grazing days per year",
+      "unit": "days",
+      "hint": "Around Lwówek usually from about 20 April to the end of October."
+    },
+    "mixedGrazingBonus": {
+      "label": "Sheep after cows: better use of the pasture",
+      "unit": "%",
+      "hint": "Grazing cattle and sheep together or one after the other: about 10% more pasture capacity (Nolan and Connolly 1989). Full effect from about 1.5 sheep per head of cattle."
+    },
+    "pastureYield": {
+      "label": "Pasture yield (eaten)",
+      "unit": "t DM/ha",
+      "hint": "Polish pastures average about 3.4 t of hay/ha (about 2.9 t DM; ITP), but that average includes neglected ones. Rotational grazing with clover in the sward: about 4–6 t DM eaten; potential 2.5–8 t of hay/ha."
+    },
+    "meadowYield": {
+      "label": "Meadow yield (2 cuts)",
+      "unit": "t DM/ha",
+      "hint": "Polish meadows average about 4.6 t of hay/ha (about 3.9 t DM; ITP, 2005–2009); extensive ones with 1 cut about 2.5 t of hay. A good meadow manured with farmyard manure: 4–6 t DM."
+    },
+    "cloverYield": {
+      "label": "Clover-grass yield",
+      "unit": "t DM/ha",
+      "hint": "Red clover with grasses, 2–3 cuts: usually 6–9 t DM/ha, on organic farms and poorer soils about 5–7."
+    },
+    "cerealYield": {
+      "label": "Cereal and mixture yield (organic)",
+      "unit": "t/ha",
+      "hint": "Organic farms: cereals about 1.5–3 t/ha (IUNG). On class IV soil after clover and manure about 2.5–3.5; cereal-legume mixtures in IUNG trials 2.6–4.9 t/ha. Yield for class IV; soil classes are set under “Land”."
+    },
+    "strawYield": {
+      "label": "Straw yield",
+      "unit": "t/ha",
+      "hint": "Usually about 1–1.2 t of straw per 1 t of grain; rye and triticale more, oats with peas less."
+    },
+    "rootCropYield": {
+      "label": "Root crop yield as grain equivalent",
+      "unit": "t/ha",
+      "hint": "Organic fodder beet: 40–60 t/ha fresh weight, i.e. about 6–9 t of dry matter; organic potatoes 15–25 t/ha. Counted as feed-grain equivalent, because the energy in beet dry matter is close to barley."
+    },
+    "grazingMoveIntervalDays": {
+      "label": "Move the cows to a new paddock every",
+      "unit": "days",
+      "hint": "0.5 means twice a day, after morning and evening milking. Moving more often leaves less ungrazed grass and spreads dung more evenly: about +4% grass eaten with moves twice a day, −7% every 3 days, −16% once a week. It takes more work with polywire and water, though. Salatin and Perkins move their cattle daily."
+    },
+    "pastureRestDays": {
+      "label": "Back to the same paddock after",
+      "unit": "days",
+      "hint": "The paddock’s rest. In spring 20–30 days is enough, in summer and drought 40–60 (Salatin: up to 60 days, until the grass rebuilds its roots). Less than 25 days weakens the sward; with longer rests the grass gets old. The number of paddocks is the rest divided by the days in one paddock, plus one."
+    },
+    "arableCostPerHa": {
+      "label": "Arable land: seed, fuel, combine",
+      "unit": "PLN/ha"
+    },
+    "meadowCostPerHa": {
+      "label": "Meadow: fuel, contract baling",
+      "unit": "PLN/ha"
+    },
+    "pastureCostPerHa": {
+      "label": "Pasture: upkeep, topping",
+      "unit": "PLN/ha"
+    },
+    "costPerCow": {
+      "label": "Cow: vet, minerals, hygiene",
+      "unit": "PLN/yr"
+    },
+    "inseminationCost": {
+      "label": "Artificial insemination (no bull)",
+      "unit": "PLN/cow"
+    },
+    "bullCost": {
+      "label": "Bull: purchase spread over years, vet",
+      "unit": "PLN/yr"
+    },
+    "milkPackagingCostPerLitre": {
+      "label": "Bottles, milk tests",
+      "unit": "PLN/l"
+    },
+    "cheeseCostPerKg": {
+      "label": "Cultures, rennet, salt, wax, electricity",
+      "unit": "PLN/kg cheese"
+    },
+    "henExtrasCost": {
+      "label": "Hen: minerals, shell grit, supplements",
+      "unit": "PLN/yr"
+    },
+    "eggPackagingCost": {
+      "label": "Egg boxes",
+      "unit": "PLN/egg"
+    },
+    "costPerBroiler": {
+      "label": "Broiler: chick, supplements, slaughter",
+      "unit": "PLN/bird"
+    },
+    "costPerGoose": {
+      "label": "Goose: gosling, vet",
+      "unit": "PLN/bird"
+    },
+    "costPerDuck": {
+      "label": "Duck: duckling, vet, slaughter",
+      "unit": "PLN/bird"
+    },
+    "costPerTurkey": {
+      "label": "Turkey: poult, vet, slaughter",
+      "unit": "PLN/bird"
+    },
+    "costPerGuineaFowl": {
+      "label": "Guinea fowl: keet, vet, slaughter",
+      "unit": "PLN/bird"
+    },
+    "costPerRabbitDoe": {
+      "label": "Rabbit: vaccinations, stock replacement",
+      "unit": "PLN/doe"
+    },
+    "costPerEwe": {
+      "label": "Ewe: vet, ear tags, ram, hoof care",
+      "unit": "PLN/yr"
+    },
+    "costPerGoat": {
+      "label": "Goat: vet, minerals",
+      "unit": "PLN/yr"
+    },
+    "costPerPig": {
+      "label": "Pig: piglet, vet",
+      "unit": "PLN/head"
+    },
+    "fixedCosts": {
+      "label": "Farmers’ social insurance (KRUS), land tax, insurance, organic certificate",
+      "unit": "PLN/yr",
+      "hint": "KRUS in 2026: about 256 PLN a month per person (178 PLN pension and disability, 78 PLN accident and sickness), about 6,200 PLN a year for 2 people. Agricultural land tax 2026: 166 PLN per conversion hectare. Plus the organic certificate, liability insurance and building insurance."
+    },
+    "salesCosts": {
+      "label": "Selling: fuel for deliveries, market fees",
+      "unit": "PLN/yr"
+    },
+    "energyCosts": {
+      "label": "Electricity and water (cooling, washing, general)",
+      "unit": "PLN/yr",
+      "hint": "Milk cooling, hot water for washing the milking machine, the cheese room, the pump and henhouse lighting: about 3,000–4,000 kWh a year at about 1 PLN/kWh. Without cows and a cheese room usually about 2,000 PLN."
+    },
+    "grainPurchasePrice": {
+      "label": "Organic grain bought in (when short)",
+      "unit": "PLN/t"
+    },
+    "sellSurplusGrain": {
+      "label": "Sell surplus grain after harvest",
+      "hint": "Grain beyond what the animals need and the reserve for a poorer year goes to a buyer or a neighbour. Without animals all the grain is sold."
+    },
+    "grainSalePrice": {
+      "label": "Selling price of organic grain",
+      "unit": "PLN/t",
+      "hint": "Conventional triticale at buyers: about 760–785 PLN/t (KOWR, Sept–Oct 2026), rye about 660–680 PLN/t. Organic grain usually sells 30–50% higher, but small lots have to be delivered or sold to neighbouring organic farms."
+    },
+    "feedReserveShare": {
+      "label": "Grain and straw reserve above needs",
+      "unit": "%",
+      "hint": "This much above the animals’ yearly needs stays in store for a poorer year. Grain above the reserve is sold and surplus straw is ploughed in."
+    },
+    "hayPurchasePrice": {
+      "label": "Hay bought in (when short)",
+      "unit": "PLN/t DM"
+    },
+    "sawdustForStraw": {
+      "label": "Replace missing straw with sawdust or wood chips",
+      "hint": "Instead of buying straw, you top up the bedding with sawdust from a sawmill. On an organic farm only from untreated wood. Manure with sawdust rots more slowly: compost it longer before spreading."
+    },
+    "sawdustPrice": {
+      "label": "Sawdust or wood chips",
+      "unit": "PLN/t",
+      "hint": "About 40–80 PLN/m³ from a sawmill; 1 m³ of sawdust weighs about 0.2–0.25 t. Sometimes free if you collect it."
+    },
+    "sawdustPerStrawTonne": {
+      "label": "Sawdust instead of 1 t of straw",
+      "unit": "t",
+      "hint": "Sawdust absorbs about as much as straw per kilogram. An assumption."
+    },
+    "strawPurchasePrice": {
+      "label": "Straw bought in (when short)",
+      "unit": "PLN/t"
+    },
+    "rootCropCostPerHa": {
+      "label": "Root crops: cost above ordinary arable",
+      "unit": "PLN/ha",
+      "hint": "Seed potatoes or beet seed, contract planting and lifting, storage. Usually 1,500–4,000 PLN/ha more than a cereal."
+    },
+    "investCattleShed": {
+      "label": "Deep-litter cattle shelter",
+      "unit": "PLN/place"
+    },
+    "investSheepShed": {
+      "label": "Shelter for sheep and goats",
+      "unit": "PLN/head"
+    },
+    "investHenHouse": {
+      "label": "Mobile henhouse (by the farmyard in winter)",
+      "unit": "PLN/hen"
+    },
+    "investBroilerPens": {
+      "label": "Movable broiler pens",
+      "unit": "PLN/place"
+    },
+    "investOtherPoultryShelters": {
+      "label": "Movable shelters: ducks, turkeys, guinea fowl",
+      "unit": "PLN/place",
+      "hint": "A turkey counts as 3 places. Ducks usually in 2 batches a season."
+    },
+    "investRabbitHutches": {
+      "label": "Movable rabbit hutches",
+      "unit": "PLN/doe"
+    },
+    "investElectricFencing": {
+      "label": "Electric fencing",
+      "unit": "PLN/ha",
+      "hint": "With sheep and goats 30% more is counted (more wires, netting)."
+    },
+    "investPastureWater": {
+      "label": "Water for the pastures (pipes, troughs)",
+      "unit": "PLN"
+    },
+    "investDairy": {
+      "label": "Milking machine, cooling tank, milk room",
+      "unit": "PLN",
+      "hint": "Less if you convert the old cowshed."
+    },
+    "investCheeseRoom": {
+      "label": "Cheese room and ageing room",
+      "unit": "PLN"
+    },
+    "investMachinery": {
+      "label": "Used implements for a small (C-360) tractor",
+      "unit": "PLN",
+      "hint": "Mower, tedder, rake, seed drill, harrow. Less if you already have some."
+    },
+    "investMarketGarden": {
+      "label": "Tunnel, irrigation, cold store, tools",
+      "unit": "PLN/ha"
+    },
+    "investBeehive": {
+      "label": "Hive with equipment and a colony",
+      "unit": "PLN/hive"
+    },
+    "investHatchery": {
+      "label": "Incubator, brooder, rearing house",
+      "unit": "PLN"
+    },
+    "investPoultryTunnel": {
+      "label": "Tunnel: netting, heated drinkers, lamps",
+      "unit": "PLN",
+      "hint": "With an existing tunnel. A new 6 × 20 m tunnel costs much more."
+    },
+    "investHorseStable": {
+      "label": "Shelter or stable for a horse",
+      "unit": "PLN/horse"
+    },
+    "investProcessingRoom": {
+      "label": "Smokehouse, cold store, vacuum packer, room",
+      "unit": "PLN",
+      "hint": "An assumption. The room must meet hygiene requirements and be registered with the district vet."
+    },
+    "investOther": {
+      "label": "Other investments (not counted elsewhere)",
+      "unit": "PLN",
+      "hint": "Anything not on the list above: a well, a track, a utility connection, a farm building, a van. The amount can also be typed in the investments table."
+    },
+    "investOtherLifetimeYears": {
+      "label": "Other investments: years of use",
+      "unit": "years",
+      "hint": "Depreciation is the amount divided by this many years."
+    },
+    "organicPayment": {
+      "label": "Organic payment (once in the organic system)"
+    },
+    "livestockDensityBonus": {
+      "label": "Bonus for mixed crop and livestock farming (0.5–1.5 LU/ha)"
+    },
+    "catchCrops": {
+      "label": "Winter catch crops and undersowing (“Carbon farming” eco-scheme, 5 points/ha)",
+      "hint": "A mixture of at least 2 species sown by 1 October and kept until 15 February; legumes undersown in oats kept at least 8 weeks after harvest. No plant protection products. The “Crop rotation” section shows where they fit in the rotation."
+    },
+    "carbonManure": {
+      "label": "Manure worked into the soil within 12 h (2 points/ha)",
+      "hint": "Geotagged photos in the ARiMR mobile app or a statement with dates within 14 days."
+    },
+    "carbonCropDiversity": {
+      "label": "Diverse crop structure (3 points per ha of arable land)",
+      "hint": "At least 3 crops, cereals at most 65%, crops that build organic matter (e.g. clover) at least 20%. Checked against your rotation."
+    },
+    "ecoSchemePointValue": {
+      "label": "Value of an eco-scheme point",
+      "unit": "PLN/point",
+      "hint": "In 2026 an estimated 92.76 PLN per point (ARiMR advance rates, September 2026); the final rate can differ slightly. Threshold: points at least 25% of farmland × 5 points."
+    },
+    "catchCropCostPerHa": {
+      "label": "Catch crop: organic seed and sowing",
+      "unit": "PLN/ha"
+    },
+    "catchCropHoursPerHa": {
+      "label": "Catch crop: work",
+      "unit": "h/ha"
+    },
+    "catchCropForageYield": {
+      "label": "Catch crop: grazing in autumn and early spring",
+      "unit": "t DM/ha",
+      "hint": "Sheep or heifers on the catch crop (rye with vetch) in autumn and March. Be careful with grazing before 15 February."
+    },
+    "catchCropMix": {
+      "label": "Catch crop mixture (chosen in the crop rotation)"
+    },
+    "stubbleCrop": {
+      "label": "Stubble crop as green manure before a winter cereal (no payment)",
+      "hint": "After an early harvest, when a winter cereal follows: mustard, phacelia or buckwheat for 6–7 weeks, then ploughed in in September. It does not meet the eco-scheme rules (the cover does not last until 15 February), but it improves the soil and feeds the geese."
+    },
+    "stubbleCropMix": {
+      "label": "Stubble crop mixture (chosen in the crop rotation)"
+    },
+    "stubbleCropForageYield": {
+      "label": "Stubble crop: forage from grazing or a cut",
+      "unit": "t DM/ha"
+    },
+    "stubbleCropCostPerHa": {
+      "label": "Stubble crop: seed and sowing",
+      "unit": "PLN/ha"
+    },
+    "extensiveGrasslandScheme": {
+      "label": "Eco-scheme: extensive grassland with livestock",
+      "hint": "Ask your advisory centre (ODR) whether it can be combined with the organic payment."
+    },
+    "youngFarmerEligible": {
+      "label": "Young farmer payment"
+    },
+    "lessFavouredAreaRate": {
+      "label": "Less-favoured area payment (if the plots are in a zone)",
+      "unit": "PLN/ha",
+      "hint": "Lwówek Śląski municipality: only some precincts. 2026 rates: specific zone I 179 PLN, zone II 264 PLN, upland zone II with at least 0.3 LU/ha 676 PLN (e.g. Nagórze)."
+    },
+    "welfareCowsGrazing": {
+      "label": "Animal welfare: cows – grazing and bedding (about 380 PLN/head)"
+    },
+    "welfareCowsSpace": {
+      "label": "Animal welfare: cows – 20% more space in the shelter (about 640 PLN/head)",
+      "hint": "Needs a big enough shelter; work out the floor area before building."
+    },
+    "welfareSheepGoats": {
+      "label": "Animal welfare: sheep and goats (about 143 and 138 PLN/head)"
+    },
+    "welfareHens": {
+      "label": "Animal welfare: laying hens (about 13 PLN/head)"
+    },
+    "otherWelfarePayments": {
+      "label": "Other animal welfare practices (amount)",
+      "unit": "PLN/yr"
+    },
+    "dairyFixedHours": {
+      "label": "Cows: milking parlour, cleaning (fixed)",
+      "unit": "h/yr"
+    },
+    "hoursPerCow": {
+      "label": "Cows: per cow",
+      "unit": "h/yr",
+      "hint": "Per cow: grazing, moving, bedding, calves, treatment (plus the fixed parlour time). With 5 cows it comes to about 170 h per cow a year in total. Milking alone in large barns is about 20 h per cow (ITP), with a bucket milking machine in a small herd much more."
+    },
+    "cheeseHoursPer100Litres": {
+      "label": "Cheesemaking",
+      "unit": "h/100 l",
+      "hint": "Hard cheese: about 3–4 h per 100 l batch including cleaning; then care in the ageing room. Enter your own time after a few batches."
+    },
+    "milkSalesHoursPer100Litres": {
+      "label": "Selling milk (bottles, customers)",
+      "unit": "h/100 l"
+    },
+    "eggSalesHoursPer100": {
+      "label": "Packing and selling eggs",
+      "unit": "h/100 eggs"
+    },
+    "salesFixedHours": {
+      "label": "Selling: market, deliveries, phone (fixed)",
+      "unit": "h/yr"
+    },
+    "hensFixedHours": {
+      "label": "Hens: fixed (moving the henhouse)",
+      "unit": "h/yr"
+    },
+    "hoursPerHen": {
+      "label": "Hens: per hen",
+      "unit": "h/yr",
+      "hint": "Feeding, water, collecting eggs, moving the henhouse. With about 100–300 hens usually 1–2 h per hen a year including the fixed time and egg sales."
+    },
+    "hoursPerBroiler": {
+      "label": "Broiler: rearing, slaughter, evisceration",
+      "unit": "h/bird",
+      "hint": "Missouri Extension (pastured): about 0.3 h per broiler with batches of 100, including slaughter; with 700 about 0.1 h. Here 0.6 h, including selling and learning at the start."
+    },
+    "hoursPerGoose": {
+      "label": "Goose",
+      "unit": "h/bird"
+    },
+    "hoursPerDuck": {
+      "label": "Duck: rearing, slaughter, plucking",
+      "unit": "h/bird"
+    },
+    "hoursPerTurkey": {
+      "label": "Turkey: rearing, slaughter",
+      "unit": "h/bird"
+    },
+    "hoursPerGuineaFowl": {
+      "label": "Guinea fowl: rearing, slaughter",
+      "unit": "h/bird"
+    },
+    "hoursPerRabbitDoe": {
+      "label": "Rabbit: per doe with young",
+      "unit": "h/yr"
+    },
+    "hoursPerEwe": {
+      "label": "Ewe",
+      "unit": "h/yr",
+      "hint": "Meat sheep kept extensively: usually 5–10 h per ewe a year (lambing, feet, worming, shearing)."
+    },
+    "abattoirTripHours": {
+      "label": "Trip to the abattoir (there and back)",
+      "unit": "h"
+    },
+    "lambSalesHoursPerLamb": {
+      "label": "Selling lamb: phone calls, handing out boxes",
+      "unit": "h/lamb"
+    },
+    "hoursPerGoat": {
+      "label": "Goat",
+      "unit": "h/yr"
+    },
+    "hoursPerPig": {
+      "label": "Pig",
+      "unit": "h/head"
+    },
+    "hayHoursPerHa": {
+      "label": "Hay (with contract baling)",
+      "unit": "h/ha"
+    },
+    "cerealHoursPerHa": {
+      "label": "Cereals (with a contract combine)",
+      "unit": "h/ha"
+    },
+    "rootCropHoursPerHa": {
+      "label": "Root crops: work",
+      "unit": "h/ha",
+      "hint": "Planting, hoeing and ridging, lifting, clamping. With contract planting and lifting about 60–120 h/ha, by hand much more."
+    },
+    "paddockMoveHours": {
+      "label": "Moving to a new paddock: work",
+      "unit": "h",
+      "hint": "Moving the polywire and the trough, checking the fence. With a laneway with water and quick couplings it takes about 10–20 minutes. The work norms per cow assume one move a day, so only the difference counts here."
+    },
+    "generalHours": {
+      "label": "Fencing, repairs, paperwork",
+      "unit": "h/yr"
+    },
+    "gardenHoursPerHa": {
+      "label": "Orchard and kitchen garden",
+      "unit": "h/ha"
+    },
+    "targetFromHouseholdBudget": {
+      "label": "Work out the minimum net income from the household budget",
+      "hint": "When on, the pessimistic threshold is calculated from the spending, margin and savings below, minus the 800+ child benefit. When off, the minimum slider in the “People” group applies."
+    },
+    "householdMonthlySpending": {
+      "label": "Household spending",
+      "unit": "PLN/month",
+      "hint": "An estimate for 5 people living frugally, with more than half of the food home-grown and their own firewood and water. Without KRUS and land tax, which are in the farm’s costs."
+    },
+    "householdSafetyMargin": {
+      "label": "Margin above spending",
+      "unit": "%"
+    },
+    "householdSavings": {
+      "label": "Savings: pension, emergency fund",
+      "unit": "PLN/yr",
+      "hint": "The KRUS pension will be low, so it is worth saving, e.g. in an IKZE retirement account."
+    },
+    "openingCash": {
+      "label": "Cash in the account on 1 January",
+      "unit": "PLN",
+      "hint": "The balance in the cash-flow table starts from this amount."
+    },
+    "childBenefitChildren": {
+      "label": "Children with 800+ benefit",
+      "unit": "children",
+      "hint": "800 PLN a month per child under 18."
+    },
+    "pessimisticPriceDrop": {
+      "label": "Selling prices lower by",
+      "unit": "%",
+      "hint": "Applies to all prices: milk, cheese, eggs, meat, vegetables, fruit, mushrooms, honey and cured products."
+    },
+    "pessimisticYieldDrop": {
+      "label": "Yields lower by",
+      "unit": "%",
+      "hint": "Cereals, straw, meadow, pasture, clover, orchard, honey, mushrooms. A drought or a wet year."
+    },
+    "pessimisticAnimalOutputDrop": {
+      "label": "Animal output lower by",
+      "unit": "%",
+      "hint": "Milk per cow, laying rate, lambs and rabbits reared."
+    },
+    "pessimisticExtraHours": {
+      "label": "Work takes longer by",
+      "unit": "%",
+      "hint": "All work norms. Illness, breakdowns, learning."
+    },
+    "pessimisticCostIncrease": {
+      "label": "Running costs higher by",
+      "unit": "%",
+      "hint": "Also the prices of bought grain, hay and straw. Rent is not changed."
+    },
+    "loyalCustomerSpendPerMonth": {
+      "label": "Regular customer family: spending per month",
+      "unit": "PLN/month",
+      "hint": "A family that buys a large part of its food from the farm: eggs every week, milk, cheese, a chicken, a meat box, a goose for Christmas. A family of 4 spends about 2,000–3,000 PLN a month on food, so 400–700 PLN is about a fifth."
+    },
+    "occasionalCustomerSpendPerMonth": {
+      "label": "Single-product customer: spending per month",
+      "unit": "PLN/month",
+      "hint": "Someone who only buys eggs or a goose once a year. A few dozen PLN a month on average."
+    },
+    "baleGrazing": {
+      "label": "Bale grazing in winter",
+      "hint": "Cattle and sheep winter in the field: hay bales set out in autumn, the polywire moved to the next ones every day. The dung stays where it falls and little bedding is needed, but about 10% of the hay is trampled. Milking cows come back for milking."
+    },
+    "manureHoursPerTonne": {
+      "label": "Manure: loading and spreading",
+      "unit": "h/t",
+      "hint": "A loader on a C-360 and a small spreader: about 2–3 t per load, about 0.15–0.3 h per tonne."
+    },
+    "riskYieldVolatility": {
+      "label": "Random years: yield variability",
+      "unit": "%",
+      "hint": "Typical deviation of yields from the average from year to year (drought, a wet summer). On lighter soils and in organic farming usually 12–20%."
+    },
+    "riskPriceVolatility": {
+      "label": "Random years: price and sales variability",
+      "unit": "%",
+      "hint": "Direct-sale prices are steadier than prices at buyers, but every year some produce may not sell or may need discounting. Usually 5–15%."
+    },
+    "riskAnimalVolatility": {
+      "label": "Random years: animal output variability",
+      "unit": "%",
+      "hint": "Milk, laying rate, lambs and rabbits reared in ordinary years."
+    },
+    "riskCostVolatility": {
+      "label": "Random years: cost variability",
+      "unit": "%",
+      "hint": "Fuel, electricity, vet, repairs."
+    },
+    "riskBadYearChance": {
+      "label": "Random years: chance of a bad year for the animals",
+      "unit": "%",
+      "hint": "Disease in the herd, a poultry housing order during bird flu, or lost customers. In such a year animal output is about 25% lower. 5% means once in 20 years on average."
+    }
+  },
+  "presets": {
+    "recommended": {
+      "label": "Milk + eggs + sheep",
+      "note": "Recommended start"
+    },
+    "milkAndEggs": {
+      "label": "Milk + eggs",
+      "note": "No sheep"
+    },
+    "poultryFirst": {
+      "label": "Poultry first",
+      "note": "Few cows"
+    },
+    "family": {
+      "label": "Family: 120k target",
+      "note": "Horses, sheep, +3 ha"
+    },
+    "diversified": {
+      "label": "Family: diversified",
+      "note": "Ducks, guinea fowl, fruit, mushrooms"
+    },
+    "smokehouse": {
+      "label": "Family + smokehouse",
+      "note": "Smoked goose, products, shipping"
+    },
+    "minimum": {
+      "label": "Minimum: 12 ha, 3 cows",
+      "note": "Little work and investment"
+    },
+    "minimumNoDairy": {
+      "label": "Minimum: 12 ha, no cows",
+      "note": "Poultry and sheep"
+    },
+    "maximumProfit": {
+      "label": "Maximum profit",
+      "note": "All the family’s time, no weekly limit"
+    },
+    "noMilking": {
+      "label": "No milking",
+      "note": "Less work"
+    },
+    "showPessimistic": "Show everything in the pessimistic scenario",
+    "lubuskieAngus": {
+      "label": "Lubusz style: Angus on grass",
+      "note": "Little work, small income",
+      "description": "Beef farming as typical in the Lubusz region: Angus suckler cows on pasture all season, moved once a week, weaners sold in autumn, hay from the meadows in winter. Plus the extensive grassland eco-scheme and cattle payments. About 8 suckler cows fit on 14 ha, so it is a side income. In the region such herds usually farm 50–200 ha, often leased."
+    },
+    "perkinsRidgedale": {
+      "label": "Ridgedale (R. Perkins)",
+      "note": "Vegetables, broilers, orchard",
+      "description": "Modelled on Richard Perkins’ Ridgedale farm in Sweden: an intensive no-dig market garden, broilers in movable pens, hens in a mobile henhouse, turkeys, sheep and a few beef cows in rotational grazing moved daily. Plus an orchard, oyster mushrooms among the trees and catch crops. A lot of work and direct selling, but many sources of income."
+    },
+    "salatinPolyface": {
+      "label": "Polyface (J. Salatin)",
+      "note": "Cattle, then poultry",
+      "description": "Modelled on Joel Salatin’s Polyface: cattle moved daily, a paddock grazed again after about 60 days, a mobile henhouse following 3–4 days behind the cattle. Broilers in pens moved daily, turkeys, rabbits and a few pigs. Grass-finished beef sold in boxes. Salatin buys his grain; here it comes from the farm’s own fields."
+    },
+    "grassDairy": {
+      "label": "Grass milk (Voisin, NZ)",
+      "note": "Once-a-day milking, cheese",
+      "description": "Pasture dairying following André Voisin’s rational grazing and New Zealand practice: Jersey cows almost entirely on grass, a fresh paddock every day, about 35 days’ rest, once-a-day milking, most of the milk made into cheese. The pasture has as many hectares as the cows will eat; winter hay comes from clover-grass leys on the arable land, without a separate meadow. A mobile henhouse behind the cows uses grain from the farm’s own fields. Less milk, but much less time in the parlour."
+    },
+    "sweetSpot": {
+      "label": "Sweet spot",
+      "note": "All 14 ha, most PLN per hour",
+      "description": "The result of searching thousands of combinations on 14 ha without leased land: the highest income per hour of work with at least 6,500 PLN a month in the pessimistic scenario, all the land in use (every feed with about a 5–10% reserve, no shortages) and a peak below 60 h a week. It came out as laying hens, ducks, a few geese and a few suckler cows with finishers sold in boxes, plus grazing moved every 3 days with long paddock rests. No dairy cows, because milking takes the most hours."
+    }
+  },
+  "assumptionSets": {
+    "realistic": "Realistic",
+    "optimistic": "Optimistic"
+  },
+  "labourGroups": {
+    "cattle": "Cows and cheese",
+    "poultry": "Poultry and rabbits",
+    "smallLivestock": "Sheep, goats, pigs, horses",
+    "fields": "Hay and cereals",
+    "produce": "Vegetables, fruit, mushrooms, bees",
+    "processing": "Processing and shipping",
+    "other": "Selling, repairs, garden"
+  },
+  "format": {
+    "numberLocale": "en-GB",
+    "pln": "{amount} PLN"
+  },
+  "warnings": {
+    "landOverAllocated": "Pasture, meadow, farmyard and vegetables take {hectares} ha more than the land you have. Reduce one of these sliders or add leased land.",
+    "gardenExceedsFarmyard": "The orchard and kitchen garden do not fit in the farmyard. Make the farmyard bigger.",
+    "grainShortage": "About {tonnes} t of grain is missing. That is about {cerealHa} ha more cereals (about {arableHa} ha of arable land in the rotation) or about {hens} fewer hens.",
+    "hayShortage": "About {tonnes} t DM of winter hay is missing. That is about {meadowHa} ha more meadow, or fewer animals.",
+    "strawShortage": "About {tonnes} t of straw for bedding is missing. More cereals will help, or switch on sawdust instead of straw (the “Costs” group).",
+    "sawdustReplacesStraw": "The missing straw is replaced with sawdust: about {tonnes} t (about {cubicMetres} m³) for about {cost} PLN a year.",
+    "grainSurplus": "Grain surplus of about {tonnes} t. You could add about {hens} hens or swap some cereals for clover.",
+    "haySurplus": "A large hay surplus (about {tonnes} t DM). There is room for more animals, or a reserve for drought.",
+    "stockingOutsideBonusRange": "A stocking rate of {density} LU/ha is outside the 0.5–1.5 range, so the 573 PLN/ha bonus does not apply.",
+    "grasslandOverstocked": "There are more than 2 LU/ha on the grassland. That is no longer extensive grazing.",
+    "notEnoughHours": "{needed} h a year are needed and the family has about {available} h. About {missing} h are missing.",
+    "littleSpareTime": "Work takes {percent}% of the family’s time. Little slack for illness and holidays.",
+    "muchSpareTime": "Work takes only about {percent}% of the family’s time ({needed} of {available} h). The limit is land and the market, not hands: spare time is best put into cheese, vegetables and direct selling.",
+    "peakMonthOverload": "The busiest month needs about {peak} h, while the family has about {monthly} h a month.",
+    "weeklyLimitExceeded": "The busiest month comes to about {peak} h a week, above your limit of {limit} h.",
+    "manyEggsToSell": "You need to sell about {boxes} boxes of 10 eggs a week. Find regular buyers first.",
+    "directSalesTaxThreshold": "Revenue from farm retail sales (cheese, red meat in boxes, cured meats) exceeds 100,000 PLN, so the surplus is subject to the 2% flat tax: about {tax} PLN a year, already included in costs.",
+    "turkeysWithHens": "Turkeys and hens: keep them apart, ideally on paddocks the hens have not used in recent years. Hens carry histomoniasis (blackhead), which can kill a whole flock of turkeys.",
+    "parcelsSeason": "About {parcels} parcels of products a year, mostly from October to December. Check chilled shipping with the courier before the season.",
+    "lambMeatLessThanLive": "A lamb sold as meat brings about {meat} PLN after slaughter and transport costs, less than sold live ({live} PLN). At these prices it is better to sell live.",
+    "sheepPaymentMinimum": "The sheep payment is counted from 10 head.",
+    "goatPaymentMinimum": "The goat payment is counted from 5 head (with fewer it is left out).",
+    "ownHatching": "Own hatching: about {chicks} chicks in spring, about {cockerels} cockerels for the pot. Remember the Marek’s disease vaccination.",
+    "carbonFarmingBelowMinimum": "“Carbon farming” eco-scheme: {points} points, and the threshold is {required} points (25% of farmed land × 5). Below the threshold there is no payment. Add practices, e.g. extensive grassland with livestock.",
+    "cropDiversityNotMet": "Diversified crop structure: your rotation has {cerealPercent}% cereals and {crops} crops. Requirement: cereals at most 65%, at least 3 crops, clover at least 20%. Change the number of fields in “Crop rotation”.",
+    "africanSwineFever": "Pigs for sale: African swine fever is present in Lower Silesia. Before buying piglets, check the zone and the biosecurity rules for outdoor pigs with the county veterinary officer.",
+    "sucklerCowsNeedBull": "Suckler cows: you need a quiet bull (e.g. Angus) or artificial insemination. Switch on “Own bull” in the cows group if you keep one.",
+    "soilSharesOver100": "The soil class shares add up to more than 100%. Correct the sliders in the “Land” group.",
+    "viewingPessimistic": "You are seeing all the numbers in the pessimistic scenario. Switch back with the button next to the assumptions.",
+    "pessimisticBelowTarget": "The pessimistic scenario gives {result}, which is {gap} below your minimum of {target}.",
+    "pessimisticAboveTarget": "Even the pessimistic scenario gives {result}, above your minimum of {target}.",
+    "pessimisticPeakOverLimit": "In the pessimistic scenario the busiest month is about {peak} h a week for the whole farm, above the limit of {limit} h.",
+    "planFits": "Feed, hay and straw fit within {area} ha. Net about {net} a year for about {hours} h of work ({percent}% of the family’s time), plus food for the household worth about {homeValue}.",
+    "shortPastureRest": "Paddocks rest for only {days} days. With less than 25 days’ rest the grass cannot rebuild its roots and the pasture yield falls. In summer it is worth extending it to 40–60 days.",
+    "rootCropsNoRoom": "Root crops are ticked, but the rotation has too few cereal years (at least two are needed). Increase the cereal share or the number of fields.",
+    "grainSold": "The grain surplus is sold: about {tonnes} t at {price} PLN/t, which is about {revenue} PLN. A reserve of {reserve}% above the animals’ needs stays in store.",
+    "grainSoldAll": "With no animals all the grain is sold: about {tonnes} t at {price} PLN/t, which is about {revenue} PLN. The straw stays in the field and is ploughed in.",
+    "nitrogenOverLimit": "The animals produce about {perHa} kg of nitrogen per hectare of farmed land, and the limit is {limit} kg/ha. More land or fewer animals are needed, or a contract to sell the manure."
+  },
+  "investments": {
+    "cattleShed": "Cattle shelter",
+    "sheepShed": "Sheep and goat shelter",
+    "horses": "Shelter or stables for horses",
+    "henHouse": "Mobile henhouses",
+    "hatching": "Incubator and brooder",
+    "poultryTunnel": "Winter poultry tunnel (equipment)",
+    "broilerPens": "Broiler pens",
+    "otherPoultryShelters": "Shelters: ducks, turkeys, guinea fowl",
+    "processing": "Smokehouse, cold room, vacuum packer",
+    "rabbitHutches": "Rabbit hutches",
+    "fencing": "Electric fencing",
+    "water": "Water for the pastures",
+    "dairy": "Milking machine, bulk tank, dairy room",
+    "cheeseRoom": "Cheese room and maturing room",
+    "machinery": "Second-hand machinery",
+    "vegetables": "Vegetables: polytunnel, irrigation, cold store",
+    "beehives": "Beehives with equipment",
+    "other": "Other investments (not included elsewhere)"
+  },
+  "enterprises": {
+    "milk": "Milk and cheese",
+    "eggs": "Eggs",
+    "broilers": "Pastured broilers",
+    "geese": "Geese",
+    "geeseWithProcessing": "Geese (with products)",
+    "ducks": "Ducks",
+    "ducksWithProcessing": "Ducks (with products)",
+    "beefCattle": "Beef cattle",
+    "turkeys": "Turkeys",
+    "guineaFowl": "Guinea fowl",
+    "rabbits": "Rabbits",
+    "sheep": "Sheep",
+    "sheepWithProcessing": "Sheep (with products)",
+    "goats": "Goats (for the dog and the scrub)",
+    "goatsWithMeat": "Goats (kid meat and for the dog)",
+    "pigs": "Pigs (for the household)",
+    "pigsForSale": "Pigs (household and sale)",
+    "horses": "Horses (reserve, work, children)",
+    "vegetables": "Vegetables for sale",
+    "fruit": "Orchard fruit",
+    "mushrooms": "Oyster mushrooms on logs",
+    "beehives": "Bees",
+    "grainForSale": "Grain for sale"
+  },
+  "units": {
+    "hours": "{value} h",
+    "hectares": "{value} ha",
+    "tonnes": "{value} t",
+    "pieces": "{value}",
+    "percent": "{value}%",
+    "thousandsPln": "{value}k",
+    "hoursPerWeek": "{value} h/week",
+    "plnPerHa": "{value} PLN/ha",
+    "plnPerHour": "{value} PLN/h",
+    "kilograms": "{value} kg",
+    "litres": "{value} l"
+  },
+  "controls": {
+    "reset": "Restore default settings"
+  },
+  "savedVariants": {
+    "defaultName": "Variant {number}",
+    "saved": "Saved “{name}” in this browser.",
+    "storageUnavailable": "This browser does not allow saving. The variant works until the page is closed.",
+    "delete": "Delete {name}",
+    "deleteTitle": "Delete"
+  },
+  "kpi": {
+    "netPerMonth": "take-home on average {amount} a month",
+    "hoursDetail": "avg {weekly} h/week, {daily} h/day; peak {peak} of {limit} h/week",
+    "revenueExplanation": "Costs include depreciation. Income = revenue (from sales and payments) minus costs.",
+    "revenueDetail": "payments {subsidies} · costs {costs}",
+    "aboveTarget": "above the {thousands}k target",
+    "belowTarget": "below the {thousands}k target",
+    "perYear": "{amount} a year",
+    "feedSurplus": "surplus {percent}%",
+    "feedShortage": "{tonnes} t missing",
+    "feedReserve": "reserve: {items} t",
+    "feedMissing": "missing: {items} t",
+    "feedItem": "{feed} {tonnes}",
+    "sawdust": "; sawdust {tonnes} t",
+    "feedExplanation": "Balance for the year: plus is a surplus, minus is a shortage (hay and pasture in t of dry matter).",
+    "feedNoAnimals": "no animals",
+    "grainForSale": "; grain for sale {tonnes} t"
+  },
+  "feeds": {
+    "hay": "hay",
+    "grain": "grain",
+    "straw": "straw",
+    "pasture": "pasture"
+  },
+  "summaries": {
+    "none": "–",
+    "people": "{fullTime} FTE, limit {limit} h/week",
+    "land": "{farmed} ha farmed",
+    "leased": ", incl. {leased} leased",
+    "head": "{count} head",
+    "broilers": "{count} broilers",
+    "geese": "{count} geese",
+    "ducks": "{count} ducks",
+    "turkeys": "{count} turkeys",
+    "guineaFowl": "{count} guinea fowl",
+    "rabbits": "{count} does",
+    "beefCattle": "{cows} sucklers, {weaners} weaners, {finishers} finishers",
+    "sheep": "{count} ewes",
+    "goats": "{count} goats",
+    "pigs": "{count} pigs",
+    "horses": "{count} horses",
+    "vegetables": "{hectares} ha of vegetables",
+    "fruit": "fruit {count}%",
+    "mushroomLogs": "{count} logs",
+    "beehives": "{count} hives",
+    "processing": "{value}, {parcels} parcels",
+    "householdMinimum": "minimum {amount}",
+    "householdSpending": "{amount} PLN/month",
+    "pessimistic": "prices −{prices}%, yields −{yields}%, work +{hours}%",
+    "arableRest": "Arable land (the rest):",
+    "cereals": "cereals and pulses",
+    "clover": "clover-grass ley",
+    "marketGarden": "vegetables for sale",
+    "outsideArable": "(in addition)",
+    "notEnoughLand": "Not enough land: missing"
+  },
+  "landUse": {
+    "farmyard": "Farmyard, orchard, kitchen garden",
+    "pasture": "Pasture",
+    "meadow": "Hay meadow",
+    "clover": "Clover-grass ley",
+    "cereals": "Cereals and pulses",
+    "rootCrops": "Root crops",
+    "marketGarden": "Vegetables for sale"
+  },
+  "feedBalance": {
+    "pasture": {
+      "label": "Pasture",
+      "detail": "in the grazing season"
+    },
+    "hay": {
+      "label": "Winter hay",
+      "detail": "{days} days in the shelter"
+    },
+    "grain": {
+      "label": "Grain",
+      "detail": "hens, poultry, pigs, oats"
+    },
+    "straw": {
+      "label": "Straw",
+      "detail": "bedding"
+    },
+    "units": {
+      "dryMatterTonnes": "t DM",
+      "tonnes": "t"
+    },
+    "need": "need {amount}",
+    "supply": "from fields {amount}",
+    "hayFromPasture": "From surplus pasture cut for hay: about {tonnes} t DM.",
+    "wheyForPigs": "Whey from the cheese room replaces about {kg} kg of grain for the pigs.",
+    "ownCost": "Own cost: grain about {grain} PLN/t, forage about {forage} PLN/t DM.",
+    "sawdustCovers": "The missing straw ({straw} t) is replaced by sawdust or wood chips ({sawdust} t), so the straw row already includes them.",
+    "grainSold": "Of the harvest ({harvest} t) about {sold} t of grain is sold. What the animals eat stays in store, plus a {reserve}% reserve.",
+    "grainSoldAll": "There are no animals to feed, so all the grain ({sold} t) is sold and the straw stays in the field.",
+    "strawPloughed": "The surplus straw (about {tonnes} t) stays in the field and is ploughed in."
+  },
+  "money": {
+    "waterfall": {
+      "sales": "Sales",
+      "subsidies": "Payments",
+      "costs": "Costs",
+      "depreciation": "Depreciation",
+      "net": "Net"
+    },
+    "perYear": "PLN/yr",
+    "revenueHeader": "Revenue",
+    "revenueTotal": "Total sales",
+    "costsHeader": "Costs",
+    "depreciation": "Depreciation of investments",
+    "costsTotal": "Total incl. depreciation",
+    "subsidiesHeader": "Payments ({hectares} ha)",
+    "subsidiesTotal": "Total payments",
+    "plnPerHead": "{value} PLN/head",
+    "homeUseHeader": "For the household (not cash)",
+    "value": "value",
+    "total": "Total"
+  },
+  "revenueItems": {
+    "milk": {
+      "label": "Raw milk",
+      "detail": "{litres} l × {price} PLN"
+    },
+    "grainSales": {
+      "label": "Grain for sale",
+      "detail": "{tonnes} t × {price} PLN/t"
+    },
+    "cheese": {
+      "label": "Cheese",
+      "detail": "{kg} kg × {price} PLN"
+    },
+    "calves": {
+      "label": "Calves and cull cows",
+      "detail": "{calves} calves, {cows} cows"
+    },
+    "eggs": {
+      "label": "Eggs (and spent hens)",
+      "detail": "{eggs} × {price} PLN"
+    },
+    "cockerels": {
+      "label": "Cockerels for the pot (own hatching)"
+    },
+    "goats": {
+      "label": "Kid meat"
+    },
+    "pigs": {
+      "label": "Pork: finished pigs in boxes"
+    },
+    "beefCattle": {
+      "label": "Beef cattle: weaners, finishers"
+    },
+    "broilers": {
+      "label": "Broilers",
+      "detail": "{count} × {kg} kg"
+    },
+    "geese": {
+      "label": "Geese",
+      "detail": "{count} birds"
+    },
+    "ducks": {
+      "label": "Ducks"
+    },
+    "turkeys": {
+      "label": "Turkeys"
+    },
+    "guineaFowl": {
+      "label": "Guinea fowl"
+    },
+    "rabbits": {
+      "label": "Rabbits",
+      "detail": "{count} rabbits"
+    },
+    "sheep": {
+      "label": "Live lambs and cull ewes",
+      "detail": "{lambs} lambs × {price} PLN"
+    },
+    "lambMeat": {
+      "label": "Lamb meat (farm retail)",
+      "detail": "{lambs} lambs, {kg} kg carcass × {price} PLN"
+    },
+    "processedGoods": {
+      "label": "Products: smoked goose breast, cured meats (farm retail)"
+    },
+    "fruit": {
+      "label": "Fruit and juice"
+    },
+    "mushrooms": {
+      "label": "Oyster mushrooms from logs"
+    },
+    "vegetables": {
+      "label": "Vegetables (CSA, market)",
+      "detail": "{hectares} ha × {price} PLN"
+    },
+    "honey": {
+      "label": "Honey",
+      "detail": "{kg} kg × {price} PLN"
+    }
+  },
+  "costItems": {
+    "arable": "Arable land",
+    "rootCrops": "Root crops: seed potatoes, seed, contractors",
+    "meadow": "Meadow",
+    "pasture": "Pasture",
+    "dairyCows": "Cows and heifers",
+    "milkPackaging": "Bottles, milk testing",
+    "cheese": "Cheesemaking supplies",
+    "layingHens": "Hens: flock replacement, minerals, egg boxes",
+    "broilers": "Broilers",
+    "geese": "Geese",
+    "ducks": "Ducks: ducklings, slaughter",
+    "catchCrops": "Catch crops: organic seed, sowing",
+    "beefCattle": "Beef cattle: vet, slaughter",
+    "turkeys": "Turkeys: poults, slaughter",
+    "guineaFowl": "Guinea fowl: keets, slaughter",
+    "processedGoods": "Products: supplies and shipping",
+    "fruit": "Fruit: pressing, packaging",
+    "mushrooms": "Logs: spawn, wood",
+    "rabbits": "Rabbits",
+    "vegetables": "Vegetables: seed, compost, water, packaging",
+    "beehives": "Bees: feed, treatments, jars",
+    "sheep": "Sheep",
+    "slaughter": "Slaughter, butchery, transport to the abattoir",
+    "goats": "Goats",
+    "horses": "Horses: farrier, vet, minerals",
+    "landLease": "Land rent",
+    "pigs": "Pigs",
+    "fixed": "KRUS social insurance, insurance, certification",
+    "sales": "Deliveries, market",
+    "energy": "Electricity and water",
+    "purchases": "Bought feed and bedding (sawdust)",
+    "retailTax": "2% flat tax on farm retail above 100,000 PLN"
+  },
+  "subsidyItems": {
+    "basicPayment": {
+      "label": "Basic income support"
+    },
+    "redistributive": {
+      "label": "Redistributive payment"
+    },
+    "dairyCows": {
+      "label": "Cow payment"
+    },
+    "beefCattle": {
+      "label": "Young cattle payment"
+    },
+    "sheep": {
+      "label": "Sheep payment"
+    },
+    "goats": {
+      "label": "Goat payment"
+    },
+    "organic": {
+      "label": "Organic farming",
+      "detail": "grassland {grassland}, arable {arable}, orchard {orchard}, vegetables {vegetables} PLN/ha"
+    },
+    "livestockBonus": {
+      "label": "Livestock stocking bonus"
+    },
+    "extensiveGrassland": {
+      "label": "Extensive grassland"
+    },
+    "carbonFarming": {
+      "label": "Carbon farming: catch crops, manure, crop structure",
+      "detail": "{value} PLN/point"
+    },
+    "youngFarmer": {
+      "label": "Young farmer"
+    },
+    "lessFavouredArea": {
+      "label": "Areas with natural constraints"
+    },
+    "animalWelfare": {
+      "label": "Animal welfare",
+      "detail": "2024 rates: cows, sheep, goats, hens"
+    }
+  },
+  "homeUse": {
+    "pigs": "Pork ({kg} kg × 25 PLN)",
+    "dogFood": "Goat meat for the dog (about {kg} kg)",
+    "eggs": "Eggs for the household",
+    "milk": "Milk for the household",
+    "cheese": "Cheese for the household",
+    "fruit": "Fruit for the household",
+    "mushrooms": "Mushrooms for the household"
+  },
+  "months": {
+    "numerals": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "names": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "inText": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ]
+  },
+  "household": {
+    "item": "Item",
+    "spending": "Household spending",
+    "spendingDetail": "{amount} PLN a month",
+    "margin": "Margin {percent}%",
+    "savings": "Savings: pension, emergency fund",
+    "childBenefit": "minus 800+",
+    "childBenefitDetail": "{children} × {amount} PLN a month",
+    "perMonth": "{amount} a month",
+    "required": "Needed from the farm",
+    "withoutChildBenefit": "Without 800+ (once the children grow up)",
+    "realisticResult": "Realistic result",
+    "pessimisticResult": "Result in the pessimistic scenario",
+    "surplus": "In the pessimistic scenario about {amount} a year is left above needs (with 800+).",
+    "shortfall": "In the pessimistic scenario about {amount} a year is missing to cover needs.",
+    "summary": "The pessimistic result plus 800+ is about {ratio} × the household’s yearly spending. Depreciation ({depreciation} a year) is already deducted: set it aside separately for repairs and replacing equipment.",
+    "targetFromBudget": "The minimum net income is now calculated from this budget.",
+    "targetSetDirectly": "Switch on “Work out the minimum net income from the household budget” so that the threshold in the bar is calculated from here."
+  },
+  "enterprisesTable": {
+    "columns": {
+      "enterprise": "Enterprise",
+      "perHa": "PLN/ha",
+      "perHour": "PLN/h",
+      "net": "Net",
+      "land": "Land",
+      "hours": "Hours",
+      "sales": "Sales",
+      "costsWithFeed": "Costs incl. feed",
+      "depreciation": "Depr.",
+      "subsidies": "Payments"
+    },
+    "unallocated": "Shared: area payments, fixed costs, garden",
+    "farm": "Farm",
+    "note": "Land is the hectares needed for each enterprise’s feed (pasture, hay and cereals by consumption). Area payments are in the “Shared” row: about {perHa} PLN for every hectare, whatever the enterprise."
+  },
+  "labour": {
+    "summary": "On average {average} h a week, about {peak} h in the busiest month. The family has about {available} h a week.",
+    "barTooltip": "{month}: {group} {hours} h",
+    "familyTime": "family time: {hours} h/month",
+    "axisLabel": "hours per month",
+    "yourLimit": "Your limit: {hours} h/week",
+    "columns": {
+      "activity": "Activity",
+      "perYear": "h/yr",
+      "perWeek": "h/week",
+      "share": "share"
+    },
+    "activities": {
+      "dairyCows": "Cows: milking, cleaning, grazing",
+      "cheese": "Cheesemaking",
+      "layingHens": "Laying hens",
+      "hatching": "Own hatching and cockerels",
+      "broilers": "Broilers",
+      "geese": "Geese",
+      "ducks": "Ducks",
+      "catchCrops": "Catch crops",
+      "beefCattle": "Beef cattle",
+      "turkeys": "Turkeys",
+      "guineaFowl": "Guinea fowl",
+      "processedGoods": "Processing and shipping",
+      "fruit": "Fruit: picking, pressing, selling",
+      "mushrooms": "Oyster mushrooms on logs",
+      "rabbits": "Rabbits",
+      "sheep": "Sheep",
+      "horses": "Horses",
+      "goats": "Goats",
+      "pigs": "Pigs",
+      "hay": "Hay",
+      "cereals": "Cereals",
+      "rootCrops": "Root crops: planting, weeding, lifting",
+      "sales": "Selling and deliveries",
+      "general": "Fencing, repairs, paperwork",
+      "garden": "Orchard and kitchen garden for the household",
+      "vegetables": "Vegetables for sale",
+      "beehives": "Bees"
+    }
+  },
+  "market": {
+    "units": {
+      "litres": "{value} l",
+      "kg": "{value} kg",
+      "boxes": "{value} boxes",
+      "pieces": "{value}",
+      "tonnes": "{value} t",
+      "families": "{value} families"
+    },
+    "items": {
+      "milk": "of milk a day (average)",
+      "cheese": "of cheese a week (more in summer)",
+      "eggs": "of 10 eggs a week",
+      "lambsLive": "live lambs a year (Aug–Dec)",
+      "lambMeat": "of lamb a year from {lambs} lambs, {trips} batches to the abattoir",
+      "lambMeatOneTrip": "of lamb a year from {lambs} lambs, {trips} batch to the abattoir",
+      "cockerels": "cockerels for the pot from own hatching (Jun–Sep)",
+      "oldHens": "spent hens for the pot a year",
+      "calves": "calves for sale in spring",
+      "broilers": "broilers a year (May–Oct)",
+      "geese": "geese for St Martin’s Day and Christmas",
+      "rabbits": "rabbits a year",
+      "pork": "of pork in autumn ({pigs} finished pigs)",
+      "kids": "kids for meat, mainly for Easter",
+      "beefCattle": "weaners and finishers in autumn",
+      "ducks": "ducks a year (Jul–Nov)",
+      "turkeys": "turkeys for Christmas",
+      "guineaFowl": "guinea fowl a year (Sep–Nov)",
+      "processedGoods": "of products and cured meats, about {parcels} parcels by courier",
+      "fruit": "of fruit for sale or for pressing",
+      "mushrooms": "of oyster mushrooms a year (spring and autumn)",
+      "vegetables": "in a CSA at about 1,600 PLN a season (May–Nov), or the same at the market",
+      "honey": "of honey a year",
+      "directSales": "of farm retail revenue: cheese, red meat in boxes, cured meats (tax-free up to 100,000 PLN)"
+    }
+  },
+  "investmentsTable": {
+    "columns": {
+      "investment": "Investment",
+      "cost": "Cost (enter your own)",
+      "unitPrice": "Unit price",
+      "years": "Years",
+      "perYear": "Per year"
+    },
+    "costLabel": "Cost: {investment}",
+    "yearsLabel": "Years of use: {investment}"
+  },
+  "comparison": {
+    "columns": {
+      "variant": "Variant",
+      "netRealistic": "Net (realistic)",
+      "netPessimistic": "Net (pessimistic scenario)",
+      "hours": "Hours / year",
+      "peakPessimistic": "Peak h/week (pessimistic scenario)",
+      "investments": "Investments",
+      "feed": "Feed from the fields"
+    },
+    "savedVariant": "my variant, prices as saved",
+    "enough": "enough",
+    "missing": "missing: {items}",
+    "missingShort": "missing",
+    "missingPessimistic": "missing in the pessimistic scenario: {items}",
+    "shortage": {
+      "grain": "grain {tonnes} t",
+      "hay": "hay {tonnes} t",
+      "straw": "straw {tonnes} t"
+    },
+    "load": "Load"
+  },
+  "cashflow": {
+    "columns": {
+      "month": "Month",
+      "sales": "Sales",
+      "subsidies": "Payments",
+      "costs": "Costs",
+      "result": "Result",
+      "household": "To the household",
+      "balance": "Account balance"
+    },
+    "year": "Year",
+    "barTooltip": "{month}: {amount} after paying the household",
+    "balanceTooltip": "{month}: balance {amount}",
+    "legend": "bars: the month after paying the household · line: account balance",
+    "lowestBalance": "Lowest balance in {month}: {amount}.",
+    "belowZero": "The balance falls below zero: increase the opening cash or move some spending.",
+    "explanation": "Every month {household} goes to the household (spending minus 800+). Payments: advances usually from 16 October, the rest by spring; animal welfare often only in the spring of the following year. Investments and depreciation are not counted here. What is left at the end of the year is the net result plus depreciation minus the household payments: set part of it aside for repairs and replacing equipment.",
+    "openingCash": {
+      "title": "Account balance at the start of the year (1 January)",
+      "currency": "PLN",
+      "description": "The money the farm starts the year with: a cushion for winter and spring, before the payments and the first bigger sales arrive. The balance in the table and on the chart is counted from this amount. Enter what will really be in the account, without money set aside for investments.",
+      "closing": "At the end of December {closing} is left ({change} over the year)."
+    }
+  },
+  "nextSteps": {
+    "steps": {
+      "addDairyCow": "+1 dairy cow",
+      "moreCheese": "+10% of the milk into cheese",
+      "addHens": "+30 laying hens",
+      "addBroilers": "+50 broilers",
+      "addGeese": "+5 geese",
+      "addDucks": "+20 ducks",
+      "addGuineaFowl": "+20 guinea fowl",
+      "addRabbitDoe": "+1 rabbit doe",
+      "addEwes": "+2 breeding ewes",
+      "addPigsForSale": "+2 pigs for sale",
+      "addSucklerCow": "+1 suckler cow",
+      "addBeehives": "+2 hives",
+      "addVegetables": "+0.1 ha of vegetables",
+      "addMushroomLogs": "+50 oyster mushroom logs",
+      "sellMoreFruit": "+20% of the fruit for sale",
+      "leaseMeadow": "+1 ha leased (meadow)",
+      "removeHorse": "−1 horse",
+      "removeRabbitDoe": "−1 rabbit doe"
+    },
+    "columns": {
+      "change": "Change",
+      "income": "Income",
+      "pessimistic": "Pessimistic",
+      "hours": "Hours",
+      "perExtraHour": "PLN/extra h",
+      "investments": "Investments",
+      "limits": "Limits"
+    },
+    "pastureShortage": "pasture",
+    "peak": "peak {hours} h/week",
+    "fits": "fits",
+    "apply": "Apply",
+    "best": "The most in the pessimistic scenario, without exceeding the work limit and with home-grown feed: {step} ({amount} a year).",
+    "nothingFits": "No step currently fits both the work limit and feed from your own fields. First land (leasing) or fewer animals."
+  },
+  "sensitivity": {
+    "factors": {
+      "cheesePrice": "Cheese price",
+      "milkPrice": "Milk price",
+      "milkPerCow": "Milk per cow",
+      "cheeseYield": "Cheese yield",
+      "eggPrice": "Egg price",
+      "eggsPerHen": "Laying rate",
+      "broilerPricePerKg": "Broiler price",
+      "goosePrice": "Goose price",
+      "lambMeatPricePerKg": "Lamb price",
+      "duckPricePerKg": "Duck price",
+      "porkBoxPricePerKg": "Pork price",
+      "honeyPrice": "Honey price",
+      "pastureYield": "Pasture yield",
+      "meadowYield": "Meadow yield",
+      "cerealYield": "Cereal yield",
+      "cloverYield": "Clover yield",
+      "fixedCosts": "Fixed costs",
+      "henFeedGramsPerDay": "Feed per hen",
+      "pulletPrice": "Pullet price",
+      "leaseRentPerHa": "Land rent"
+    },
+    "title": "result {net}: change at −20% (left) and +20% (right)",
+    "note": "What matters most: {factors}. Check these numbers for your own farm first."
+  },
+  "crops": {
+    "clover": {
+      "name": "Red clover with grasses",
+      "sowing": "Undersown in oats with peas the year before",
+      "harvest": "2–3 cuts: end of May, July, September",
+      "usedFor": "Hay and haylage for cows and sheep; nitrogen for the following cereals",
+      "locative": "clover",
+      "instrumental": "clover",
+      "months": [
+        "dormant",
+        "dormant",
+        "growth starts",
+        "growing",
+        "1st cut at the end of the month",
+        "regrowing",
+        "2nd cut",
+        "regrowing",
+        "3rd cut or grazing the regrowth",
+        "grazing the regrowth; in the last year shallow ploughing",
+        "dormant",
+        "dormant"
+      ]
+    },
+    "triticale": {
+      "name": "Winter triticale",
+      "sowing": "September, after manure",
+      "harvest": "End of July",
+      "usedFor": "Grain for hens, geese and pigs; straw for bedding",
+      "locative": "triticale",
+      "instrumental": "triticale",
+      "months": [
+        "overwintering",
+        "overwintering",
+        "growth starts",
+        "tillering",
+        "stem elongation",
+        "heading",
+        "harvest at the end of the month",
+        "stubble: geese, shallow ploughing",
+        "sowing a catch crop or ploughing",
+        "—",
+        "—",
+        "—"
+      ]
+    },
+    "rye": {
+      "name": "Winter rye",
+      "sowing": "September",
+      "harvest": "July",
+      "usedFor": "Grain and plenty of straw; good on poorer soil",
+      "locative": "rye",
+      "instrumental": "rye",
+      "months": [
+        "overwintering",
+        "overwintering",
+        "growth starts",
+        "tillering",
+        "heading",
+        "flowering",
+        "harvest",
+        "stubble, shallow ploughing",
+        "ploughing for the next crop",
+        "—",
+        "—",
+        "—"
+      ]
+    },
+    "mixedGrain": {
+      "name": "Cereal and pulse mixture",
+      "sowing": "End of March – April",
+      "harvest": "August",
+      "usedFor": "Protein for the hens (instead of soya)",
+      "locative": "the mixture",
+      "instrumental": "the mixture",
+      "months": [
+        "—",
+        "—",
+        "sowing at the end of the month",
+        "emergence",
+        "growing",
+        "peas flowering",
+        "ripening",
+        "harvest",
+        "ploughing, sowing a winter cereal",
+        "—",
+        "—",
+        "—"
+      ]
+    },
+    "oats": {
+      "name": "Oats with peas and undersown clover",
+      "sowing": "End of March – April, with undersowing",
+      "harvest": "August",
+      "usedFor": "Protein for the hens, oats for cows after calving; the undersowing becomes the clover ley",
+      "locative": "oats with peas",
+      "instrumental": "oats with peas",
+      "months": [
+        "—",
+        "—",
+        "sowing at the end of the month",
+        "emergence, clover undersown",
+        "growing",
+        "peas flowering",
+        "ripening",
+        "harvest; the undersowing stays",
+        "clover growing under the stubble",
+        "clover growing",
+        "dormant",
+        "dormant"
+      ]
+    },
+    "roots": {
+      "name": "Root crops: potatoes or fodder beet",
+      "sowing": "End of April – May, after manure",
+      "harvest": "September – October",
+      "usedFor": "Beet for cows and pigs instead of some grain, potatoes for the household and for sale; the field is left clean of weeds",
+      "locative": "root crops",
+      "instrumental": "root crops",
+      "months": [
+        "—",
+        "—",
+        "manure, spring ploughing",
+        "planting at the end of the month",
+        "emergence, ridging",
+        "weeding, ridging",
+        "weeding",
+        "growing, early potatoes",
+        "potato harvest",
+        "beet harvest, clamping",
+        "winter ploughing",
+        "dormant"
+      ]
+    },
+    "cloverYear": "year {year}"
+  },
+  "plurals": {
+    "years": {
+      "one": "year",
+      "few": "years",
+      "many": "years",
+      "other": "years"
+    }
+  },
+  "catchCropMixes": {
+    "ryeWithVetch": "Rye with hairy vetch",
+    "landsberger": "Landsberger mixture",
+    "phaceliaBuckwheatRye": "Phacelia, buckwheat and rye",
+    "winterTurnipRapeRye": "Winter turnip rape with rye",
+    "multiSpeciesRye": "Multi-species mixture with rye",
+    "triticaleWinterPea": "Triticale with winter field pea"
+  },
+  "stubbleCropMixes": {
+    "whiteMustard": "White mustard",
+    "phaceliaBuckwheat": "Phacelia with buckwheat",
+    "oatsVetchPea": "Oats with spring vetch and peas"
+  },
+  "fieldStatus": {
+    "catchCropInSpring": [
+      "catch crop overwintering (leave until 15 Feb)",
+      "from 15 Feb sheep grazing or mulching",
+      "ploughing in the catch crop, sowing at the end of the month"
+    ],
+    "catchCropAfterHarvest": [
+      "harvest, then sowing a catch crop ({mix})",
+      "sowing the catch crop by 1 October",
+      "catch crop growing, sheep grazing",
+      "catch crop overwintering",
+      "catch crop overwintering"
+    ],
+    "noCatchCropAfterHarvest": [
+      "after harvest",
+      "stubble or catch crop",
+      "winter ploughing",
+      "dormant",
+      "dormant"
+    ],
+    "stubbleCrop": ["harvest, straight away a stubble cover crop ({mix})", "{incorporation}, sowing: {crop}"],
+    "stubbleCutOrGrazed": "cutting or grazing the cover crop, then ploughing it in",
+    "stubblePloughed": "ploughing in the cover crop",
+    "beforeWinterCereal": [
+      "after harvest: manure, ploughing",
+      "sowing: {crop}",
+      "{crop}: emergence",
+      "{crop} overwintering",
+      "{crop} overwintering"
+    ],
+    "cloverBeforeWinterCereal": [
+      "shallow ploughing, manure",
+      "sowing: {crop}",
+      "{crop}: emergence",
+      "{crop} overwintering"
+    ],
+    "stubbleBeforeSpringCrop": [
+      "stubble, catch crop",
+      "winter ploughing",
+      "winter ploughing, dormant",
+      "dormant"
+    ]
+  },
+  "plan": {
+    "month": "Month:",
+    "road": "access road · {month}",
+    "farmyard": {
+      "house": "House, yard",
+      "oldBarn": "Old cowshed:|parlour, cheese room",
+      "cattleShedWinter": "Shelter: cattle|(inside now)",
+      "cattleShedSummer": "Shelter: cattle|(empty, on pasture)",
+      "sheepShedWinter": "Shelter: sheep, goats|(inside now)",
+      "sheepShedSummer": "Shelter: sheep, goats",
+      "tunnelWinter": "Tunnel: hens in winter|(inside now)",
+      "tunnelSummer": "Tunnel: vegetables",
+      "henHousesWinter": "Henhouses in winter|(here now)",
+      "henHousesSummer": "Winter spot for henhouses",
+      "orchard": "Orchard{geese}|{hectares} ha",
+      "kitchenGarden": "Kitchen garden|{hectares} ha",
+      "caption": "Farmyard {hectares} ha"
+    },
+    "pasture": {
+      "dairyCows": "cows now",
+      "nextPaddock": "next paddock",
+      "sheepAfterCows": "sheep after the cows",
+      "sheepToday": "sheep today",
+      "layingHens": "hens: {days} days after the cows",
+      "sucklerCows": "suckler cows with calves",
+      "winterTitle": "Winter: the pasture rests",
+      "winterNote": "grazing from about 20 Apr to the end of Oct",
+      "caption": "Pasture {hectares} ha · {paddocks} paddocks of about {paddockArea}"
+    },
+    "meadow": {
+      "title": "Hay meadow",
+      "months": [
+        "dormant",
+        "dormant",
+        "rolling",
+        "growing",
+        "growing",
+        "1st cut: hay",
+        "regrowing",
+        "2nd cut",
+        "grazing the regrowth",
+        "grazing the regrowth",
+        "dormant",
+        "dormant"
+      ],
+      "caption": "Meadow {hectares} ha"
+    },
+    "arable": {
+      "field": "Field {field}: {crop}",
+      "fieldDetail": "{hectares} ha · {status}",
+      "marketGarden": "Vegetables for sale and tunnel",
+      "caption": "Arable land {hectares} ha · rotation year {year}"
+    },
+    "grazing": {
+      "moveLabel": "Moving the cows:",
+      "restLabel": "Back on a paddock after:",
+      "days": "{days} days",
+      "everyDays": "every {days} days",
+      "intervalButtons": {
+        "twiceDaily": "2× a day",
+        "daily": "daily",
+        "weekly": "weekly"
+      },
+      "intervalPhrases": {
+        "twiceDaily": "twice a day",
+        "daily": "every day",
+        "weekly": "once a week"
+      },
+      "squareMetres": "{value} m²",
+      "rotationYear": "Rotation year on the fields: {year} of {count} (change it in the table in the “Crop rotation” block)",
+      "noteTitle": "Paddocks and returns",
+      "noPasture": "Without pasture there are no paddocks. Grazing animals need pasture, or hay all year round.",
+      "noteSummary": "Moving {interval} and returning after {rest} days gives <b>{paddocks} paddocks</b> of about {area}, roughly a {side} × {side} m square. Each paddock is grazed about {grazings} times a season.",
+      "noteYield": "Grass eaten: {change}% compared with moving daily and 35 days’ rest.",
+      "noteHours": "Work with the polywire and the trough: {change} h a year compared with one move a day.",
+      "noteSalatin": "Salatin: a paddock is grazed again only once the grass has rebuilt its roots, in summer even after 60 days. In spring grass grows faster and 20–30 days are enough, so some paddocks can then be cut for hay."
+    }
+  },
+  "planInfo": {
+    "monthActivity": "{month}: {activity}.",
+    "pasture": {
+      "title": "Pasture · {hectares} ha",
+      "grazing": "{month}: rotational grazing.",
+      "cows": "The cows ({count}) move to a new paddock {interval}.",
+      "sucklerCows": "The suckler cows with calves ({count}) go as a separate group.",
+      "sheep": "Sheep a day after the cows.",
+      "hens": "Mobile henhouse 3–4 days after the cows.",
+      "broilers": "Broiler pens moved every day.",
+      "rest": "Each paddock rests {days} days, longer in a drought.",
+      "winter": "{month}: animals in the shelters and around the farmyard, the pasture rests.",
+      "liming": "At the end of the month liming or fertilising according to the soil test."
+    },
+    "meadow": {
+      "title": "Hay meadow · {hectares} ha",
+      "months": [
+        "dormant",
+        "dormant",
+        "rolling, harrowing",
+        "growing",
+        "growing, grasses flowering",
+        "1st cut for hay",
+        "regrowing",
+        "2nd cut",
+        "grazing the regrowth",
+        "grazing the regrowth",
+        "dormant",
+        "dormant"
+      ],
+      "hay": "Hay from the meadow about {tonnes} t DM a year."
+    },
+    "plot": {
+      "title": "Field {field} · {hectares} ha",
+      "year": "Year {year}: {crop}",
+      "cropDetails": "Sowing: {sowing}. Harvest: {harvest}. {usedFor}.",
+      "nextYear": "Next year: {crop}."
+    },
+    "garden": {
+      "title": "Vegetables for sale · {hectares} ha",
+      "months": [
+        "crop plan, ordering seed",
+        "seedlings in the tunnel",
+        "seedlings, first sowings",
+        "planting, sowing",
+        "first harvests, CSA boxes",
+        "harvesting, weeding",
+        "peak harvest",
+        "peak harvest",
+        "harvesting, storage",
+        "last harvests, mulching",
+        "tunnel: winter salads",
+        "rest, accounts"
+      ]
+    },
+    "farmyard": {
+      "title": "Farmyard · {hectares} ha",
+      "summer": "the cows come in for milking, young animals by the pens.",
+      "winter": "animals in the shelters on deep litter",
+      "hensInTunnel": ", hens in the polytunnel",
+      "hensAtFarmyard": ", hens in the henhouses by the farmyard",
+      "sheepAtNight": "Sheep in the pen at night (wolves).",
+      "orchardAndGarden": "Orchard {orchard} ha{geese}, kitchen garden {garden} ha.",
+      "withGeese": " with geese"
+    }
+  },
+  "rotation": {
+    "fieldCount": "Number of fields:",
+    "length": "Clover {cloverYears} {cloverUnit}, cereals {cerealYears} {cerealUnit}",
+    "catchCrops": "Winter catch crops (eco-scheme):",
+    "stubbleCrop": "Stubble cover crop before a winter cereal:",
+    "mix": "Mixture:",
+    "no": "no",
+    "yes": "yes",
+    "fieldHeader": "Field ({hectares} ha)",
+    "year": "Year {year}",
+    "field": "Field {field}",
+    "catchCropSown": "+ catch crop: {mix}",
+    "catchCropRoom": "room for a catch crop",
+    "stubbleCropSown": "+ stubble cover crop",
+    "stubbleCropRoom": "room for a stubble cover crop",
+    "undersownClover": "+ undersown clover",
+    "undersownPoints": " (5 points)",
+    "note": "Every year: {clover} ha of clover and {cereals} ha of cereals. This rotation is {rotationPercent}% cereals, and the “Cereals on arable land” slider is at {sliderPercent}%.",
+    "matchSlider": "Set the slider to {percent}%",
+    "rootCrops": "Root crops (as in a four-course rotation):",
+    "rootCropsNoRoom": "Too few cereal years: root crops need at least two."
+  },
+  "ecoScheme": {
+    "title": "Your rotation and the eco-scheme",
+    "possibleArea": "A winter catch crop is possible every year on {catchCropHa} ha, undersowing in oats on {undersownHa} ha.",
+    "points": "Points: {total} (catch crops {catchCrops}, manure {manure}, structure {diversity}, extensive grassland {extensive}). Threshold: {required} points.",
+    "payment": "Payment for catch crops, manure and crop structure: <b>{amount}</b> a year{belowMinimum}{enableHint}.",
+    "belowMinimum": " (below the threshold)",
+    "enableCatchCrops": ". Switch on catch crops in the “Payments” group to count them",
+    "costAndForage": "Cost of catch crops{andStubble}: {cost} a year; grazed forage: about {forage} t DM.{stubbleArea}",
+    "andStubbleCrops": " and cover crops",
+    "stubbleArea": " Stubble cover crop: {hectares} ha.",
+    "diversityMet": "Diversified crop structure: your rotation meets the requirements.",
+    "diversityNotMet": "Diversified crop structure: not met (cereals {percent}%, the requirement is at most 65%; e.g. 5 fields and the cereal slider at 60%, i.e. 2 years of clover)."
+  },
+  "coverCropAdvice": {
+    "title": "Where in the rotation",
+    "undersown": "In oats with peas: <b>undersown clover</b>, which stays as the clover field.",
+    "afterClover": "After clover before {next}: no catch crop; plough the clover in with manure.",
+    "catchCrop": "After {crop} before {next}: <b>winter catch crop</b>, {mix}.",
+    "recommendedMix": "ideally rye with hairy vetch",
+    "lateMix": "Note: {mix} is ready to cut only in May, and oats are sown in March–April. Before oats, rye with vetch or turnip rape with rye is better.",
+    "stubbleCrop": "After {crop} before {next}: a <b>stubble cover crop</b> ({mix}) straight after harvest, ploughed in before sowing the winter cereal. No payment, but it improves the soil.",
+    "noRoom": "After {crop} before {next}: there is no room for a winter catch crop. A short stubble cover crop is possible, or mixing the straw into the soil."
+  },
+  "cropsTable": {
+    "crop": "Crop",
+    "sowing": "Sowing",
+    "harvest": "Harvest",
+    "usedFor": "Used for"
+  },
+  "calendar": {
+    "columns": {
+      "month": "Month",
+      "tasks": "Work (only your enterprises)",
+      "hoursPerWeek": "h/week",
+      "inflows": "Inflows",
+      "outflows": "Outflows",
+      "balance": "Account balance"
+    },
+    "tasks": {
+      "dairyCows": {
+        "label": "Cows",
+        "months": [
+          "drying off, hay from an unfertilised meadow",
+          "calving pen, calcium boluses at hand",
+          "calving; 1–2 kg of oats after calving",
+          "around 20 Apr start of grazing, magnesium in the lick",
+          "rotational grazing every 1–3 days, peak milk",
+          "breeding or insemination",
+          "repeat breeding",
+          "in a drought, hay from the reserve",
+          "pregnancy testing",
+          "end of grazing around 31 Oct",
+          "cows in the shelter",
+          "quiet, drying off from mid-January"
+        ]
+      },
+      "cheese": {
+        "label": "Cheese",
+        "months": [
+          "selling from the maturing room",
+          "",
+          "first cheeses after calving",
+          "cheese for stock",
+          "the most cheese",
+          "cheese for stock",
+          "maturing cheese",
+          "maturing cheese",
+          "",
+          "cheese for Christmas",
+          "Christmas sales",
+          "Christmas sales"
+        ]
+      },
+      "sucklerCows": {
+        "label": "Sucklers",
+        "months": [
+          "hay, shelter",
+          "preparing for calving",
+          "calving",
+          "grazing from about 20 Apr",
+          "grazing",
+          "bull in with the herd",
+          "breeding",
+          "grazing",
+          "weaning, weighing",
+          "selling weaners",
+          "finishers for the winter, culling",
+          "hay"
+        ]
+      },
+      "layingHens": {
+        "label": "Hens",
+        "months": [
+          "hens by the farmyard",
+          "ordering pullets and chicks",
+          "first days on range",
+          "mobile henhouse behind the cows",
+          "henhouse behind the cows",
+          "henhouse behind the cows",
+          "henhouse behind the cows",
+          "henhouse behind the cows",
+          "flock replacement plan",
+          "last weeks on pasture",
+          "henhouses to the farmyard",
+          "winter, lighting up to 16 h"
+        ],
+        "monthsWithWinterTunnel": [
+          "hens in the tunnel, topping up the litter",
+          "ordering pullets and chicks",
+          "first days on range",
+          "mobile henhouse behind the cows",
+          "henhouse behind the cows",
+          "henhouse behind the cows",
+          "henhouse behind the cows",
+          "henhouse behind the cows",
+          "flock replacement plan",
+          "last weeks on pasture",
+          "hens into the tunnel",
+          "winter, lighting up to 16 h"
+        ]
+      },
+      "hatching": {
+        "label": "Hatching",
+        "months": [
+          "",
+          "cockerels in the flock, collecting eggs",
+          "setting eggs, vaccinating chicks",
+          "hatches, brooder",
+          "brooder",
+          "cockerels on range",
+          "selling cockerels",
+          "selling cockerels",
+          "young pullets into the flock",
+          "",
+          "",
+          ""
+        ]
+      },
+      "broilers": {
+        "label": "Broilers",
+        "months": [
+          "",
+          "",
+          "ordering chicks",
+          "first batch of chicks",
+          "pens on pasture",
+          "slaughter of the 1st batch, 2nd batch",
+          "slaughter and sales",
+          "3rd batch",
+          "slaughter and sales",
+          "last slaughter",
+          "",
+          ""
+        ]
+      },
+      "geese": {
+        "label": "Geese",
+        "months": [
+          "",
+          "",
+          "",
+          "goslings",
+          "on range in the orchard",
+          "grazing",
+          "grazing",
+          "stubble",
+          "stubble",
+          "finishing on oats",
+          "St Martin’s Day: slaughter, sales",
+          ""
+        ]
+      },
+      "ducks": {
+        "label": "Ducks",
+        "months": [
+          "",
+          "",
+          "",
+          "ducklings",
+          "on range, paddling pool",
+          "range",
+          "slaughter and sales",
+          "slaughter and sales",
+          "slaughter and sales",
+          "last slaughter",
+          "",
+          ""
+        ]
+      },
+      "turkeys": {
+        "label": "Turkeys",
+        "months": [
+          "",
+          "",
+          "",
+          "",
+          "poults (apart from the hens)",
+          "range",
+          "range",
+          "range",
+          "range",
+          "Christmas orders",
+          "Christmas orders",
+          "slaughter and sales before Christmas"
+        ]
+      },
+      "guineaFowl": {
+        "label": "Guinea fowl",
+        "months": [
+          "",
+          "",
+          "",
+          "",
+          "keets",
+          "range",
+          "range",
+          "range",
+          "slaughter and sales",
+          "slaughter and sales",
+          "slaughter and sales",
+          ""
+        ]
+      },
+      "rabbits": {
+        "label": "Rabbits",
+        "months": [
+          "breeding in the winter pen",
+          "",
+          "movable hutches onto the grass",
+          "litters",
+          "moving the hutches",
+          "moving the hutches",
+          "slaughter and sales",
+          "slaughter and sales",
+          "slaughter and sales",
+          "slaughter and sales",
+          "hutches in for the winter",
+          ""
+        ]
+      },
+      "sheep": {
+        "label": "Sheep",
+        "months": [
+          "shelter, hay",
+          "last weeks of pregnancy: better hay",
+          "lambing",
+          "onto the pasture behind the cows",
+          "faecal egg count, worming according to the result",
+          "feet, shearing",
+          "weaning the lambs",
+          "selling lambs",
+          "selling lambs",
+          "ram in with the ewes",
+          "winter pens",
+          "hay"
+        ]
+      },
+      "goats": {
+        "label": "Goats",
+        "months": [
+          "shelter",
+          "",
+          "kids",
+          "range",
+          "on the scrub",
+          "on the scrub",
+          "on the scrub",
+          "on the scrub",
+          "on the scrub",
+          "breeding",
+          "shelter",
+          "meat for the dogs"
+        ]
+      },
+      "pigs": {
+        "label": "Pigs",
+        "months": [
+          "",
+          "",
+          "",
+          "piglets",
+          "on range",
+          "on range",
+          "on range",
+          "on range",
+          "on range",
+          "supplementary feeding",
+          "slaughter for the household",
+          "slaughter for the household"
+        ]
+      },
+      "fieldsAndMeadows": {
+        "label": "Fields and meadows",
+        "months": [
+          "machinery repairs, rotation plan, hay testing",
+          "checking the fences",
+          "manure on the fields, sowing oats with peas",
+          "undersowing clover, liming according to the soil test",
+          "end of May: first clover cut",
+          "meadow hay",
+          "winter cereal harvest, second clover cut",
+          "mixture harvest, second meadow cut, straw",
+          "sowing winter cereals, third clover cut",
+          "manure for winter cereals, soil testing",
+          "",
+          "the year’s accounts, plan for the next"
+        ]
+      },
+      "marketGarden": {
+        "label": "Vegetables",
+        "months": [
+          "plan, seed, CSA sign-ups",
+          "seedlings in the tunnel",
+          "seedlings, sowing",
+          "planting",
+          "CSA boxes",
+          "harvesting",
+          "peak harvest",
+          "peak harvest",
+          "harvesting, storage",
+          "last harvests",
+          "tunnel: winter salads",
+          ""
+        ]
+      },
+      "orchard": {
+        "label": "Orchard",
+        "months": [
+          "winter pruning",
+          "winter pruning",
+          "",
+          "blossom",
+          "",
+          "",
+          "early varieties",
+          "picking, pressing",
+          "picking, pressing",
+          "picking, juice",
+          "selling juice",
+          ""
+        ]
+      },
+      "mushrooms": {
+        "label": "Mushrooms",
+        "months": [
+          "",
+          "felling and soaking logs",
+          "inoculating logs",
+          "spring flush",
+          "picking",
+          "",
+          "",
+          "",
+          "autumn flush",
+          "picking",
+          "soaking logs",
+          ""
+        ]
+      },
+      "bees": {
+        "label": "Bees",
+        "months": [
+          "",
+          "",
+          "spring inspection",
+          "colonies building up",
+          "honey harvest (rapeseed)",
+          "honey harvest",
+          "honey harvest",
+          "feeding, varroa treatment",
+          "feeding",
+          "",
+          "",
+          "winter treatment"
+        ]
+      },
+      "processing": {
+        "label": "Processing",
+        "months": [
+          "winter shipping",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "Christmas orders",
+          "smoking, goose breasts",
+          "smoking, shipping",
+          "Christmas shipping"
+        ]
+      },
+      "catchCrops": {
+        "label": "Catch crops",
+        "months": [
+          "overwintering, leave until 15 Feb",
+          "from 15 Feb sheep grazing or mulching",
+          "ploughing in before sowing oats",
+          "undersowing clover in the oats",
+          "",
+          "",
+          "",
+          "sowing after harvest",
+          "sowing by 1 October",
+          "sheep grazing the catch crop",
+          "",
+          ""
+        ]
+      },
+      "paperwork": {
+        "label": "Paperwork",
+        "months": [
+          "KRUS (by the end of March), plan",
+          "contract with the certification body",
+          "payment application (usually from 15 March)",
+          "",
+          "",
+          "KRUS",
+          "",
+          "",
+          "KRUS, agricultural tax",
+          "payment advances from 16 Oct",
+          "agricultural tax",
+          "KRUS, farm retail tax return"
+        ]
+      }
+    }
+  },
+  "app": {
+    "title": "Family Farm Simulator"
+  },
+  "export": {
+    "saveSettings": "Save settings to a file",
+    "loadSettings": "Load from a file",
+    "pdfReport": "PDF report",
+    "savePdf": "Save PDF",
+    "unavailable": "Saving files is not available in this view (open the app in claude.ai).",
+    "saved": "File saved.",
+    "cancelled": "Saving cancelled.",
+    "failed": "The file could not be saved.",
+    "loaded": "Loaded {count} settings{name}.",
+    "loadedName": " (“{name}”)",
+    "notSettingsFile": "This is not a simulator settings file.",
+    "customSettings": "Custom settings",
+    "fallbackFileName": "variant",
+    "settingsFilePrefix": "simulator",
+    "reportFilePrefix": "report"
+  },
+  "pdf": {
+    "sections": {
+      "summary": {
+        "choice": "Summary",
+        "title": "Summary"
+      },
+      "money": {
+        "choice": "Money",
+        "title": "Money"
+      },
+      "cashflow": {
+        "choice": "Cash flow",
+        "title": "Cash flow"
+      },
+      "enterprises": {
+        "choice": "Enterprises",
+        "title": "Which enterprise pays"
+      },
+      "nextSteps": {
+        "choice": "Next steps",
+        "title": "Next steps: what to add"
+      },
+      "labour": {
+        "choice": "Working time",
+        "title": "Working time over the year"
+      },
+      "market": {
+        "choice": "What to sell",
+        "title": "What needs to be sold"
+      },
+      "investments": {
+        "choice": "Investments",
+        "title": "Investments"
+      },
+      "rotation": {
+        "choice": "Crop rotation",
+        "title": "Crop rotation"
+      },
+      "household": {
+        "choice": "Household budget",
+        "title": "Household budget"
+      }
+    },
+    "variant": "Variant: {name}",
+    "subtitle": "{date} · {farmedHa} ha farmed · {ownedHa} ha owned{leased} · assumptions: a year in full operation",
+    "leased": " + {leasedHa} ha leased",
+    "animals": {
+      "dairyCows": "{count} cows",
+      "sucklerCows": "{count} suckler cows",
+      "layingHens": "{count} hens",
+      "broilers": "{count} broilers",
+      "geese": "{count} geese",
+      "ducks": "{count} ducks",
+      "turkeys": "{count} turkeys",
+      "guineaFowl": "{count} guinea fowl",
+      "sheep": "{count} ewes",
+      "goats": "{count} goats",
+      "pigs": "{count} pigs",
+      "horses": "{count} horses",
+      "rabbits": "{count} rabbit does",
+      "beehives": "{count} hives"
+    },
+    "animalsAndCrops": "Animals and crops: {animals}. Pasture {pastureHa} ha, meadow {meadowHa} ha, arable land {arableHa} ha (cereals {cerealShare}%).",
+    "summary": {
+      "netIncome": "Net income / year",
+      "monthlyAverage": "Monthly average",
+      "revenue": "Revenue (sales + payments)",
+      "subsidies": "of which payments",
+      "costs": "Costs incl. depreciation",
+      "pessimistic": "Pessimistic scenario",
+      "hours": "Work / year",
+      "hoursValue": "{hours} h (avg {perWeek} h/week)",
+      "peakMonth": "Busiest month (pessim.)",
+      "peakMonthValue": "{peak} h/week (limit {limit})",
+      "investments": "Investments",
+      "investmentsValue": "{capex} ({depreciation} a year)",
+      "feed": "Feed",
+      "feedValue": "hay {hay} t, grain {grain} t, straw {straw} t",
+      "stocking": "Stocking rate",
+      "stockingValue": "{value} LU/ha"
+    },
+    "cashflowChart": "Monthly result after paying the household (PLN)",
+    "labourChart": "Hours per month (whole family)",
+    "disclaimer": "Rough estimates based on the simulator’s assumptions; prices, yields and work norms are worth checking locally. Payments and regulations change every year.",
+    "footer": "Family Farm Simulator · {variant} · page {page} of {pages}"
+  },
+  "page": {
+    "header": {
+      "eyebrow": "Planner for money, work and feed · 14 ha near Lwówek Śląski",
+      "lead": "14 ha, Jersey cows on grass, hens in a mobile henhouse, sheep and poultry on pasture. All feed, hay and straw from the farm’s own fields. Move the sliders: the feed balance, working time and money are recalculated straight away.",
+      "locationFacts": "<span>51°07′N 15°35′E</span><span>about 250–400 m a.s.l.</span><span>about 680 mm of rain/yr</span><span>average about 7.6–8 °C</span><span>grazing about 20 Apr – 31 Oct</span>"
+    },
+    "theme": {
+      "label": "Theme:",
+      "auto": "Automatic",
+      "light": "Light",
+      "dark": "Dark",
+      "groupLabel": "Colour theme"
+    },
+    "kpi": {
+      "netIncome": "Income / year",
+      "hours": "Work / year",
+      "revenue": "Revenue / year",
+      "pessimistic": "Pessimistic",
+      "investment": "Investments",
+      "feed": "Feed",
+      "stocking": "Stocking rate",
+      "stockingDetail": "LU per ha farmed",
+      "regionLabel": "Live result",
+      "pessimisticTitle": "Pessimistic scenario"
+    },
+    "presets": {
+      "variant": "Variant",
+      "assumptions": "Assumptions",
+      "savedVariants": "My variants",
+      "saveCurrent": "Save current settings",
+      "savedLocally": "Saved only in this browser.",
+      "exportAndReport": "Save and report",
+      "namePlaceholder": "Name, e.g. Plan 2027",
+      "nameLabel": "Variant name",
+      "philosophies": "Philosophies"
+    },
+    "results": {
+      "title": "The result",
+      "intro": "The balance is calculated for a year in full operation (year 3)."
+    },
+    "landAndFeed": {
+      "title": "Land and feed",
+      "intro": "Need (outline) and production from your own fields (fill)."
+    },
+    "farmPlan": {
+      "title": "Farm layout",
+      "intro": "A diagram, not a map: the field proportions change with the sliders. Choose the month, how often you move the cows and after how many days they return to the same paddock; the number of paddocks is recalculated automatically. You choose the rotation year in the “Crop rotation” block below. Click a field to see what is happening on it.",
+      "notes": {
+        "grazingOrder": "<h3>Order on the pasture</h3><p>The cows go in first and eat the top of the sward. 1–3 days later the sheep clean up the lower grasses and herbs. 3–4 days after the cows the mobile henhouse arrives: the hens scratch apart the cowpats, eat the fly larvae and fertilise. Cows and sheep mostly have different parasites, so this order breaks their life cycle.</p>",
+        "buildings": "<h3>Buildings: cheap and light</h3><ul><li>Old cowshed: milking parlour, dairy room, cheese room (they need a separate, washable room).</li><li>A frame shelter clad with OSB or boards, open to the east, on deep litter: cows and heifers.</li><li>A second shelter or an extension: sheep and goats, a night pen against wolves.</li><li>Mobile henhouses on skids, pulled by a C-360 tractor; in winter they stand by the farmyard.</li></ul>",
+        "waterAndFencing": "<h3>Water and fencing</h3><ul><li>A PE pipe along the laneway with quick couplings every 2–3 paddocks, a portable trough.</li><li>Perimeter: 2–3 permanent wires (4–5 for sheep), polywire on portable posts inside.</li><li>An energiser with enough spare power, earthed at several points.</li></ul>"
+      },
+      "mapLabel": "Farm layout diagram"
+    },
+    "rotation": {
+      "title": "Crop rotation on arable land",
+      "intro": "On an organic farm nitrogen comes from clover and manure, so part of the arable land is always under clover with grasses. You choose the number of fields below (or in the “Land” group), the cereal share with the slider. Click a year to see it on the plan."
+    },
+    "catchCrops": {
+      "title": "Catch crops and eco-schemes",
+      "intro": "A catch crop is green cover between two main crops: it protects the soil in winter, holds nitrogen, feeds soil life and gives the sheep forage. In the “Carbon farming” eco-scheme a winter catch crop or undersowing earns 5 points/ha, about 500 PLN/ha. You switch them on with the buttons by the rotation or in the “Payments” group.",
+      "requirements": "Practice requirements (ARiMR, PODR 2025): at least 2 species, not cereals only; a winter catch crop sown by 1 Oct and kept until 15 Feb (mulching allowed after 15 Nov); an undersown legume kept until the next crop is sown or at least 8 weeks after harvest; no plant protection products. On an organic farm, organic seed (or permission for non-organic). Seed rates are approximate: check with the seed supplier. Whether the eco-scheme can be combined with the organic payment on the same plot, confirm with the agricultural advisory centre (ODR) before applying.",
+      "grainLegumeMixtures": "In IUNG trials cereal-pulse mixtures gave about 2.6–4.9 t/ha and 16–19% protein (peas with wheat). Pulses make up 40–50% of the seed. It is worth supplementing the hens’ grain with whey from the cheese room (protein) and green forage from the range."
+    },
+    "money": {
+      "title": "Money",
+      "intro": "From sales to the net result.",
+      "chartLabel": "Chart: sales, payments, costs, depreciation and result"
+    },
+    "cashflow": {
+      "title": "Cash flow",
+      "intro": "A year in full operation, month by month. Without investments, with the household payments.",
+      "chartLabel": "Chart: monthly result and account balance"
+    },
+    "enterprises": {
+      "title": "Which enterprise pays",
+      "intro": "Feed from the farm’s own fields is valued at its growing cost.",
+      "colourNote": "Colours by PLN/ha and PLN/h: from red (weakest) to green (best). Green per hectare is worth scaling up when land is short; green per hour when hands are short. In other tables, a stronger red by costs and hours means more.",
+      "perHourNote": "PLN per hour is the enterprise’s surplus divided by its hours (including selling). Goats and pigs are for the household, so what they “earn” is the value of the meat in the last column of the “For the household” table."
+    },
+    "nextSteps": {
+      "title": "Next steps: what to add",
+      "intro": "Each step is recalculated with your current settings."
+    },
+    "sensitivity": {
+      "title": "What changes the result most",
+      "intro": "Each assumption separately 20% down and up.",
+      "chartLabel": "Chart of how sensitive the result is to the assumptions"
+    },
+    "labour": {
+      "title": "Working time over the year",
+      "intro": "Hours per month by activity.",
+      "chartLabel": "Chart of working hours by month"
+    },
+    "market": {
+      "title": "What needs to be sold",
+      "intro": "Without regular customers none of these numbers will work."
+    },
+    "investments": {
+      "title": "Investments",
+      "intro": "Spread over the years of use (depreciation).",
+      "editNote": "The amounts are defaults. Enter your own (e.g. from a quote, or 0 if you already have something) and press Enter: it is converted to a unit price and the slider in the “Investments” group moves. It also works the other way: the slider changes the amount here."
+    },
+    "household": {
+      "title": "Household budget",
+      "intro": "Whether the farm’s result is enough to live on."
+    },
+    "comparison": {
+      "title": "Comparing variants",
+      "intro": "Each variant is recalculated with your other settings, once with realistic assumptions and once with cautious ones (lower prices and yields, more hours)."
+    },
+    "calendar": {
+      "title": "The farming year",
+      "intro": "Calving and lambing in early spring, breeding in summer, hay in June, selling geese and cheese in autumn and before Christmas. Dates for the Lwówek area (grazing from about 20 April).",
+      "note": "Work is shown only for the enterprises in your settings. Click a month to see it on the plan."
+    },
+    "stages": {
+      "title": "How to start: three years",
+      "intro": "Each new enterprise only once the previous one is selling. The result at the top applies to year 3, when everything is running.",
+      "year1": "<div class=\"eyebrow\">Year 1</div><h3>Cows, hens, fencing</h3><ul> <li>4 cows, 100 hens in one mobile henhouse, a few geese.</li> <li>Electric fencing for the pasture, water along the laneway, a cattle shelter.</li> <li>A dairy room in the old cowshed; register milk and egg sales with the county veterinary inspectorate.</li> <li>A contract with an organic certification body before applying for payments.</li> <li>Soil and hay testing; the first rotation.</li> <li>Keep records: litres, eggs, hours, spending.</li></ul>",
+      "year2": "<div class=\"eyebrow\">Year 2</div><h3>Sheep and cheese</h3><ul> <li>Hens up to 200 (a second henhouse), if the eggs are selling.</li> <li>10–15 ewes, a night pen, a livestock guardian dog.</li> <li>A cheese room and farm retail registration; cheese from summer milk.</li> <li>A full three-field rotation, the farm’s own grain for the hens.</li></ul>",
+      "year3": "<div class=\"eyebrow\">Year 3</div><h3>Meat poultry and decisions</h3><ul> <li>A trial batch of 100 pastured broilers, once there is somewhere to slaughter them legally.</li> <li>Goats for the scrub; pigs for the household, if the African swine fever situation allows.</li> <li>A fifth cow or more sheep, depending on what sells better and how much hay is left.</li> <li>Your own heifers from the best cows.</li></ul>"
+    },
+    "regulations": {
+      "title": "Law and formalities",
+      "intro": "A summary of the most important matters. Regulations change, so before each start confirm the details with the county veterinary inspectorate (PIW) in Lwówek, with ARiMR and with the agricultural advisory centre (ODR).",
+      "notes": {
+        "subsidies": "<h3>ARiMR and payments</h3><ul><li>A producer number and a herd registration; cattle, sheep, goats and pigs ear-tagged and registered; register the poultry flock too.</li><li>Leasing: payments, including the organic one, go to the tenant who actually farms the land. For the organic payment the lease should cover the whole commitment period. Put the lease in writing.</li><li>A payment application every year. The sheep payment is counted from 10 head, goats from 5 (check the thresholds).</li><li>Rates in the planner: direct and livestock payments are 2026 estimates (advance rates), animal welfare 2024, areas with natural constraints 2026, the organic payment 2023 estimates.</li></ul>",
+        "organic": "<h3>Organic farming</h3><ul><li>A contract with a certification body and a conversion period (the payment is also available during conversion).</li><li>Hens: at most 6 hens per m² of henhouse, outdoor range, no synthetic amino acids, up to 5% non-organic feed.</li><li>Organic broilers: slaughter at the earliest on day 81, or slow-growing breeds.</li></ul>",
+        "milkEggsCheese": "<h3>Milk, eggs, cheese</h3><ul><li>Raw milk and eggs: direct sales; notify the county veterinary officer at least 30 days before starting and get a veterinary number.</li><li>Eggs at a market: marking with the producer code is usually required (confirm with PIW).</li><li>Lamb: slaughter in an approved abattoir (a farm or service abattoir, in your own or a neighbouring county), meat with a health mark. The farm retail limit for red meat was 2,300 kg a year (2016 regulation). Whether you can sell whole carcasses or only after cutting in your own farm retail kitchen, confirm with PIW.</li><li>Cheese: farm retail (RHD), quantity limits are set by the veterinary officer’s decision. Farm retail revenue is tax-free up to 100,000 PLN, above that a 2% flat tax.</li><li>Do not advertise that milk “heals”: health claims on food are strictly regulated in the EU.</li></ul>",
+        "poultryAndPigs": "<h3>Meat poultry and pigs</h3><ul><li>Poultry and rabbits slaughtered on the farm are sold under direct sales (notify the county veterinary officer). To make products from them you also need farm retail registration.</li><li>Sheep, goat and pig meat for farm retail products must come from an abattoir; meat from slaughter for own use is not allowed.</li><li>Keep turkeys apart from hens (histomoniasis).</li><li>Hatching for your own flock does not require registering a hatchery; selling chicks or hatching eggs does (county veterinary officer).</li><li>A winter tunnel during a poultry housing order: all openings covered with netting, feed and water inside.</li><li>Pigs: check the African swine fever zone with PIW. Biosecurity rules apply, and feeding kitchen scraps is prohibited.</li><li>Bird flu: during risk periods poultry must be housed, so mobile henhouses need a netted or closable option.</li></ul>",
+        "produceBeesEducation": "<h3>Vegetables, bees, activities for children</h3><ul><li>Vegetables sold directly: ask the county sanitary-epidemiological station about registration.</li><li>An apiary must be registered with the county veterinary officer.</li><li>Cultivated mushrooms and juice from your own fruit: registration with the sanitary inspectorate (farm retail for plant food).</li><li>Activities for children (an educational farm): regular paid activities usually require a business registration (CEIDG), occasional ones may be unregistered; extra liability insurance is needed.</li></ul>",
+        "processingAndShipping": "<h3>Products and shipping (farm retail)</h3><ul><li>Farm retail allows selling to consumers at a distance, including by mail order, as long as safe conditions, including temperature, are kept in transport. Selling through intermediaries is not allowed.</li><li>Farm retail quantity limits apply only to supplies to shops and restaurants (e.g. meat products 1,400 kg a year). Sales to consumers have no quantity limit.</li><li>Tax relief: at least 50% of the ingredients (excluding water) from your own farm; revenue up to 100,000 PLN is tax-free, above that a 2% flat tax.</li><li>In 2026 the ministry announced the removal of territorial restrictions and higher limits; the draft was under consultation. Check what has come into force before starting.</li></ul>",
+        "wolvesBuildingsManure": "<h3>Wolves, buildings, manure</h3><ul><li>Wolf damage is compensated by the Regional Directorate for Environmental Protection; report it straight away, and shut sheep and goats in at night.</li><li>Shelters: ask the county office whether a notification is enough or a building permit is needed.</li><li>Manure and deep litter: storage according to the nitrates action programme (ask at the ODR).</li></ul>",
+        "taxesAndInsurance": "<h3>Taxes and insurance</h3><ul><li>Selling unprocessed products (raw milk, eggs, live animals) is usually agricultural activity; products under farm retail as above. Confirm with an accountant.</li><li>KRUS, building insurance and the farmer’s liability insurance are in the planner’s fixed costs.</li></ul>"
+      }
+    },
+    "assumptions": {
+      "title": "Assumptions and sources",
+      "method": "<h3>How it is calculated</h3><ul> <li>A Jersey cow eats about 15 kg of dry matter a day (5.5 t a year), a heifer 3.3 t, a ewe with lambs 0.8 t, a goat 0.6 t.</li> <li>Hen: feed ad lib, about 90% of it the farm’s own grain and pulses, the rest minerals and shell grit (bought).</li> <li>Hay: 75% of the meadow yield goes to hay, 25% is regrowth for grazing; 70% of the pasture surplus can be cut.</li> <li>Grain and hay from your own fields are valued at their growing cost, without rent for the land. Grain fed to hens could be sold for more, so what the eggs “earn” also includes that profit.</li> <li>LU: approximate conversion factors (cow 1, heifer 0.6, sheep and goat 0.1, hen 0.014).</li> <li>“Net” is the result before paying yourself for your work, without loan costs and taxes.</li> <li>The “pessimistic scenario” is your current settings made worse by the sliders in that group: prices, yields, animal output, hours and costs. Rent stays the same.</li> <li>Products are assigned to the species they come from (geese, ducks, sheep), together with a share of the smokehouse and shipping.</li> <li>The work norms are my estimates for a small farm with a bucket milking machine. Correct them after the first year from your own records.</li></ul>",
+      "sources": "<h3>Sources</h3><ul> <li><a href=\"https://www.farmer.pl/finanse/doplaty-2026-sa-nowe-stawki-na-hektar,182894.html\" target=\"_blank\" rel=\"noopener\">farmer.pl: 2026 direct payment rates (advances)</a></li> <li><a href=\"https://staszow.pl/files/image/2025/Aktualno%C5%9Bci/ARIMR_stawki_p%C5%82atno%C5%9Bci.pdf\" target=\"_blank\" rel=\"noopener\">ARiMR: payment rates for 2025</a></li> <li><a href=\"https://wiescirolnicze.pl/rolnictwo-ekologiczne-z-wyzszymi-stawkami-w-2023-roku\" target=\"_blank\" rel=\"noopener\">Wieści Rolnicze: organic payment rates (2023)</a></li> <li><a href=\"https://wiescirolnicze.pl/hodowla/startuja-wyplaty-za-dobrostan-zwierzat-takie-pieniadze-dostana-rolnicy-lista,21487\" target=\"_blank\" rel=\"noopener\">Wieści Rolnicze: animal welfare rates for 2024</a></li> <li><a href=\"https://www.gov.pl/web/arimr/platnosc-onw---podstawowe-informacje-2026\" target=\"_blank\" rel=\"noopener\">ARiMR: areas with natural constraints payment 2026</a></li> <li><a href=\"https://wiescirolnicze.pl/stawki-za-ekoschematy-2024-sa-jednak-wieksze-ostateczne-kwoty\" target=\"_blank\" rel=\"noopener\">Wieści Rolnicze: eco-scheme rates 2024</a></li> <li><a href=\"https://podr.pl/wp-content/uploads/2025/12/RHD-i-MLO.pdf\" target=\"_blank\" rel=\"noopener\">PODR: farm retail and marginal local activity (December 2025)</a></li> <li><a href=\"https://poradnikprzedsiebiorcy.pl/-stawka-ryczaltu-w-rolniczym-handlu-detalicznym\" target=\"_blank\" rel=\"noopener\">Poradnik Przedsiębiorcy: flat tax in farm retail</a></li> <li><a href=\"https://www.kpodr.pl/wp-content/uploads/2024/03/Kiczorowska-B.-Dobre-praktyki-utrzymania-drobiurzeznego-i-kur-niosek.zmieniona.pdf\" target=\"_blank\" rel=\"noopener\">KPODR: good practice in keeping meat poultry and laying hens</a></li> <li><a href=\"https://www.iung.pl/wp-content/uploads/2023/09/Instrukcja-Mieszanki-roslin-straczkowych-ze-zbozami.pdf\" target=\"_blank\" rel=\"noopener\">IUNG: pulse and cereal mixtures</a></li> <li><a href=\"https://www.gov.pl/attachment/00bf374e-b258-4c8d-896e-aedf7a17cc2c\" target=\"_blank\" rel=\"noopener\">KOWR: grain market no. 41/2026</a></li> <li><a href=\"https://www.sodr.pl/pliki/Analiza-cen-2026-06,2096.pdf\" target=\"_blank\" rel=\"noopener\">ŚODR: cattle prices, June 2026</a></li> <li><a href=\"https://wiescirolnicze.pl/drob/produkuje-jajka-od-kur-z-wolnego-wybiegu\" target=\"_blank\" rel=\"noopener\">Wieści Rolnicze: free-range eggs (prices, 2024)</a></li> <li><a href=\"https://www.gov.pl/attachment/a63161eb-624b-4fb7-b75e-0f54da2b886f\" target=\"_blank\" rel=\"noopener\">KOWR: meat market, July 2026 (sheep meat prices)</a></li> <li><a href=\"https://bip2.lasy.gov.pl/pl/bip/px_dg~rdlp_wroclaw~nadl_lwowek_slaski~program_ochrony_przyrody_13_15.pdf\" target=\"_blank\" rel=\"noopener\">Lwówek Śląski Forest District: natural conditions</a></li> <li><a href=\"https://www.uvm.edu/d10-files/documents/2025-11/2024-COP-article-Sep2025.pdf\" target=\"_blank\" rel=\"noopener\">University of Vermont: costs of grass-based dairy farms (2024)</a></li> <li><a href=\"https://www.agproud.com/articles/30227-cheese-production-from-jersey-milk-conserves-resources-and-reduces-environmental-impact\" target=\"_blank\" rel=\"noopener\">Cheese yield from Jersey milk</a></li> <li><a href=\"https://www.olx.pl/rolnictwo/ryneczek/q-jagni%C4%99cina-tusza/\" target=\"_blank\" rel=\"noopener\">OLX: lamb listings from farmers (prices)</a></li> <li><a href=\"https://owczeklimaty.pl/produkt/tusza-jagnieca/\" target=\"_blank\" rel=\"noopener\">Owcze Klimaty: lamb carcass, 52 PLN/kg</a></li> <li><a href=\"https://www.iung.pl/wp-content/uploads/2023/10/Zacharzewska_rzeznie-rolnicze-pazdziernik-2023.pdf\" target=\"_blank\" rel=\"noopener\">WIW Kraków (IUNG): farm abattoirs</a></li> <li><a href=\"https://www.infor.pl/akt-prawny/DZU.2016.252.0002159,rozporzadzenie-ministra-rolnictwa-i-rozwoju-wsi-w-sprawie-maksymalnej-ilosci-zywnosci-zbywanej-w-ramach-rolniczego-handlu-detalicznego-oraz-zakresu-i-sposobu-jej-dokumentowania.html\" target=\"_blank\" rel=\"noopener\">Regulation on farm retail limits (2016)</a></li> <li><a href=\"https://ksowplus.kpodr.pl/wp-content/uploads/2025/11/Adrianna-Augustyniak-Dobrzynskie-warzywa-prezentacja-dobtych-praktyk.pdf\" target=\"_blank\" rel=\"noopener\">KPODR: the Dobrzyńskie Warzywa CSA (2025)</a></li> <li><a href=\"https://modernfarmer.com/2016/10/jm-fortier/\" target=\"_blank\" rel=\"noopener\">Modern Farmer: J.M. Fortier and small market gardens</a></li> <li><a href=\"https://www.inhort.pl/wp-content/uploads/2026/01/8.2_streszczenie-2025.pdf\" target=\"_blank\" rel=\"noopener\">INHORT: honey market 2025</a></li> <li><a href=\"https://www.lubianka.pl/plik,25306,dzialalnosc-edukacyjna-w-gospodarstwie.pdf\" target=\"_blank\" rel=\"noopener\">DODR: educational activities on the farm</a></li> <li><a href=\"https://gov.mb.ca/agriculture/livestock/sheep/accelerated-lambing.html\" target=\"_blank\" rel=\"noopener\">Manitoba Agriculture: accelerated lambing</a></li> <li><a href=\"https://www.flockandherd.net.au/sheep/reader/reproductive-performance-dorper.html\" target=\"_blank\" rel=\"noopener\">Flock and Herd: reproduction in Dorper sheep</a></li> <li><a href=\"https://www.piwwyszkow.pl/Dokumenty/aktualnosci/RHD/RHD%20-%20pytania%20i%20odpowiedzi%20do%20regulacji%20prawnych.pdf\" target=\"_blank\" rel=\"noopener\">Farm retail: questions and answers (mail order, poultry slaughter)</a></li> <li><a href=\"https://new.podr.pl/wp-content/uploads/2024/01/rhd-zmniejszone-1.pdf\" target=\"_blank\" rel=\"noopener\">PODR: farm retail after the changes (2024)</a></li> <li><a href=\"https://wiescirolnicze.pl/prawo-i-finanse/koniec-z-ograniczenami-dla-rolnikow-szykuja-sie-przelomowe-zmiany-w-sprzedazy-bezposredniej,30495/\" target=\"_blank\" rel=\"noopener\">Wieści Rolnicze: announced farm retail changes (April 2026)</a></li> <li><a href=\"https://manufakturadobra.pl/eko-polgesek-z-gesi-pastwiskowej/\" target=\"_blank\" rel=\"noopener\">Manufaktura Dobra: organic smoked goose breast, 200 PLN/kg</a></li> <li><a href=\"https://wolnywypas.pl/kaczka/25-tuszka-kaczki-eko.html\" target=\"_blank\" rel=\"noopener\">Wolny Wypas: organic duck</a> and <a href=\"https://wolnywypas.pl/perliczka/36-perliczka-tuszka.html\" target=\"_blank\" rel=\"noopener\">organic guinea fowl</a></li> <li><a href=\"https://lokalnyrolnik.pl/indyk-tuszka-eko-ok-8-kg\" target=\"_blank\" rel=\"noopener\">Lokalny Rolnik: organic turkey, 82.50 PLN/kg</a></li> <li><a href=\"http://grzyby.grzybnia.pl/files/amatorska-uprawa-boczniak.pdf\" target=\"_blank\" rel=\"noopener\">M. Siwulski: growing oyster mushrooms at home</a></li> <li><a href=\"https://okfronline.com/2022/07/histomoniasis-blackhead/\" target=\"_blank\" rel=\"noopener\">Histomoniasis in turkeys and hens</a></li> <li><a href=\"https://www.motherearthnews.com/homesteading-and-livestock/sustainable-farming/joel-salatin-interview/\" target=\"_blank\" rel=\"noopener\">Joel Salatin: grazing and poultry behind cattle</a></li></ul>"
+    },
+    "footer": "Your settings are saved only in this browser. The numbers are an estimate for planning, not a business plan for the bank.",
+    "controls": {
+      "label": "Settings"
+    },
+    "coverCropGuide": {
+      "catchCrops": {
+        "columns": ["Mixture", "Seed rate (approximate)", "When and where", "What for"],
+        "mixes": {
+          "ryeWithVetch": {
+            "name": "Winter rye with hairy vetch",
+            "seeding": "rye 60–80 kg/ha, vetch 25–40 kg/ha",
+            "timing": "After harvest, by 1 October. Before oats with peas.",
+            "purpose": "The most reliable: it overwinters, the vetch fixes nitrogen, the rye protects the soil. Sheep grazing in autumn and from mid-February, then ploughed in before sowing oats."
+          },
+          "landsberger": {
+            "name": "Landsberger mixture",
+            "species": "winter vetch, crimson clover, Italian ryegrass",
+            "seeding": "vetch 20–30, clover 15–20, ryegrass 15–20 kg/ha",
+            "timing": "Sown August – September. Before a late-sown crop or vegetables.",
+            "purpose": "In May it gives a cut of green forage or haylage for the cows, but that is too late for oats. Good before vegetables."
+          },
+          "cloverUndersown": {
+            "name": "Clover undersown in oats",
+            "seeding": "red clover 8–12 kg/ha, ryegrass or timothy 4–8 kg/ha",
+            "timing": "April, together with the oats and peas or straight after.",
+            "purpose": "Counts as an undersown crop (keep at least 8 weeks after harvest). It becomes the clover field in the rotation straight away."
+          },
+          "winterTurnipRapeRye": {
+            "name": "Winter turnip rape with rye",
+            "seeding": "turnip rape 6–10 kg/ha, rye 60–80 kg/ha",
+            "timing": "After harvest, by the end of August (turnip rape needs time before winter). Before oats.",
+            "purpose": "Plenty of forage for autumn grazing by sheep and geese (October–November), overwinters. Turnip rape is a brassica: do not sow it if the rotation has brassica vegetables or oilseed rape."
+          },
+          "multiSpeciesRye": {
+            "name": "Multi-species mixture with rye",
+            "species": "oilseed radish, phacelia, vetch, crimson clover, oats or buckwheat",
+            "seeding": "ready mixtures usually 25–40 kg/ha plus rye 30–50 kg/ha",
+            "timing": "After harvest, August. Before oats or vegetables.",
+            "purpose": "The most soil life: different roots, flowers for bees. Part of it is winter-killed, the rye stays green until 15 February. More expensive seed."
+          },
+          "triticaleWinterPea": {
+            "name": "Triticale with winter field pea",
+            "seeding": "triticale 80–100 kg/ha, field pea 40–60 kg/ha",
+            "timing": "September. Before a late crop or vegetables.",
+            "purpose": "In May green forage or haylage rich in protein. Like the Landsberger mixture: too late before oats."
+          },
+          "phaceliaBuckwheatSerradella": {
+            "name": "Phacelia, buckwheat, serradella",
+            "seeding": "phacelia 6–8, buckwheat 30–40, serradella 20–30 kg/ha",
+            "timing": "After an early harvest, July – August.",
+            "purpose": "Fast, good for honey (bees), winter-killed and leaves a mulch. For the eco-scheme add an overwintering species (e.g. rye), because the cover must last until 15 February."
+          }
+        }
+      },
+      "stubbleCrops": {
+        "columns": [
+          "Stubble cover crop (before a winter cereal, no payment)",
+          "Seed rate (approximate)",
+          "When",
+          "What for"
+        ],
+        "mixes": {
+          "whiteMustard": {
+            "name": "White mustard",
+            "seeding": "15–20 kg/ha",
+            "timing": "Straight after harvest, July – early August; plough in in September before sowing the winter cereal.",
+            "purpose": "The cheapest and fastest, covers the soil quickly. A brassica: take care if you grow brassica vegetables."
+          },
+          "phaceliaBuckwheat": {
+            "name": "Phacelia with buckwheat",
+            "seeding": "phacelia 8–10, buckwheat 30–40 kg/ha",
+            "timing": "Straight after harvest.",
+            "purpose": "Good for honey (bees), improves soil structure, not a brassica. Little forage."
+          },
+          "oatsVetchPea": {
+            "name": "Oats with spring vetch and peas",
+            "seeding": "oats 60–80, vetch 30–40, peas 40–60 kg/ha",
+            "timing": "After the earliest harvest (July), 7–8 weeks of growth.",
+            "purpose": "Green forage for the cows or sheep grazing in September, then ploughed in. The pulses fix nitrogen for the winter cereal."
+          }
+        }
+      }
+    },
+    "dataTools": {
+      "groupLabel": "Settings",
+      "clearAll": "Clear everything",
+      "clearAllTitle": "All animals to 0 and all the land outside the farmyard under cereals. It can be undone with the “Previous settings” button.",
+      "previous": "↶ Previous settings",
+      "previousTitle": "Undoes the last change to the settings (remembers up to 30 steps)."
+    },
+    "nitrogen": {
+      "title": "Nitrogen and manure",
+      "intro": "How much nitrogen the animals produce, how much they spread themselves on pasture and range, and how much stays in the manure to be hauled. Below, the balance of the fields and meadows the manure goes to. Approximate values, based on the nitrates action programme tables.",
+      "baleGrazingNote": "<h3>Bale grazing in winter</h3><ul><li>The bales are set out in autumn on a field that goes under a crop in spring, or on a poorer part of the meadow; somewhere different each year.</li><li>Not on waterlogged or flood-prone soil, nor by ditches and streams; during a thaw the animals move to a drier spot.</li><li>Access to water in winter (a heated trough or a water bowser) and shelter from the wind.</li><li>The nitrates action programme restricts fertilising in winter, so the site and the stocking rate are worth discussing with an ODR adviser.</li></ul>"
+    },
+    "risk": {
+      "title": "Risk in random years",
+      "intro": "How often the farm reaches its target when yields, prices, animal output and costs are a little different each year.",
+      "chartLabel": "Chart: how many years end with a given income",
+      "method": "The model recalculates the farm for 500 random years: each year has different yields, prices, animal output and costs, and roughly once in 20 years there is a bad year for the animals. Green bars are years with an income at least equal to the target, red ones below it. The pessimistic scenario is a single year in which everything goes wrong at once; it happens less often than the worst years on this chart. You set the variability in the “Pessimistic scenario” group."
+    },
+    "language": {
+      "label": "Language:",
+      "groupLabel": "Page language",
+      "pl": "Polski",
+      "en": "English"
+    }
+  },
+  "customers": {
+    "title": "How many customers you need",
+    "intro": "Sales straight to households (without buyers and traders): about {sales} a year. Joel Salatin often says it is easier to find 10 customers who buy 100 things each than 100 customers who buy 10 things each. That is why a wide range for the same families pays off.",
+    "familiesValue": "{count} families",
+    "customersValue": "{count} customers",
+    "loyal": "regular, taking a full basket (about {amount} PLN a month)",
+    "occasional": "if each bought only one product (about {amount} PLN a month)",
+    "note": "With regular families that is about {perWeek} hand-overs a week if each collects once a month, or one collection day for everyone. The first customers usually come through friends, the school, the parish and neighbours; the rest through recommendations."
+  },
+  "nitrogen": {
+    "winterLabel": "In winter:",
+    "winterInSheds": "in the shelters (manure)",
+    "winterBaleGrazing": "bale grazing",
+    "kg": "{value} kg N",
+    "perHaOfLimit": "{perHa} of {limit} kg/ha",
+    "total": "Nitrogen from the animals in a year",
+    "onPasture": "left by the animals themselves on pasture and range (about {perHa} kg/ha of pasture)",
+    "onBaleGrazing": "stays in winter on the bale-grazing field",
+    "inManure": "manure to haul: about {tonnes} t, about {hours} h of work",
+    "columns": {
+      "source": "Where the nitrogen goes",
+      "nitrogen": "Nitrogen"
+    },
+    "fieldsTitle": "Fields and meadows with manure ({hectares} ha)",
+    "fieldsSummary": "Manure gives about {manure} kg N, clover fixes about {clover} kg N, and grain, hay and root crops remove about {removed} kg N. Balance: <b>{balance} kg N/ha</b> a year.",
+    "fieldStatus": {
+      "balanced": "A balance close to zero: the fields do not get poorer and no nitrogen is wasted.",
+      "surplus": "A large surplus: some of the nitrogen will be leached. You can reduce the stocking rate, grow more cereals or give the manure to a neighbour.",
+      "deficit": "The fields are losing nitrogen: yields will fall over time. More clover in the rotation, catch crops with legumes or more manure will help."
+    }
+  },
+  "risk": {
+    "summary": "Income of at least {target} (your minimum) in <b>{chance}% of years</b>. A typical year: {typical}. A weaker year, once in 10: below {poor}. A good year, once in 10: above {good}.",
+    "barTooltip": "{from} – {to}: {years} years",
+    "targetLabel": "minimum {target}"
+  }
+}

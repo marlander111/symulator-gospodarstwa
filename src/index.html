@@ -15,6 +15,7 @@
   <div class="top-tools">
     <div class="seg theme-sw" id="theme-switch" role="group" data-i18n-attr="aria-label:page.theme.groupLabel"><span class="lab" data-i18n="page.theme.label"></span><button class="btn" type="button" data-theme-option="auto" data-i18n="page.theme.auto"></button><button class="btn" type="button" data-theme-option="light" data-i18n="page.theme.light"></button><button class="btn" type="button" data-theme-option="dark" data-i18n="page.theme.dark"></button></div>
     <div class="seg" id="data-tools" role="group" data-i18n-attr="aria-label:page.dataTools.groupLabel"><button class="btn ghost" type="button" id="clear-all" data-i18n="page.dataTools.clearAll" data-i18n-attr="title:page.dataTools.clearAllTitle"></button><button class="btn ghost" type="button" id="undo-params" disabled data-i18n="page.dataTools.previous" data-i18n-attr="title:page.dataTools.previousTitle"></button></div>
+    <div class="seg" id="language-switch" role="group" data-i18n-attr="aria-label:page.language.groupLabel"><span class="lab" data-i18n="page.language.label"></span><button class="btn" type="button" data-language-option="pl" lang="pl" data-i18n="page.language.pl"></button><button class="btn" type="button" data-language-option="en" lang="en" data-i18n="page.language.en"></button></div>
   </div>
 </header>
 
@@ -92,6 +93,16 @@
       <p class="small muted" data-i18n="page.catchCrops.grainLegumeMixtures"></p>
     </div>
 
+    <div class="panel" id="nitrogen">
+      <div class="panel-h"><h2 data-i18n="page.nitrogen.title"></h2><p data-i18n="page.nitrogen.intro"></p></div>
+      <div class="seg" id="nitrogen-controls"></div>
+      <div class="tw"><table id="nitrogen-table"></table></div>
+      <div class="notes">
+        <div class="note" id="nitrogen-fields"></div>
+        <div class="note" data-i18n-html="page.nitrogen.baleGrazingNote"></div>
+      </div>
+    </div>
+
     <div class="panel">
       <div class="panel-h"><h2 data-i18n="page.money.title"></h2><p data-i18n="page.money.intro"></p></div>
       <svg class="chart" id="waterfall" viewBox="0 0 640 250" role="img" data-i18n-attr="aria-label:page.money.chartLabel"></svg>
@@ -133,6 +144,13 @@
       <p class="small muted" id="sensitivity-note"></p>
     </div>
 
+    <div class="panel" id="risk">
+      <div class="panel-h"><h2 data-i18n="page.risk.title"></h2><p data-i18n="page.risk.intro"></p></div>
+      <svg class="chart" id="risk-chart" viewBox="0 0 640 220" role="img" data-i18n-attr="aria-label:page.risk.chartLabel"></svg>
+      <p id="risk-summary"></p>
+      <p class="small muted" data-i18n="page.risk.method"></p>
+    </div>
+
     <div class="panel">
       <div class="panel-h"><h2 data-i18n="page.labour.title"></h2><p id="labour-summary" data-i18n="page.labour.intro"></p></div>
       <svg class="chart" id="labour-chart" viewBox="0 0 640 270" role="img" data-i18n-attr="aria-label:page.labour.chartLabel"></svg>
@@ -143,6 +161,7 @@
     <div class="panel">
       <div class="panel-h"><h2 data-i18n="page.market.title"></h2><p data-i18n="page.market.intro"></p></div>
       <div class="cards" id="market"></div>
+      <div id="customers"></div>
     </div>
 
     <div class="panel">

@@ -24,6 +24,7 @@ defineParameterGroup('labour', [
   { id: 'cerealHoursPerHa', min: 8, max: 30, step: 1, defaultValue: 15 },
   { id: 'rootCropHoursPerHa', min: 30, max: 250, step: 10, defaultValue: 80 },
   { id: 'paddockMoveHours', min: 0.1, max: 1, step: 0.05, defaultValue: 0.25 },
+  { id: 'manureHoursPerTonne', min: 0.05, max: 0.6, step: 0.05, defaultValue: 0.2, advanced: true },
   { id: 'generalHours', min: 50, max: 400, step: 10, defaultValue: 150 },
   { id: 'gardenHoursPerHa', min: 50, max: 600, step: 10, defaultValue: 240 },
 ]);

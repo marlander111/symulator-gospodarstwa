@@ -60,6 +60,7 @@ function computeRevenue(params, results) {
     mushrooms: mushroomsKg * 0.1 * params.mushroomPrice,
   };
 
+  const beefBoxRevenue = beefSoldInBoxes(params, finishers);
   return {
     calves: params.dairyCows * 0.95,
     calvesSold,
@@ -73,6 +74,8 @@ function computeRevenue(params, results) {
     mushroomsKg,
     revenueItems,
     revenue: sumValues(revenueItems),
+    beefBoxRevenue,
+    retailSalesRevenue: retailSales(revenueItems, beefBoxRevenue),
     homeUse,
     homeUseTotal: sumValues(homeUse),
     dogFoodKg,
@@ -130,4 +133,19 @@ function computeProcessing(params, lambMeatKg) {
     processedKg,
     parcels: (processedKg * params.shippedShare) / 100 / params.parcelWeightKg,
   };
+}
+
+/** Beef sold to households in boxes (the rest of the finishers goes live to traders). */
+function beefSoldInBoxes(params, finishers) {
+  const carcassKg = (params.finisherWeightKg * params.finisherKillingOut) / 100;
+  return ((finishers * params.finishersSoldAsMeatShare) / 100) * carcassKg * params.beefBoxPricePerKg;
+}
+
+/**
+ * Sales under farm retail rules (RHD): cheese, red meat in boxes and processed goods. Fresh eggs,
+ * raw milk and poultry are direct sales of unprocessed produce and are not counted here.
+ */
+function retailSales(revenueItems, beefBoxRevenue) {
+  const { cheese, lambMeat, processedGoods, goats, pigs } = revenueItems;
+  return cheese + lambMeat + processedGoods + goats + pigs + beefBoxRevenue;
 }

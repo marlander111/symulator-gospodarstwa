@@ -20,7 +20,12 @@ ROOT = Path(__file__).resolve().parent
 SOURCE_DIR = ROOT / 'src'
 BUILD_DIR = ROOT / 'build'
 
-LOCALE_FILE = 'locales/pl.json'
+# Interface languages; the first one is the default and the one the Node model uses.
+LOCALE_FILES = {
+    'pl': 'locales/pl.json',
+    'en': 'locales/en.json',
+}
+DEFAULT_LANGUAGE = next(iter(LOCALE_FILES))
 STYLES_FILE = 'styles/app.css'
 TEMPLATE_FILE = 'index.html'
 
@@ -58,6 +63,7 @@ MODEL_FILES = [
     'model/warnings.js',
     'model/stages/land-and-animals.js',
     'model/stages/feed-balance.js',
+    'model/stages/nitrogen.js',
     'model/stages/products.js',
     'model/stages/revenue.js',
     'model/stages/costs.js',
@@ -67,6 +73,7 @@ MODEL_FILES = [
     'model/stages/enterprises.js',
     'model/stages/market.js',
     'model/simulate-farm.js',
+    'model/risk.js',
 ]
 NODE_EXPORTS_FILE = 'model/node-exports.js'
 
@@ -94,6 +101,8 @@ UI_FILES = [
     'ui/panels/cashflow.js',
     'ui/panels/next-steps.js',
     'ui/panels/sensitivity.js',
+    'ui/panels/nitrogen.js',
+    'ui/panels/risk.js',
     'ui/farm/plan-state.js',
     'ui/farm/crops.js',
     'ui/farm/plan-map.js',
@@ -107,6 +116,7 @@ UI_FILES = [
     'ui/pdf/report.js',
     'ui/export.js',
     'ui/theme.js',
+    'ui/language.js',
     'ui/main.js',  # last: starts the app
 ]
 
@@ -131,15 +141,15 @@ def concatenate(relative_paths: list[str]) -> str:
     return '\n'.join(f'// ===== {path} =====\n' + read_source(path) for path in relative_paths)
 
 
-def load_locale() -> dict:
-    """Return the Polish texts of the app."""
-    return json.loads(read_source(LOCALE_FILE))
+def load_locales() -> dict[str, dict]:
+    """Return the texts of the app for every language."""
+    return {language: json.loads(read_source(path)) for language, path in LOCALE_FILES.items()}
 
 
-def locale_script_tag(messages: dict) -> str:
-    """Embed the locale as JSON data; `</` is escaped so the text cannot close the tag."""
+def locale_script_tag(language: str, messages: dict) -> str:
+    """Embed one locale as JSON data; `</` is escaped so the text cannot close the tag."""
     data = json.dumps(messages, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
-    return f'<script type="application/json" id="locale-pl">{data}</script>'
+    return f'<script type="application/json" id="locale-{language}">{data}</script>'
 
 
 def build_model_script() -> str:
@@ -152,26 +162,26 @@ def build_interface_script() -> str:
     return f'(function () {{\n{concatenate(UI_FILES)}}})();\n'
 
 
-def build_page(messages: dict) -> str:
-    """Return the page body: template with styles, locale and scripts filled in."""
+def build_page(locales: dict[str, dict]) -> str:
+    """Return the page body: template with styles, locales and scripts filled in."""
     scripts = (
-        locale_script_tag(messages)
+        '\n'.join(locale_script_tag(language, messages) for language, messages in locales.items())
         + f'\n<script>\n{build_model_script()}</script>\n'
         + f'<script>\n{build_interface_script()}</script>'
     )
     page = read_source(TEMPLATE_FILE)
     page = page.replace(STYLES_PLACEHOLDER, f'<style>\n{read_source(STYLES_FILE)}</style>')
     page = page.replace(SCRIPTS_PLACEHOLDER, scripts)
-    page = page.replace(TITLE_PLACEHOLDER, html.escape(messages['app']['title']))
+    page = page.replace(TITLE_PLACEHOLDER, html.escape(locales[DEFAULT_LANGUAGE]['app']['title']))
     if '@@' in page:
         raise ValueError(f'unreplaced placeholder in {TEMPLATE_FILE}')
     return page
 
 
 def build_node_model() -> str:
-    """Return the model as a Node module that loads the locale with require()."""
+    """Return the model as a Node module that loads the default locale with require()."""
     return (
-        f"const LOCALE_MESSAGES = require('../{SOURCE_DIR.name}/{LOCALE_FILE}');\n\n"
+        f"const LOCALE_MESSAGES = require('../{SOURCE_DIR.name}/{LOCALE_FILES[DEFAULT_LANGUAGE]}');\n\n"
         + build_model_script()
         + '\n'
         + read_source(NODE_EXPORTS_FILE)
@@ -184,8 +194,7 @@ def write_text(path: Path, text: str) -> None:
 
 
 def main() -> None:
-    messages = load_locale()
-    page = build_page(messages)
+    page = build_page(load_locales())
     standalone = PAGE_HEAD + page + PAGE_TAIL
 
     write_text(ROOT / 'index.html', standalone)

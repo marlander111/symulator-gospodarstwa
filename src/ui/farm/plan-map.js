@@ -46,7 +46,7 @@ function renderPlanMonthButtons() {
 
 function drawAccessRoad() {
   const { width, pad } = PLAN_SIZE;
-  const month = messages('months.names')[planView.month].toLowerCase();
+  const month = messages('months.inText')[planView.month];
   const road = element('line', {
     x1: pad,
     x2: width - pad,

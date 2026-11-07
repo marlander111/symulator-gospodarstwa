@@ -1,15 +1,42 @@
-// User-facing texts. All Polish content lives in locales/pl.json; the code refers to it by key.
+// User-facing texts. All content lives in locales/<language>.json; the code refers to it by key.
 //
-// The build embeds the JSON file in the page as <script type="application/json" id="locale-pl">
-// (and as LOCALE_MESSAGES for Node), so the app also works when opened straight from disk.
+// The build embeds every locale in the page as <script type="application/json" id="locale-pl">
+// (and the default one as LOCALE_MESSAGES for Node), so the app also works when opened from disk.
+// The language comes from the address (?lang=en), then from this browser's memory, then the default.
 
-const MESSAGES = loadMessages();
+const LANGUAGES = ['pl', 'en'];
+const DEFAULT_LANGUAGE = LANGUAGES[0];
+const LANGUAGE_STORAGE_KEY = 'gosp-jezyk';
+const LANGUAGE_URL_PARAMETER = 'lang';
 
-function loadMessages() {
+const CURRENT_LANGUAGE = chooseLanguage();
+const MESSAGES = loadMessages(CURRENT_LANGUAGE);
+
+function chooseLanguage() {
+  if (typeof LOCALE_MESSAGES !== 'undefined' || typeof document === 'undefined') return DEFAULT_LANGUAGE;
+  const fromAddress = new URLSearchParams(location.search).get(LANGUAGE_URL_PARAMETER);
+  if (LANGUAGES.includes(fromAddress)) return fromAddress;
+  try {
+    const saved = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (LANGUAGES.includes(saved)) return saved;
+  } catch (error) {
+    // storage unavailable: use the default language
+  }
+  return DEFAULT_LANGUAGE;
+}
+
+function loadMessages(language) {
   if (typeof LOCALE_MESSAGES !== 'undefined') return LOCALE_MESSAGES;
-  const element = typeof document !== 'undefined' && document.getElementById('locale-pl');
+  const element =
+    document.getElementById(`locale-${language}`) || document.getElementById(`locale-${DEFAULT_LANGUAGE}`);
   if (!element) throw new Error('Locale data is missing: build the page with build.py');
+  document.documentElement.lang = language;
   return JSON.parse(element.textContent);
+}
+
+/** The language the interface is shown in, e.g. "pl". */
+function currentLanguage() {
+  return CURRENT_LANGUAGE;
 }
 
 function lookupMessage(key) {
@@ -38,7 +65,7 @@ function t(key, values) {
 }
 
 /**
- * Returns the plural form matching `count` (Polish: one, few, many, other), e.g. 1 rok, 2 lata, 5 lat.
+ * Returns the plural form matching `count` (Polish: one, few, many, other; English: one, other).
  * @param {string} key - group of forms in the locale, e.g. "plurals.years"
  * @param {number} count
  */

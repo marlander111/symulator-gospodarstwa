@@ -17,4 +17,6 @@ defineParameterGroup('processing', [
   { id: 'shippingFeeCharged', min: 0, max: 60, step: 1, defaultValue: 20 },
   { id: 'parcelWeightKg', min: 1, max: 10, step: 0.5, defaultValue: 3, advanced: true },
   { id: 'hoursPerParcel', min: 0.1, max: 1, step: 0.05, defaultValue: 0.3, advanced: true },
+  { id: 'loyalCustomerSpendPerMonth', min: 100, max: 2000, step: 50, defaultValue: 500 },
+  { id: 'occasionalCustomerSpendPerMonth', min: 10, max: 300, step: 10, defaultValue: 50 },
 ]);

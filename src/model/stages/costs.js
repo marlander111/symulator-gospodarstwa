@@ -3,6 +3,18 @@
 
 // ---------- Running costs ----------
 
+/** Cost lines that do not follow the general rise of costs in the pessimistic case. */
+const FIXED_PRICE_COST_ITEMS = ['landLease', 'retailTax'];
+
+/** Farm retail (RHD) sales are free of income tax up to this amount a year. */
+const RETAIL_TAX_FREE_LIMIT = 100000;
+/** Flat-rate tax on the retail sales above the limit. */
+const RETAIL_FLAT_TAX_RATE = 0.02;
+
+function retailFlatTax(retailSalesRevenue) {
+  return Math.max(0, retailSalesRevenue - RETAIL_TAX_FREE_LIMIT) * RETAIL_FLAT_TAX_RATE;
+}
+
 function computeCosts(params, results) {
   const {
     replacementHeifers,
@@ -70,13 +82,14 @@ function computeCosts(params, results) {
       (params.pigsForHome + params.pigsForSale) * params.costPerPig +
       params.pigsForSale * params.pigSlaughterCost,
     fixed: params.fixedCosts,
+    retailTax: retailFlatTax(results.retailSalesRevenue),
     sales: sellsDirectly ? params.salesCosts : 0,
     energy: params.energyCosts,
   };
 
   // the pessimistic scenario raises every running cost except the lease
   const costMultiplier = params.costMultiplier || 1;
-  for (const item in costItems) if (item !== 'landLease') costItems[item] *= costMultiplier;
+  for (const item in costItems) if (!FIXED_PRICE_COST_ITEMS.includes(item)) costItems[item] *= costMultiplier;
 
   const purchases = {
     grain: Math.max(0, -results.grainBalance) * params.grainPurchasePrice,

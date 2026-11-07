@@ -48,6 +48,9 @@ function buildPlanControls() {
   onClick('rotation-controls', '[data-rotation-fields]', data =>
     setParams({ rotationFields: +data.rotationFields })
   );
+  onClick('nitrogen-controls', '[data-bale-grazing]', data =>
+    setParams({ baleGrazing: data.baleGrazing === '1' })
+  );
   onClick('rotation-controls', '[data-root-crops]', data => setParams({ rootCrops: data.rootCrops === '1' }));
   onClick('rotation-controls', '[data-catch-crops]', data =>
     setParams({ catchCrops: data.catchCrops === '1' })

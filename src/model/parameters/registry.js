@@ -36,6 +36,7 @@ const SUBSECTION_START_IDS = new Set([
   'geeseProcessedShare',
   'processingMaterialsShare',
   'shippedShare',
+  'loyalCustomerSpendPerMonth',
   'organicPayment',
   'catchCrops',
   'extensiveGrasslandScheme',
@@ -55,6 +56,7 @@ const SUBSECTION_START_IDS = new Set([
   'soilClassIIIShare',
   'rotationFields',
   'grazingMoveIntervalDays',
+  'riskYieldVolatility',
   'investOther',
 ]);
 

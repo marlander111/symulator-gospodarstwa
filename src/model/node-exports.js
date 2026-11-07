@@ -9,6 +9,8 @@ if (typeof module !== 'undefined')
     LABOUR_GROUPS,
     defaultParams,
     simulateFarm,
+    simulateRisk,
+    computeGrazingPlan,
     applyPessimisticScenario,
     computeMonthlyCashflow,
     migrateLegacyParameterIds,

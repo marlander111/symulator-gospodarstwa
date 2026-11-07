@@ -110,7 +110,8 @@ function addSalesWarnings(params, results, add) {
   const number = formatNumber;
   if (results.market.eggsPerWeek > 500)
     add('info', 'manyEggsToSell', { boxes: number(results.market.eggsPerWeek / 10, 0) });
-  if (results.market.directSalesRevenue > 100000) add('info', 'directSalesTaxThreshold');
+  if (results.costItems.retailTax > 0)
+    add('info', 'directSalesTaxThreshold', { tax: number(results.costItems.retailTax, 0) });
   if (params.turkeys > 0 && params.layingHens + params.broilers > 0) add('warn', 'turkeysWithHens');
   if (results.parcels > 0) add('info', 'parcelsSeason', { parcels: number(results.parcels, 0) });
   if (results.lambsSoldAsMeat > 0) {
@@ -150,13 +151,19 @@ function addEcoSchemeWarnings(params, results, add) {
     });
 }
 
-/** Paddocks resting too short, root crops that do not fit the rotation. */
+/** Paddocks resting too short, root crops that do not fit the rotation, too much manure nitrogen. */
 function addGrazingAndRotationWarnings(params, results, add) {
   const { grazingPlan } = results;
   const grazesPasture = params.pastureHa > 0 && params.dairyCows + params.sucklerCows + params.sheep > 0;
   if (grazesPasture && grazingPlan.restDays < 25)
     add('warn', 'shortPastureRest', { days: grazingPlan.restDays });
   if (params.rootCrops && !results.rotation.rootCropsFit) add('info', 'rootCropsNoRoom');
+  const { nitrogen } = results;
+  if (nitrogen.perFarmedHa > nitrogen.limitPerHa)
+    add('bad', 'nitrogenOverLimit', {
+      perHa: formatNumber(nitrogen.perFarmedHa, 0),
+      limit: nitrogen.limitPerHa,
+    });
 }
 
 /** Disease rules, breeding and soil class shares. */

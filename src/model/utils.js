@@ -10,10 +10,11 @@ function sumBy(items, select) {
   return items.reduce((sum, item) => sum + select(item), 0);
 }
 
-/** Formats a number the Polish way (space every three digits, decimal comma). */
+/** Formats a number for the interface language (Polish: "12 300,5", English: "12,300.5"). */
 function formatNumber(value, decimals = 0) {
   if (!isFinite(value)) return '–';
-  return value.toLocaleString(t('format.numberLocale'), {
+  const roundsToZero = Math.abs(value) < 0.5 / 10 ** decimals;
+  return (roundsToZero ? 0 : value).toLocaleString(t('format.numberLocale'), {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });

@@ -1,12 +1,14 @@
 // Subtle background colours for numbers in tables: from red (weakest) to green (best).
 
-/** Parses a number as displayed ("−12 300 zł", "1,5") or returns null. */
+const DECIMAL_SEPARATOR = (1.5).toLocaleString(t('format.numberLocale')).charAt(1);
+const NOT_PART_OF_NUMBER = new RegExp(`[^\\d\\-${DECIMAL_SEPARATOR}]`, 'g');
+
+/** Parses a number as displayed ("−12 300 zł", "1,5", "12,300 PLN", "1.5") or returns null. */
 function parseDisplayedNumber(text) {
   const normalised = String(text)
     .replace(/−/g, '-')
-    .replace(/[^\d,.\-]/g, '')
-    .replace(/\.(?=\d{3})/g, '')
-    .replace(',', '.');
+    .replace(NOT_PART_OF_NUMBER, '')
+    .replace(DECIMAL_SEPARATOR, '.');
   const value = parseFloat(normalised);
   return isFinite(value) ? value : null;
 }

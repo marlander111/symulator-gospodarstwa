@@ -4,7 +4,7 @@ defineParameterGroup('produce', [
   { id: 'marketGardenHa', min: 0, max: 1.5, step: 0.05, defaultValue: 0 },
   { id: 'vegetableSalesPerHa', min: 40000, max: 250000, step: 5000, defaultValue: 120000 },
   { id: 'vegetableCostShare', min: 10, max: 60, step: 1, defaultValue: 30, advanced: true },
-  { id: 'vegetableHoursPerHa', min: 1000, max: 6000, step: 100, defaultValue: 3000 },
+  { id: 'vegetableHoursPerHa', min: 1000, max: 8000, step: 100, defaultValue: 4000 },
   { id: 'fruitSoldShare', min: 0, max: 90, step: 5, defaultValue: 0 },
   { id: 'orchardYield', min: 1, max: 15, step: 0.5, defaultValue: 6 },
   { id: 'fruitPricePerKg', min: 1, max: 12, step: 0.25, defaultValue: 4 },

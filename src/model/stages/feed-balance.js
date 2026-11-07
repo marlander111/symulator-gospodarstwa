@@ -21,7 +21,7 @@ function computeForageBalance(params, results) {
   };
   const forageNeed = sumValues(forageNeedByAnimal);
   const grazingNeed = (forageNeed * params.grazingDays) / 365;
-  const winterNeed = forageNeed - grazingNeed;
+  const winterNeed = forageNeed - grazingNeed + baleGrazingHayWaste(params, forageNeedByAnimal);
 
   // sheep grazing after cattle use the pasture better
   const dairyHerd = params.dairyCows + replacementHeifers + bulls;
@@ -128,6 +128,21 @@ function surplusGrainForSale(params, grainSupply, grainNeed) {
   return Math.max(0, grainSupply - kept);
 }
 
+/** Share of hay trampled and left when animals winter on bale grazing. */
+const BALE_GRAZING_HAY_WASTE = 0.1;
+/** Share of the winter bedding still needed with bale grazing (stormy days, calving, lambing). */
+const BALE_GRAZING_BEDDING_SHARE = 0.3;
+/** Forage-need keys of the cattle, sheep and goats that winter outside on bale grazing. */
+const BALE_GRAZING_FORAGE_KEYS = ['dairyCows', 'replacementHeifers', 'bull', 'beefCattle', 'sheep', 'goats'];
+
+function baleGrazingHayWaste(params, forageNeedByAnimal) {
+  if (!params.baleGrazing) return 0;
+  const winterShare = (365 - params.grazingDays) / 365;
+  return (
+    sumBy(BALE_GRAZING_FORAGE_KEYS, key => forageNeedByAnimal[key]) * winterShare * BALE_GRAZING_HAY_WASTE
+  );
+}
+
 function computeStrawBalance(params, results) {
   const { replacementHeifers, bulls, sucklerCows, finishers, beefHeifers, winterFactor } = results;
   const strawNeedByAnimal = {
@@ -147,6 +162,9 @@ function computeStrawBalance(params, results) {
     pigs: (params.pigsForHome + params.pigsForSale) * 0.6,
     rabbits: params.rabbits * 0.05,
   };
+  if (params.baleGrazing)
+    for (const key of BALE_GRAZING_FORAGE_KEYS.concat(['replacementHeifers', 'bull']))
+      if (key in strawNeedByAnimal) strawNeedByAnimal[key] *= BALE_GRAZING_BEDDING_SHARE;
   const strawNeed = sumValues(strawNeedByAnimal);
   // straw beyond the need and the reserve stays on the field and is ploughed in
   const strawHarvest = results.cerealHa * params.strawYield;

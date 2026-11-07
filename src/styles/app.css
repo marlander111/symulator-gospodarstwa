@@ -963,6 +963,11 @@ section.full .intro {
   font-weight: 600;
   white-space: nowrap;
 }
+#comparison-table .pill {
+  display: inline-block;
+  white-space: normal;
+  text-align: left;
+}
 #comparison-table td:first-child,
 #enterprises-table td:first-child {
   min-width: 150px;
@@ -1034,4 +1039,9 @@ footer {
 }
 #plan-legend:not(:empty) {
   margin-top: 6px;
+}
+
+/* Loyal customers card stands out a little */
+.card.good {
+  border-color: var(--ok);
 }

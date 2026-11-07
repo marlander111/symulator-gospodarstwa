@@ -11,4 +11,5 @@ defineParameterGroup('yields', [
   { id: 'rootCropYield', min: 3, max: 10, step: 0.25, defaultValue: 6, advanced: true },
   { id: 'grazingMoveIntervalDays', min: 0.5, max: 7, step: 0.5, defaultValue: 1 },
   { id: 'pastureRestDays', min: 20, max: 60, step: 5, defaultValue: 35 },
+  { id: 'baleGrazing', type: 'boolean', defaultValue: false },
 ]);

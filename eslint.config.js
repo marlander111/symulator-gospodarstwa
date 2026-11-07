@@ -12,6 +12,7 @@ const BROWSER_GLOBALS = [
   'console',
   'Blob',
   'URL',
+  'URLSearchParams',
   'FileReader',
   'getComputedStyle',
   'navigator',

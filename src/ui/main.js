@@ -3,6 +3,7 @@
 applyTranslations(document);
 renderCoverCropGuide();
 initTheme();
+initLanguageSwitch();
 buildControls();
 buildPresets();
 buildSavedVariants();

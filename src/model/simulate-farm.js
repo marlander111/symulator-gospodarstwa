@@ -25,6 +25,7 @@ function simulateFarm(inputParams) {
     computeGrainBalance,
     computeStrawBalance,
     computeLivestockUnits,
+    computeNitrogenBalance,
     computeRevenue,
     computeCosts,
     computeInvestments,

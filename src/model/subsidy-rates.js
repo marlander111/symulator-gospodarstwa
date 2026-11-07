@@ -1,16 +1,17 @@
-// Subsidy rates in PLN (2025 direct payments; organic payments estimated from 2023).
+// Subsidy rates in PLN: 2026 direct payments and eco-schemes as estimated for the advances
+// (MRiRW regulation of 3 September 2026); organic payments as set in 2023.
 
 const SUBSIDY_RATES = {
   // area payments, per hectare of farmed land
-  basicPayment: 488.55,
-  redistributive: 176.84, // first 30 ha only
-  youngFarmer: 248.16,
+  basicPayment: 484.27, // basic income support 436.23 + complementary basic payment 48.04
+  redistributive: 179.12, // first 30 ha only
+  youngFarmer: 248.7,
 
   // coupled support, per animal
-  dairyCows: 412.63,
-  beefCattle: 322.49,
-  sheep: 110.16, // from 10 ewes
-  goats: 48.12, // from 5 goats
+  dairyCows: 407.91,
+  beefCattle: 318.83,
+  sheep: 108.91, // from 10 ewes
+  goats: 47.57, // from 5 goats
 
   // organic farming, per hectare
   organicGrassland: 1043,
@@ -20,7 +21,7 @@ const SUBSIDY_RATES = {
   livestockBonus: 573, // organic crop and livestock farm at 0.5–1.5 LU/ha
 
   // eco-schemes, per hectare
-  extensiveGrasslandScheme: 435.1,
+  extensiveGrasslandScheme: 463.8,
 
   // animal welfare, per animal
   welfareCowGrazing: 287.52,

@@ -9,7 +9,7 @@ function renderCashflow(results) {
   renderCashflowChart(cashflow);
 
   const lowestBalance = t('cashflow.lowestBalance', {
-    month: messages('months.names')[cashflow.minBalanceMonth].toLowerCase(),
+    month: messages('months.inText')[cashflow.minBalanceMonth],
     amount: formatPln(cashflow.minBalance),
   });
   const warning = cashflow.minBalance < 0 ? t('cashflow.belowZero') + ' ' : '';

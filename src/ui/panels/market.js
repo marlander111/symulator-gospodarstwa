@@ -51,4 +51,42 @@ function renderMarket(results) {
       ([amount, text]) => `<div class="card"><div class="v">${amount}</div><div class="k">${text}</div></div>`
     )
     .join('');
+  renderCustomers(market);
+}
+
+/** How many customer families the household sales need: loyal full baskets versus single products. */
+function renderCustomers(market) {
+  const container = byId('customers');
+  if (market.householdSales < 1) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const card = (value, text, className) =>
+    element(
+      'div',
+      { class: className },
+      element('div', { class: 'v' }, value) + element('div', { class: 'k' }, text)
+    );
+  const loyal = Math.ceil(market.loyalFamilies);
+  const occasional = Math.ceil(market.occasionalCustomers / 10) * 10;
+  const cards = element(
+    'div',
+    { class: 'cards' },
+    card(
+      t('customers.familiesValue', { count: formatNumber(loyal, 0) }),
+      t('customers.loyal', { amount: formatNumber(params.loyalCustomerSpendPerMonth, 0) }),
+      'card good'
+    ) +
+      card(
+        t('customers.customersValue', { count: formatNumber(occasional, 0) }),
+        t('customers.occasional', { amount: formatNumber(params.occasionalCustomerSpendPerMonth, 0) }),
+        'card'
+      )
+  );
+  container.innerHTML =
+    element('h3', { class: 'sub-h' }, t('customers.title')) +
+    element('p', { class: 'small' }, t('customers.intro', { sales: formatPln(market.householdSales) })) +
+    cards +
+    element('p', { class: 'small muted' }, t('customers.note', { perWeek: formatNumber(loyal / 4, 0) }));
 }

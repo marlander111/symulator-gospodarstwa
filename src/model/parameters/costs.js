@@ -22,7 +22,7 @@ defineParameterGroup('costs', [
   { id: 'costPerPig', min: 200, max: 800, step: 25, defaultValue: 400 },
   { id: 'fixedCosts', min: 3000, max: 25000, step: 500, defaultValue: 11000 },
   { id: 'salesCosts', min: 0, max: 15000, step: 250, defaultValue: 4000 },
-  { id: 'energyCosts', min: 1000, max: 8000, step: 250, defaultValue: 2500 },
+  { id: 'energyCosts', min: 1000, max: 8000, step: 250, defaultValue: 3500 },
   { id: 'grainPurchasePrice', min: 900, max: 2500, step: 50, defaultValue: 1600 },
   { id: 'sellSurplusGrain', type: 'boolean', defaultValue: true },
   { id: 'grainSalePrice', min: 500, max: 2000, step: 50, defaultValue: 1100 },

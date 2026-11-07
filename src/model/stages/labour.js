@@ -6,6 +6,7 @@
 function computeLabour(params, results) {
   const hoursByActivity = hoursPerActivity(params, results);
   addPaddockMoveHours(hoursByActivity, params, results.grazingPlan);
+  subtractBaleGrazingManureHours(hoursByActivity, params, results.nitrogen);
 
   // the pessimistic scenario makes every job take longer
   const hoursMultiplier = params.hoursMultiplier || 1;
@@ -121,4 +122,21 @@ function familyHoursPerYear(params) {
 function addPaddockMoveHours(hoursByActivity, params, grazingPlan) {
   const leadingHerd = params.dairyCows > 0 ? 'dairyCows' : params.sucklerCows > 0 ? 'beefCattle' : 'sheep';
   hoursByActivity[leadingHerd] = Math.max(0, hoursByActivity[leadingHerd] + grazingPlan.extraMoveHours);
+}
+
+/** Daily bedding in the shed that bale grazing saves through the winter (hours a day). */
+const BALE_GRAZING_BEDDING_HOURS_PER_DAY = 0.15;
+
+/**
+ * With bale grazing the winter dung stays on the field and the animals need little bedding, so
+ * there is less manure to load and spread and less straw to put down every day.
+ */
+function subtractBaleGrazingManureHours(hoursByActivity, params, nitrogen) {
+  if (!params.baleGrazing || nitrogen.baleGrazingManureSavedTonnes <= 0) return;
+  const winterDays = 365 - params.grazingDays;
+  const savedHours =
+    nitrogen.baleGrazingManureSavedTonnes * params.manureHoursPerTonne +
+    winterDays * BALE_GRAZING_BEDDING_HOURS_PER_DAY;
+  const leadingHerd = params.dairyCows > 0 ? 'dairyCows' : params.sucklerCows > 0 ? 'beefCattle' : 'sheep';
+  hoursByActivity[leadingHerd] = Math.max(0, hoursByActivity[leadingHerd] - savedHours);
 }

@@ -289,6 +289,9 @@ const CHANGED_DEFAULTS = {
   householdMonthlySpending: [5100, 5000],
   pessimisticYieldDrop: [17, 20],
   minimumNetIncome: [120000, 60000],
+  energyCosts: [2500, 3500],
+  vegetableHoursPerHa: [3000, 4000],
+  ecoSchemePointValue: [100, 93],
 };
 
 /**

@@ -6,7 +6,7 @@ defineParameterGroup('subsidies', [
   { id: 'catchCrops', type: 'boolean', defaultValue: false },
   { id: 'carbonManure', type: 'boolean', defaultValue: false },
   { id: 'carbonCropDiversity', type: 'boolean', defaultValue: false },
-  { id: 'ecoSchemePointValue', min: 50, max: 150, step: 1, defaultValue: 100, advanced: true },
+  { id: 'ecoSchemePointValue', min: 50, max: 150, step: 1, defaultValue: 93, advanced: true },
   { id: 'catchCropCostPerHa', min: 100, max: 900, step: 25, defaultValue: 400, advanced: true },
   { id: 'catchCropHoursPerHa', min: 0.5, max: 6, step: 0.5, defaultValue: 2, advanced: true },
   { id: 'catchCropForageYield', min: 0, max: 3, step: 0.1, defaultValue: 1, advanced: true },

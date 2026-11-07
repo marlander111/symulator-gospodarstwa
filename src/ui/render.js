@@ -36,6 +36,7 @@ function render() {
   slowPanelsTimer = setTimeout(() => {
     renderNextSteps();
     renderSensitivity();
+    renderRisk();
     tintTables();
   }, 220);
 
@@ -45,6 +46,7 @@ function render() {
   renderComparison();
   renderFarmPlan(results);
   renderRotation(results);
+  renderNitrogen(results);
   renderCalendar(results);
   tintTables();
 }

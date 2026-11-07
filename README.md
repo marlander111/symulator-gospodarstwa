@@ -2,7 +2,9 @@
 
 Interaktywny planer finansów, pracy i pasz dla małego gospodarstwa ekologicznego (ok. 14 ha pod Lwówkiem Śląskim): krowy jersey na trawie z serami, kury i drób pastwiskowy, owce, kozy, świnie, warzywa, sad, pszczoły i przetwórstwo w RHD.
 
-Otwórz `index.html` w przeglądarce. Działa bez serwera i bez instalacji (np. przez GitHub Pages).
+Aplikacja działa pod adresem **https://symgospodarstwa.netlify.app/**. Można też otworzyć plik `index.html` bezpośrednio w przeglądarce: działa bez serwera i bez instalacji.
+
+Język: polski (domyślnie) albo angielski, przełącznik na górze strony. Wybór zapamiętuje przeglądarka; można też podać go w adresie: `?lang=en`.
 
 ## Co liczy
 
@@ -12,17 +14,21 @@ Otwórz `index.html` w przeglądarce. Działa bez serwera i bez instalacji (np. 
 - Czas pracy rodziny w miesiącach na tle limitu tygodniowego.
 - Przepływy gotówki miesiąc po miesiącu i budżet domu.
 - Co się opłaca z hektara i z godziny, co dołożyć dalej i które założenia najbardziej zmieniają wynik.
+- Ryzyko: 500 losowych lat (plony, ceny, wydajność zwierząt, koszty, rzadki zły rok) i szansa, że dochód nie spadnie poniżej minimum.
+- Bilans azotu i obornika: ile zwierzęta zostawiają same na pastwisku, ile trzeba wywieźć, limit 170 kg N/ha, opcja wypasu na belach zimą.
+- Ilu klientów potrzeba: stałe rodziny z pełnym koszykiem albo klienci jednego produktu (zasada Joela Salatina).
 - Gotowe warianty, własne warianty, zapis i wczytanie ustawień z pliku, raport PDF.
 
 ## Struktura
 
-Kod jest po angielsku. Wszystkie polskie teksty (etykiety, podpowiedzi, ostrzeżenia, nazwy w tabelach, raport PDF) są w jednym pliku `src/locales/pl.json`, a kod odwołuje się do nich kluczem: `t('money.revenueTotal')`.
+Kod jest po angielsku. Wszystkie teksty (etykiety, podpowiedzi, ostrzeżenia, nazwy w tabelach, raport PDF) są w plikach `src/locales/pl.json` i `src/locales/en.json` o tej samej budowie, a kod odwołuje się do nich kluczem: `t('money.revenueTotal')`.
 
 ```
 src/
   index.html                 szkielet strony; teksty przez atrybuty data-i18n
   locales/pl.json            wszystkie teksty po polsku
-  i18n/translate.js          t(key, values), tPlural(), messages()
+  locales/en.json            te same teksty po angielsku
+  i18n/translate.js          wybór języka, t(key, values), tPlural(), messages()
   styles/app.css             wygląd: motyw jasny i ciemny, układ, tabele, suwaki
   model/                     obliczenia bez dostępu do strony (działają też w Node)
     parameters/registry.js   lista parametrów, grupy, parameterById(), defaultParams()
@@ -31,7 +37,8 @@ src/
     presets.js               gotowe warianty, filozofie gospodarstw, sweet spot, zestawy założeń
     simulate-farm.js         simulateFarm(params): kolejne etapy obliczeń
     stages/*.js              etapy: ziemia i zwierzęta, pasze (ze sprzedażą nadwyżki zboża), produkty, przychody, koszty,
-                             inwestycje, dopłaty, praca, kierunki, rynek
+                             inwestycje, dopłaty, praca, kierunki, rynek i klienci, azot i obornik
+    risk.js                  ryzyko: losowe lata ze stałym ziarnem losowania
     warnings.js              ostrzeżenia i podpowiedzi do planu
     cashflow.js              przepływy gotówki miesiąc po miesiącu
     pessimistic-scenario.js  wariant pesymistyczny
@@ -49,8 +56,12 @@ src/
     farm/*.js                plan rozmieszczenia, wypas rotacyjny i płodozmian
     calendar.js              kalendarz prac
     pdf/*.js, export.js      raport PDF, zapis i wczytanie ustawień
-    theme.js, main.js        motyw, start aplikacji
-tests/model.test.js          testy modelu
+    theme.js, language.js    motyw, przełącznik języka
+    main.js                  start aplikacji
+tests/
+  model.test.js              testy modelu i gotowych wariantów
+  features.test.js           klienci, azot, wypas na belach, ryzyko, ryczałt RHD, kwatery, migracja ustawień
+  locales.test.js            zgodność tekstów angielskich z polskimi (klucze, {zmienne}, znaczniki HTML)
 build.py                     składa wszystko w jedną stronę
 eslint.config.js             reguły lintera
 ```
@@ -59,14 +70,15 @@ eslint.config.js             reguły lintera
 
 ```
 npm run build     # python3 build.py: index.html, build/artifact.html, build/model.js, build/app.js
-npm test          # testy modelu (Node)
+npm test          # testy modelu i tekstów (Node)
 npm run lint      # ESLint na złożonym skrypcie
 npm run format    # Prettier
 ```
 
-- **Nowy parametr:** dopisz go w `src/model/parameters/<grupa>.js`, jego etykietę, jednostkę i podpowiedź w `src/locales/pl.json` pod `parameters.<id>`, a użycie w odpowiednim etapie w `src/model/stages/`. Suwak pojawi się sam.
+- **Nowy parametr:** dopisz go w `src/model/parameters/<grupa>.js`, jego etykietę, jednostkę i podpowiedź w `src/locales/pl.json` i `src/locales/en.json` pod `parameters.<id>`, a użycie w odpowiednim etapie w `src/model/stages/`. Suwak pojawi się sam.
 - **Nowy panel:** plik w `src/ui/panels/`, wpis na liście `UI_FILES` w `build.py` i wywołanie w `render()` w `src/ui/render.js`.
-- **Zmiana tekstu:** tylko w `src/locales/pl.json`. Drugi język to kopia tego pliku z innymi tekstami.
+- **Zmiana tekstu:** tylko w plikach `src/locales/*.json`, w obu językach; `npm test` sprawdza, czy klucze i `{zmienne}` się zgadzają.
+- **Kolejny język:** kopia `pl.json` z przetłumaczonymi tekstami, wpis w `LOCALE_FILES` w `build.py`, w `LANGUAGES` w `src/i18n/translate.js` i przycisk w `src/index.html`.
 - Ustawienia zapisane wcześniejszą wersją (w przeglądarce i w plikach `.json`) wczytują się automatycznie: stare nazwy parametrów są tłumaczone na nowe.
 
 ## Zastrzeżenie
