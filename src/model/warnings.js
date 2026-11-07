@@ -16,6 +16,7 @@ function collectWarnings(params, inputParams, results) {
   addLabourWarnings(params, results, add);
   addSalesWarnings(params, results, add);
   addEcoSchemeWarnings(params, results, add);
+  addGrazingAndRotationWarnings(params, results, add);
   addOtherWarnings(params, inputParams, results, add);
   return warnings;
 }
@@ -139,6 +140,15 @@ function addEcoSchemeWarnings(params, results, add) {
       cerealPercent: Math.round(results.rotation.cerealShare * 100),
       crops: results.rotation.distinctCrops,
     });
+}
+
+/** Paddocks resting too short, root crops that do not fit the rotation. */
+function addGrazingAndRotationWarnings(params, results, add) {
+  const { grazingPlan } = results;
+  const grazesPasture = params.pastureHa > 0 && params.dairyCows + params.sucklerCows + params.sheep > 0;
+  if (grazesPasture && grazingPlan.restDays < 25)
+    add('warn', 'shortPastureRest', { days: grazingPlan.restDays });
+  if (params.rootCrops && !results.rotation.rootCropsFit) add('info', 'rootCropsNoRoom');
 }
 
 /** Disease rules, breeding and soil class shares. */

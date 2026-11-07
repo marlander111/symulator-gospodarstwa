@@ -59,7 +59,9 @@
     "investDairy": "Mleczarnia i maszyny",
     "investMarketGarden": "Pozostałe",
     "soilClassIIIShare": "Klasy gleby",
-    "rotationFields": "Płodozmian"
+    "rotationFields": "Płodozmian",
+    "grazingMoveIntervalDays": "Wypas rotacyjny",
+    "investOther": "Inne"
   },
   "parameters": {
     "fullTimeWorkers": {
@@ -147,6 +149,10 @@
       "unit": "%",
       "hint": "Reszta gruntów ornych to koniczyna z trawami na siano. W rolnictwie ekologicznym to źródło azotu, więc 100% zbóż na dłuższą metę nie działa."
     },
+    "rootCrops": {
+      "label": "Rośliny okopowe w płodozmianie (ziemniaki, buraki pastewne)",
+      "hint": "Jedno pole płodozmianu przed ostatnim owsem, jak w czteropolówce norfolskiej: koniczyna → zboże → okopowe → owies z wsiewką. Okopowe dostają obornik, pielenie czyści pole z chwastów, a plon zastępuje część ziarna w paszy krów i świń. Wymaga co najmniej dwóch lat zbóż w płodozmianie."
+    },
     "dairyCows": {
       "label": "Krowy mleczne (jersey)",
       "unit": "szt."
@@ -155,6 +161,10 @@
       "label": "Mleko na krowę",
       "unit": "l/rok",
       "hint": "Jersey bez zboża: 3500–4000 l. Farmy 100% grass-fed w USA: średnio ok. 3800 kg."
+    },
+    "onceADayMilking": {
+      "label": "Dój raz dziennie (model nowozelandzki)",
+      "hint": "Ok. 20% mniej mleka, ale dojenie i mycie dojarni raz dziennie: ok. 35% mniej pracy na krowę i 40% mniej pracy stałej. Krowy są w lepszej kondycji. W badaniach z Nowej Zelandii spadek mleka wynosi 10–30%, a jersey traci mniej niż holsztyny."
     },
     "milkUsedShare": {
       "label": "Mleko do sprzedaży i przerobu",
@@ -732,6 +742,21 @@
       "unit": "t/ha",
       "hint": "Zwykle ok. 1–1,2 t słomy na 1 t ziarna; żyto i pszenżyto więcej, owies z grochem mniej."
     },
+    "rootCropYield": {
+      "label": "Plon okopowych w przeliczeniu na ziarno",
+      "unit": "t/ha",
+      "hint": "Buraki pastewne eko: 40–60 t/ha świeżej masy, czyli ok. 6–9 t suchej masy; ziemniaki eko 15–25 t/ha. Liczone jako ekwiwalent ziarna paszowego, bo energia suchej masy buraka jest zbliżona do jęczmienia."
+    },
+    "grazingMoveIntervalDays": {
+      "label": "Przesuwanie krów na nową kwaterę co",
+      "unit": "dni",
+      "hint": "0,5 to dwa razy dziennie, po porannym i wieczornym dojeniu. Częstsze przesuwanie daje mniej niedojadów i równiejsze nawożenie: ok. +4% zjedzonej trawy przy przesuwaniu 2× dziennie, −7% co 3 dni, −16% co tydzień. Wymaga za to więcej pracy z taśmą i wodą. Salatin i Perkins przesuwają bydło codziennie."
+    },
+    "pastureRestDays": {
+      "label": "Powrót na tę samą kwaterę po",
+      "unit": "dni",
+      "hint": "Odpoczynek kwatery. Wiosną wystarcza 20–30 dni, latem i w suszy 40–60 (Salatin: do 60 dni, aż trawa odbuduje korzenie). Krótszy niż 25 dni osłabia ruń, przy dłuższym trawa się starzeje. Liczba kwater to odpoczynek podzielony przez czas na kwaterze, plus jedna."
+    },
     "arableCostPerHa": {
       "label": "Grunty orne: nasiona, paliwo, kombajn",
       "unit": "zł/ha"
@@ -847,6 +872,11 @@
       "label": "Słoma kupowana (gdy brakuje)",
       "unit": "zł/t"
     },
+    "rootCropCostPerHa": {
+      "label": "Okopowe: koszt ponad zwykłe grunty orne",
+      "unit": "zł/ha",
+      "hint": "Sadzeniaki lub nasiona buraków, usługowe sadzenie i kopanie, przechowanie. Zwykle 1500–4000 zł/ha więcej niż zboże."
+    },
     "investCattleShed": {
       "label": "Wiata dla bydła z głęboką ściółką",
       "unit": "zł/stanowisko"
@@ -920,6 +950,16 @@
       "label": "Wędzarnia, chłodnia, pakowarka, pomieszczenie",
       "unit": "zł",
       "hint": "Założenie. Pomieszczenie musi spełniać wymagania higieniczne i być zgłoszone do powiatowego lekarza weterynarii."
+    },
+    "investOther": {
+      "label": "Inne inwestycje (wcześniej nieuwzględnione)",
+      "unit": "zł",
+      "hint": "Wszystko, czego nie ma na liście powyżej: studnia, droga, przyłącze, budynek gospodarczy, samochód dostawczy. Kwotę można też wpisać w tabeli inwestycji."
+    },
+    "investOtherLifetimeYears": {
+      "label": "Inne inwestycje: lata użytkowania",
+      "unit": "lat",
+      "hint": "Amortyzacja to kwota podzielona przez tyle lat."
     },
     "organicPayment": {
       "label": "Płatność ekologiczna (po wejściu w system eko)"
@@ -1093,6 +1133,16 @@
       "label": "Zboża (z usługowym kombajnem)",
       "unit": "h/ha"
     },
+    "rootCropHoursPerHa": {
+      "label": "Okopowe: praca",
+      "unit": "h/ha",
+      "hint": "Sadzenie, pielenie i obsypywanie, zbiór, kopcowanie. Przy usługowym sadzeniu i kopaniu ok. 60–120 h/ha, ręcznie znacznie więcej."
+    },
+    "paddockMoveHours": {
+      "label": "Przestawienie kwatery: praca",
+      "unit": "h",
+      "hint": "Przeniesienie taśmy i poidła, sprawdzenie ogrodzenia. Przy alei z wodą i szybkozłączkach zajmuje ok. 10–20 minut. Normy pracy na krowę zakładają jedno przestawienie dziennie, więc tu liczy się tylko różnica."
+    },
     "generalHours": {
       "label": "Ogrodzenia, naprawy, papiery",
       "unit": "h/rok"
@@ -1196,7 +1246,32 @@
       "label": "Bez dojenia",
       "note": "Mniej pracy"
     },
-    "showPessimistic": "Pokaż wszystko w wariancie pesymistycznym"
+    "showPessimistic": "Pokaż wszystko w wariancie pesymistycznym",
+    "lubuskieAngus": {
+      "label": "Lubuskie: angusy na trawie",
+      "note": "Mało pracy, mały dochód",
+      "description": "Typowy w Lubuskiem chów bydła mięsnego: krowy mamki angus cały sezon na pastwisku, przesuwane raz w tygodniu, odsadki sprzedawane jesienią, zimą siano z łąk. Do tego ekoschemat ekstensywnych użytków zielonych i dopłaty do bydła. Na 14 ha mieści się ok. 8 mamek, więc to dochód uzupełniający. W regionie takie stada gospodarują zwykle na 50–200 ha, często dzierżawionych."
+    },
+    "perkinsRidgedale": {
+      "label": "Ridgedale (R. Perkins)",
+      "note": "Warzywa, kurczaki, sad",
+      "description": "Na wzór gospodarstwa Ridgedale Richarda Perkinsa w Szwecji: intensywny ogród warzywny bez przekopywania, kurczaki w przenośnych zagrodach, kury w mobilnym kurniku, indyki, owce i kilka krów mięsnych w wypasie rotacyjnym z codziennym przesuwaniem. Do tego sad i boczniaki w zadrzewieniach oraz międzyplony. Dużo pracy i sprzedaży bezpośredniej, za to wiele źródeł dochodu."
+    },
+    "salatinPolyface": {
+      "label": "Polyface (J. Salatin)",
+      "note": "Bydło, a za nim drób",
+      "description": "Na wzór Polyface Joela Salatina: bydło przesuwane codziennie, kwatera wraca do wypasu po ok. 60 dniach, 3–4 dni za bydłem jedzie mobilny kurnik. Kurczaki w zagrodach przesuwanych codziennie, indyki, króliki i kilka tuczników. Wołowina z opasu na trawie sprzedawana w paczkach. Salatin kupuje ziarno, a tutaj pochodzi ono z własnych pól."
+    },
+    "grassDairy": {
+      "label": "Mleko z trawy (Voisin, NZ)",
+      "note": "Dój 1× dziennie, sery",
+      "description": "Mleczarstwo pastwiskowe według zasad wypasu racjonalnego André Voisina i praktyki nowozelandzkiej: krowy jersey prawie wyłącznie na trawie, codziennie świeża kwatera, odpoczynek ok. 35 dni, dój raz dziennie, większość mleka na sery. Nadwyżki trawy kosi się z kwater na siano, zamiast trzymać osobną łąkę. Mniej mleka, ale dużo mniej pracy przy dojarce."
+    },
+    "sweetSpot": {
+      "label": "Sweet spot",
+      "note": "Najwięcej zł na godzinę",
+      "description": "Wynik przeszukania tysięcy kombinacji na 14 ha bez dzierżawy: najwyższy dochód na godzinę pracy przy co najmniej 5 tys. zł miesięcznie w wariancie pesymistycznym, paszach z własnych pól i szczycie poniżej 60 h tygodniowo. Wyszły kury nieśne, gęsi i kilka mamek z opasem sprzedawanym w paczkach, do tego międzyplony i wypas co 3 dni z długim odpoczynkiem kwater. Krów mlecznych nie ma, bo dojenie zabiera najwięcej godzin."
+    }
   },
   "assumptionSets": {
     "realistic": "Realnie",
@@ -1248,7 +1323,9 @@
     "pessimisticBelowTarget": "W wariancie pesymistycznym wychodzi {result}, czyli {gap} poniżej Twojego minimum {target}.",
     "pessimisticAboveTarget": "Nawet w wariancie pesymistycznym wychodzi {result}, powyżej Twojego minimum {target}.",
     "pessimisticPeakOverLimit": "W wariancie pesymistycznym najcięższy miesiąc to ok. {peak} h tygodniowo dla całego gospodarstwa, powyżej limitu {limit} h.",
-    "planFits": "Pasze, siano i słoma mieszczą się w {area} ha. Na czysto ok. {net} rocznie przy ok. {hours} h pracy ({percent}% czasu rodziny), plus jedzenie dla domu warte ok. {homeValue}."
+    "planFits": "Pasze, siano i słoma mieszczą się w {area} ha. Na czysto ok. {net} rocznie przy ok. {hours} h pracy ({percent}% czasu rodziny), plus jedzenie dla domu warte ok. {homeValue}.",
+    "shortPastureRest": "Kwatery odpoczywają tylko {days} dni. Przy odpoczynku krótszym niż 25 dni trawa nie odbudowuje korzeni i plon pastwiska spada. Latem warto wydłużyć go do 40–60 dni.",
+    "rootCropsNoRoom": "Okopowe są zaznaczone, ale w płodozmianie jest za mało lat zbóż (potrzeba co najmniej dwóch). Zwiększ udział zbóż albo liczbę pól."
   },
   "investments": {
     "cattleShed": "Wiata dla bydła",
@@ -1267,7 +1344,8 @@
     "cheeseRoom": "Serownia i dojrzewalnia",
     "machinery": "Używane maszyny",
     "vegetables": "Warzywa: tunel, nawadnianie, chłodnia",
-    "beehives": "Ule z wyposażeniem"
+    "beehives": "Ule z wyposażeniem",
+    "other": "Inne inwestycje (wcześniej nieuwzględnione)"
   },
   "enterprises": {
     "milk": "Mleko i sery",
@@ -1330,7 +1408,8 @@
     "feedMissing": "brak: {items} t",
     "feedItem": "{feed} {tonnes}",
     "sawdust": "; trociny {tonnes} t",
-    "feedExplanation": "Bilans na rok: plus to nadwyżka, minus to brak (siano i pastwisko w t suchej masy)."
+    "feedExplanation": "Bilans na rok: plus to nadwyżka, minus to brak (siano i pastwisko w t suchej masy).",
+    "feedNoAnimals": "brak zwierząt"
   },
   "feeds": {
     "hay": "siano",
@@ -1376,6 +1455,7 @@
     "meadow": "Łąka kośna",
     "clover": "Koniczyna z trawami",
     "cereals": "Zboża i strączkowe",
+    "rootCrops": "Okopowe",
     "marketGarden": "Warzywa na sprzedaż"
   },
   "feedBalance": {
@@ -1504,6 +1584,7 @@
   },
   "costItems": {
     "arable": "Grunty orne",
+    "rootCrops": "Okopowe: sadzeniaki, nasiona, usługi",
     "meadow": "Łąka",
     "pasture": "Pastwisko",
     "dairyCows": "Krowy i jałówki",
@@ -1687,6 +1768,7 @@
       "pigs": "Świnie",
       "hay": "Siano",
       "cereals": "Zboża",
+      "rootCrops": "Okopowe: sadzenie, pielenie, zbiór",
       "sales": "Sprzedaż i dowozy",
       "general": "Ogrodzenia, naprawy, papiery",
       "garden": "Sad i warzywnik dla domu",
@@ -1738,7 +1820,8 @@
       "years": "Lata",
       "perYear": "Rocznie"
     },
-    "costLabel": "Koszt: {investment}"
+    "costLabel": "Koszt: {investment}",
+    "yearsLabel": "Lata użytkowania: {investment}"
   },
   "comparison": {
     "columns": {
@@ -1778,7 +1861,13 @@
     "legend": "słupki: miesiąc po wypłacie na dom · linia: saldo konta",
     "lowestBalance": "Najniżej na koncie w miesiącu {month}: {amount}.",
     "belowZero": "Saldo spada poniżej zera: zwiększ gotówkę na start albo przesuń wydatki.",
-    "explanation": "Na dom co miesiąc {household} (wydatki minus 800+). Dopłaty: zaliczki zwykle od 16 października, reszta do wiosny; dobrostan często dopiero wiosną następnego roku. Inwestycje i amortyzacja nie są tu liczone. To, co zostaje na koniec roku, to wynik na czysto plus amortyzacja minus wypłaty na dom: odłóż część na naprawy i wymianę sprzętu."
+    "explanation": "Na dom co miesiąc {household} (wydatki minus 800+). Dopłaty: zaliczki zwykle od 16 października, reszta do wiosny; dobrostan często dopiero wiosną następnego roku. Inwestycje i amortyzacja nie są tu liczone. To, co zostaje na koniec roku, to wynik na czysto plus amortyzacja minus wypłaty na dom: odłóż część na naprawy i wymianę sprzętu.",
+    "openingCash": {
+      "title": "Stan konta na start roku (1 stycznia)",
+      "currency": "zł",
+      "description": "Pieniądze, z którymi gospodarstwo zaczyna rok: poduszka na zimę i wiosnę, zanim przyjdą dopłaty i pierwsze większe sprzedaże. Od tej kwoty liczy się saldo w tabeli i na wykresie. Wpisz to, co realnie będzie na koncie, bez pieniędzy odłożonych na inwestycje.",
+      "closing": "Na koniec grudnia zostaje {closing} ({change} w ciągu roku)."
+    }
   },
   "nextSteps": {
     "steps": {
@@ -1954,6 +2043,28 @@
         "spoczynek"
       ]
     },
+    "roots": {
+      "name": "Okopowe: ziemniaki lub buraki pastewne",
+      "sowing": "Koniec kwietnia – maj, po oborniku",
+      "harvest": "Wrzesień – październik",
+      "usedFor": "Buraki dla krów i świń zamiast części ziarna, ziemniaki dla domu i na sprzedaż; pole po nich zostaje czyste z chwastów",
+      "locative": "okopowych",
+      "instrumental": "okopowymi",
+      "months": [
+        "—",
+        "—",
+        "obornik, orka wiosenna",
+        "sadzenie pod koniec miesiąca",
+        "wschody, obsypywanie",
+        "pielenie, obsypywanie",
+        "pielenie",
+        "rośnie, wczesne ziemniaki",
+        "zbiór ziemniaków",
+        "zbiór buraków, kopcowanie",
+        "orka zimowa",
+        "spoczynek"
+      ]
+    },
     "cloverYear": "rok {year}"
   },
   "plurals": {
@@ -2025,7 +2136,6 @@
   },
   "plan": {
     "month": "Miesiąc:",
-    "rotationYear": "Rok płodozmianu:",
     "road": "droga dojazdowa · {month}",
     "farmyard": {
       "house": "Dom, podwórze",
@@ -2043,15 +2153,15 @@
       "caption": "Obejście {hectares} ha"
     },
     "pasture": {
-      "dairyCows": "krowy dziś",
-      "nextPaddock": "krowy jutro",
-      "sheepAfterCows": "owce: dzień po krowach",
+      "dairyCows": "krowy teraz",
+      "nextPaddock": "następna kwatera",
+      "sheepAfterCows": "owce za krowami",
       "sheepToday": "owce dziś",
-      "layingHens": "kury: 3 dni po krowach",
+      "layingHens": "kury: {days} dni po krowach",
       "sucklerCows": "mamki z cielętami",
       "winterTitle": "Zima: pastwisko odpoczywa",
       "winterNote": "wypas od ok. 20 IV do końca X",
-      "caption": "Pastwisko {hectares} ha · {paddocks} kwater po ok. {paddockHa} ha"
+      "caption": "Pastwisko {hectares} ha · {paddocks} kwater po ok. {paddockArea}"
     },
     "meadow": {
       "title": "Łąka kośna",
@@ -2076,6 +2186,30 @@
       "fieldDetail": "{hectares} ha · {status}",
       "marketGarden": "Warzywa na sprzedaż i tunel",
       "caption": "Grunty orne {hectares} ha · rok {year} płodozmianu"
+    },
+    "grazing": {
+      "moveLabel": "Przesuwanie krów:",
+      "restLabel": "Powrót na kwaterę po:",
+      "days": "{days} dni",
+      "everyDays": "co {days} dni",
+      "intervalButtons": {
+        "twiceDaily": "2× dziennie",
+        "daily": "codziennie",
+        "weekly": "co tydzień"
+      },
+      "intervalPhrases": {
+        "twiceDaily": "dwa razy dziennie",
+        "daily": "codziennie",
+        "weekly": "raz w tygodniu"
+      },
+      "squareMetres": "{value} m²",
+      "rotationYear": "Rok płodozmianu na polach: {year} z {count} (zmieniasz go w tabeli w bloku „Płodozmian”)",
+      "noteTitle": "Kwatery i powroty",
+      "noPasture": "Bez pastwiska nie ma kwater. Zwierzęta trawożerne potrzebują pastwiska albo siana przez cały rok.",
+      "noteSummary": "Przesuwanie {interval} i powrót po {rest} dniach daje <b>{paddocks} kwater</b> po ok. {area}, czyli mniej więcej kwadrat {side} × {side} m. Każda kwatera jest wypasana ok. {grazings} razy w sezonie.",
+      "noteYield": "Zjedzona trawa: {change}% względem przesuwania codziennie i 35 dni odpoczynku.",
+      "noteHours": "Praca z taśmą i poidłem: {change} h w roku względem jednego przestawienia dziennie.",
+      "noteSalatin": "Salatin: kwatera wraca do wypasu dopiero, gdy trawa odbuduje korzenie, latem nawet po 60 dniach. Wiosną trawa rośnie szybciej i wystarcza 20–30 dni, więc część kwater można wtedy skosić na siano."
     }
   },
   "planInfo": {
@@ -2083,12 +2217,12 @@
     "pasture": {
       "title": "Pastwisko · {hectares} ha",
       "grazing": "{month}: wypas rotacyjny.",
-      "cows": "Krowy ({count}) zmieniają kwaterę co 1–2 dni.",
+      "cows": "Krowy ({count}) zmieniają kwaterę {interval}.",
       "sucklerCows": "Mamki z cielętami ({count}) idą osobną grupą.",
       "sheep": "Owce dzień po krowach.",
       "hens": "Mobilny kurnik 3–4 dni po krowach.",
       "broilers": "Zagrody z kurczakami przesuwane codziennie.",
-      "rest": "Każda kwatera odpoczywa 30–40 dni, w suszy dłużej.",
+      "rest": "Każda kwatera odpoczywa {days} dni, w suszy dłużej.",
       "winter": "{month}: zwierzęta w wiatach i przy obejściu, pastwisko odpoczywa.",
       "liming": "Pod koniec miesiąca wapnowanie lub nawożenie według badania gleby."
     },
@@ -2162,7 +2296,9 @@
     "undersownClover": "+ wsiewka koniczyny",
     "undersownPoints": " (5 pkt)",
     "note": "Co roku: {clover} ha koniczyny i {cereals} ha zbóż. Ten płodozmian to {rotationPercent}% zbóż, a suwak „Zboża na gruntach ornych” stoi na {sliderPercent}%.",
-    "matchSlider": "Ustaw suwak na {percent}%"
+    "matchSlider": "Ustaw suwak na {percent}%",
+    "rootCrops": "Okopowe (jak w czteropolówce):",
+    "rootCropsNoRoom": "Za mało lat zbóż: okopowe potrzebują co najmniej dwóch."
   },
   "ecoScheme": {
     "title": "Twój płodozmian a ekoschemat",
@@ -2732,7 +2868,8 @@
       "savedLocally": "Zapisane tylko w tej przeglądarce.",
       "exportAndReport": "Zapis i raport",
       "namePlaceholder": "Nazwa, np. Plan 2027",
-      "nameLabel": "Nazwa wariantu"
+      "nameLabel": "Nazwa wariantu",
+      "philosophies": "Filozofie"
     },
     "results": {
       "title": "Co wychodzi",
@@ -2744,7 +2881,7 @@
     },
     "farmPlan": {
       "title": "Plan rozmieszczenia",
-      "intro": "Schemat, nie mapa: proporcje pól zmieniają się razem z suwakami. Wybierz miesiąc i rok płodozmianu, kliknij pole, żeby zobaczyć, co się na nim dzieje. Pastwisko podzielone na kwatery z aleją i wodą przez środek, żeby krowy, za nimi owce, a za nimi kury przechodziły codziennie na świeżą trawę.",
+      "intro": "Schemat, nie mapa: proporcje pól zmieniają się razem z suwakami. Wybierz miesiąc, jak często przesuwasz krowy i po ilu dniach wracają na tę samą kwaterę; liczba kwater przeliczy się sama. Rok płodozmianu wybierasz w bloku „Płodozmian” poniżej. Kliknij pole, żeby zobaczyć, co się na nim dzieje.",
       "notes": {
         "grazingOrder": "<h3>Kolejność na pastwisku</h3><p>Krowy wchodzą pierwsze i zjadają górę runi. 1–3 dni później owce dojadają niższe trawy i zioła. 3–4 dni po krowach przyjeżdża mobilny kurnik: kury rozgrzebują placki, zjadają larwy much i nawożą. Krowy i owce mają w większości różne pasożyty, więc taka kolejność przerywa ich cykl.</p>",
         "buildings": "<h3>Budynki: tanio i lekko</h3><ul><li>Stara obora: dojarnia, mleczarnia, serownia (wymagają osobnego, zmywalnego pomieszczenia).</li><li>Wiata szkieletowa z OSB lub deskami, otwarta od wschodu, z głęboką ściółką: krowy i jałówki.</li><li>Druga wiata lub przedłużenie: owce i kozy, nocna zagroda przed wilkami.</li><li>Kurniki mobilne na płozach, ciągnięte C-360; zimą stoją przy obejściu.</li></ul>",
@@ -2927,6 +3064,13 @@
           }
         }
       }
+    },
+    "dataTools": {
+      "groupLabel": "Ustawienia",
+      "clearAll": "Wyczyść wszystko",
+      "clearAllTitle": "Wszystkie zwierzęta na 0, a cała ziemia poza obejściem pod zboża. Można to cofnąć przyciskiem „Poprzednie dane”.",
+      "previous": "↶ Poprzednie dane",
+      "previousTitle": "Cofa ostatnią zmianę ustawień (pamięta do 30 kroków)."
     }
   }
 }

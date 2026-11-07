@@ -34,6 +34,7 @@ const CROP_YIELD_PARAMS = [
   'pastureYield',
   'meadowYield',
   'cloverYield',
+  'rootCropYield',
   'orchardYield',
   'honeyPerHive',
   'mushroomYieldPerLog',

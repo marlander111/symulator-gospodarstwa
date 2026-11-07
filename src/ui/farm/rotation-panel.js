@@ -13,6 +13,8 @@ function renderRotation(results) {
   byId('crops-table').innerHTML = cropsTableHtml(rotation);
 }
 
+const ROTATION_FIELD_OPTIONS = [3, 4, 5, 6, 7, 8];
+
 const toggleButton = (isOn, attribute, value, text) =>
   `<button class="btn${isOn ? ' on' : ''}" type="button" ${attribute}="${value}">${text}</button>`;
 
@@ -37,10 +39,16 @@ function rotationControlsHtml(rotation) {
 
   return (
     `<span class="lab">${t('rotation.fieldCount')}</span>` +
-    [3, 4, 5, 6]
-      .map(count => toggleButton(count === rotation.fieldCount, 'data-rotation-fields', count, count))
-      .join('') +
+    ROTATION_FIELD_OPTIONS.map(count =>
+      toggleButton(count === rotation.fieldCount, 'data-rotation-fields', count, count)
+    ).join('') +
     `<span class="lab" style="margin-left:10px">${length}</span>` +
+    lineBreak +
+    `<span class="lab">${t('rotation.rootCrops')}</span>` +
+    yesNo('data-root-crops', params.rootCrops) +
+    (params.rootCrops && !rotation.rootCropsFit
+      ? element('span', { class: 'lab', style: 'margin-left:10px' }, t('rotation.rootCropsNoRoom'))
+      : '') +
     lineBreak +
     `<span class="lab">${t('rotation.catchCrops')}</span>` +
     yesNo('data-catch-crops', params.catchCrops) +

@@ -8,6 +8,7 @@ function renderLandUse(results) {
     { id: 'meadow', hectares: params.meadowHa, color: 'var(--color-meadow)' },
     { id: 'clover', hectares: results.cloverHa, color: 'var(--color-clover)' },
     { id: 'cereals', hectares: results.cerealHa, color: 'var(--color-cereal)' },
+    { id: 'rootCrops', hectares: results.rootCropHa, color: 'var(--color-roots)' },
     { id: 'marketGarden', hectares: params.marketGardenHa, color: 'var(--color-other)' },
   ].filter(segment => segment.hectares > 0.001);
   const barTotal = Math.max(

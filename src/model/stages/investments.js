@@ -71,6 +71,14 @@ function computeInvestments(params, results) {
       lifetimeYears: 10,
     },
     { id: 'beehives', priceParam: 'investBeehive', quantity: params.beehives, lifetimeYears: 15 },
+    // anything the list above leaves out, typed in by the user
+    {
+      id: 'other',
+      priceParam: 'investOther',
+      quantity: 1,
+      lifetimeYears: params.investOtherLifetimeYears,
+      lifetimeParam: 'investOtherLifetimeYears',
+    },
   ];
   for (const item of investmentItems) {
     item.cost = item.quantity * params[item.priceParam];

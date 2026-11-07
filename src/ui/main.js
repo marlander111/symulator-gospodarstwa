@@ -8,5 +8,6 @@ buildPresets();
 buildSavedVariants();
 buildPlanControls();
 buildExport();
+bindDataTools();
 syncInputs();
 render();

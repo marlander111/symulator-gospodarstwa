@@ -7,6 +7,7 @@ const CROP_COLORS = {
   rye: 'var(--color-cereal)',
   mixedGrain: 'var(--color-cereal)',
   oats: 'var(--color-cereal)',
+  roots: 'var(--color-roots)',
 };
 
 /** Winter catch crops sown after harvest; the `catchCropMix` parameter is an index into this list. */
@@ -74,7 +75,7 @@ function fieldStatus(field, year, month, rotation) {
     return status('beforeWinterCereal', month - 7, { crop: nextName });
   if (month >= 8 && crop === 'clover' && WINTER_CEREALS.includes(next))
     return status('cloverBeforeWinterCereal', month - 8, { crop: nextName });
-  if (month >= 8 && crop !== 'clover' && crop !== 'oats' && !WINTER_CEREALS.includes(next))
+  if (month >= 8 && isWinterCatchCropSlot(crop) && !WINTER_CEREALS.includes(next))
     return status('stubbleBeforeSpringCrop', month - 8);
   return messages(`crops.${crop}.months`)[month];
 }

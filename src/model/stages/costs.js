@@ -24,6 +24,7 @@ function computeCosts(params, results) {
 
   const costItems = {
     arable: results.usableArableHa * params.arableCostPerHa,
+    rootCrops: results.rootCropHa * params.rootCropCostPerHa,
     meadow: params.meadowHa * params.meadowCostPerHa,
     pasture: params.pastureHa * params.pastureCostPerHa,
     dairyCows:

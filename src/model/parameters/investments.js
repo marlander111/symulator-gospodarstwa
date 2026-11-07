@@ -18,4 +18,6 @@ defineParameterGroup('investments', [
   { id: 'investPoultryTunnel', min: 0, max: 30000, step: 500, defaultValue: 5000 },
   { id: 'investHorseStable', min: 0, max: 20000, step: 500, defaultValue: 6000 },
   { id: 'investProcessingRoom', min: 0, max: 150000, step: 5000, defaultValue: 45000 },
+  { id: 'investOther', min: 0, max: 300000, step: 500, defaultValue: 0 },
+  { id: 'investOtherLifetimeYears', min: 1, max: 30, step: 1, defaultValue: 10 },
 ]);

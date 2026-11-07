@@ -1,5 +1,5 @@
-// Event handlers of the farm plan, rotation and calendar: month and year buttons, rotation
-// length, catch and stubble crops, and clicks on plan areas.
+// Event handlers of the farm plan, rotation and calendar: month buttons, grazing, rotation year
+// and length, root crops, catch and stubble crops, and clicks on plan areas.
 
 function buildPlanControls() {
   const monthNames = messages('months.names');
@@ -35,7 +35,10 @@ function buildPlanControls() {
 
   onClick('plan-months', '[data-month]', data => selectMonth(+data.month));
   onClick('calendar-table', '[data-calendar-month]', data => selectMonth(+data.calendarMonth));
-  onClick('plan-years', '[data-year]', data => selectYear(+data.year));
+  onClick('plan-grazing', '[data-move-interval]', data =>
+    setParams({ grazingMoveIntervalDays: +data.moveInterval })
+  );
+  onClick('plan-grazing', '[data-rest-days]', data => setParams({ pastureRestDays: +data.restDays }));
   onClick('rotation-table', '[data-year]', data => selectYear(+data.year));
   onClick('plan-svg', '[data-area]', data => {
     planView.selectedArea = data.area;
@@ -45,6 +48,7 @@ function buildPlanControls() {
   onClick('rotation-controls', '[data-rotation-fields]', data =>
     setParams({ rotationFields: +data.rotationFields })
   );
+  onClick('rotation-controls', '[data-root-crops]', data => setParams({ rootCrops: data.rootCrops === '1' }));
   onClick('rotation-controls', '[data-catch-crops]', data =>
     setParams({ catchCrops: data.catchCrops === '1' })
   );

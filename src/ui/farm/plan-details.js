@@ -11,14 +11,19 @@ function describePlanSelection(results, area) {
     if (isGrazingMonth(month)) {
       const parts = [
         t('planInfo.pasture.grazing', { month: monthName }),
-        params.dairyCows ? t('planInfo.pasture.cows', { count: params.dairyCows }) : '',
+        params.dairyCows
+          ? t('planInfo.pasture.cows', {
+              count: params.dairyCows,
+              interval: moveIntervalPhrase(params.grazingMoveIntervalDays),
+            })
+          : '',
         params.sucklerCows ? t('planInfo.pasture.sucklerCows', { count: params.sucklerCows }) : '',
         params.sheep ? t('planInfo.pasture.sheep') : '',
         params.layingHens ? t('planInfo.pasture.hens') : '',
         params.broilers && month >= 4 && month <= 9 ? t('planInfo.pasture.broilers') : '',
       ];
       html += paragraph(parts.filter(Boolean).join(' '));
-      html += paragraph(t('planInfo.pasture.rest'), 'small muted');
+      html += paragraph(t('planInfo.pasture.rest', { days: params.pastureRestDays }), 'small muted');
     } else {
       const liming = month === 2 ? ' ' + t('planInfo.pasture.liming') : '';
       html += paragraph(t('planInfo.pasture.winter', { month: monthName }) + liming);

@@ -11,7 +11,8 @@ function renderFarmPlan(results) {
   if (planView.rotationYear > rotation.fieldCount) planView.rotationYear = 1;
 
   renderPlanMonthButtons();
-  renderPlanYearButtons(rotation);
+  renderGrazingControls(rotation);
+  renderGrazingNote(results);
 
   const { width, height, pad, top, gap } = PLAN_SIZE;
   const areas = [
@@ -33,6 +34,7 @@ function renderFarmPlan(results) {
   });
 
   byId('plan-svg').innerHTML = svg;
+  byId('plan-legend').innerHTML = pastureLegendHtml(results.grazingPlan);
   byId('plan-info').innerHTML = describePlanSelection(results, planView.selectedArea || 'pasture');
 }
 
@@ -40,15 +42,6 @@ function renderPlanMonthButtons() {
   document
     .querySelectorAll('[data-month]')
     .forEach(button => button.classList.toggle('on', +button.dataset.month === planView.month));
-}
-
-function renderPlanYearButtons(rotation) {
-  const buttons = Array.from({ length: rotation.fieldCount }, (_, index) => {
-    const year = index + 1;
-    const className = year === planView.rotationYear ? 'btn on' : 'btn';
-    return element('button', { class: className, type: 'button', 'data-year': year }, year);
-  });
-  byId('plan-years').innerHTML = `<span class="lab">${t('plan.rotationYear')}</span>` + buttons.join('');
 }
 
 function drawAccessRoad() {
@@ -202,18 +195,30 @@ const PADDOCK_FILLS = {
  * Which paddock holds which animals this month: cows move forward every few days, sheep
  * follow one paddock behind, the mobile hen house three behind, suckler cows graze apart.
  */
-function paddockOccupants(paddockCount) {
+/** Days the sheep and the hens follow the cows. */
+const SHEEP_DAYS_BEHIND_COWS = 1;
+const HENS_DAYS_BEHIND_COWS = 3;
+/** The suckler herd grazes as a separate group, about a third of the way round. */
+const SUCKLER_HERD_OFFSET_SHARE = 0.3;
+
+/** Who grazes which paddock in the selected month (index → occupant). */
+function paddockOccupants(paddockCount, grazingPlan) {
   const occupants = {};
   if (!isGrazingMonth(planView.month)) return occupants;
 
-  const position = ((planView.month - 3) * 3 + 2) % paddockCount;
-  const paddockAt = offset => (position + offset + paddockCount) % paddockCount;
-  if (params.dairyCows) occupants[position] = 'dairyCows';
+  const interval = grazingPlan.moveIntervalDays;
+  const daysSinceTurnout = (planView.month - 3) * 30 + 10;
+  const position = Math.floor(daysSinceTurnout / interval) % paddockCount;
+  const paddockAt = offset => (((position + offset) % paddockCount) + paddockCount) % paddockCount;
+  const paddocksBehind = days => -Math.max(1, Math.round(days / interval));
+
   if (params.dairyCows) occupants[paddockAt(1)] = 'nextPaddock';
-  if (params.sheep) occupants[paddockAt(-1)] = 'sheep';
-  if (params.layingHens) occupants[paddockAt(-3)] = 'layingHens';
-  if (params.sucklerCows) occupants[paddockAt(10)] = 'sucklerCows';
-  if (!params.dairyCows && params.sheep) occupants[position] = 'sheep';
+  if (params.sheep) occupants[paddockAt(paddocksBehind(SHEEP_DAYS_BEHIND_COWS))] = 'sheep';
+  if (params.layingHens) occupants[paddockAt(paddocksBehind(HENS_DAYS_BEHIND_COWS))] = 'layingHens';
+  if (params.sucklerCows)
+    occupants[paddockAt(Math.round(paddockCount * SUCKLER_HERD_OFFSET_SHARE))] = 'sucklerCows';
+  if (params.dairyCows) occupants[position] = 'dairyCows';
+  else if (params.sheep) occupants[position] = 'sheep';
   return occupants;
 }
 
@@ -221,40 +226,47 @@ function paddockLabel(occupant) {
   if (!occupant) return '';
   if (occupant === 'sheep')
     return t(params.dairyCows ? 'plan.pasture.sheepAfterCows' : 'plan.pasture.sheepToday');
+  if (occupant === 'layingHens') return t('plan.pasture.layingHens', { days: HENS_DAYS_BEHIND_COWS });
   return t(`plan.pasture.${occupant}`);
 }
 
 /** Pasture as two columns of paddocks with a lane between them. */
-function drawPasture(box) {
+/** Paddocks smaller than this on the drawing get no text label. */
+const MIN_LABELLED_PADDOCK_HEIGHT = 18;
+
+function drawPasture(box, results) {
   const laneWidth = 16;
-  const rows = 10;
-  const paddockCount = rows * 2;
+  const paddockCount = results.grazingPlan.paddockCount;
+  const rows = Math.ceil(paddockCount / 2);
   const paddockWidth = (box.width - laneWidth) / 2;
   const paddockHeight = box.height / rows;
-  const occupants = paddockOccupants(paddockCount);
+  const gap = paddockHeight > 8 ? 2 : 0.5;
+  const occupants = paddockOccupants(paddockCount, results.grazingPlan);
 
   let svg = areaBackground(box, 'pasture', 'var(--color-pasture)', '.22');
 
   for (let side = 0; side < 2; side++) {
     for (let row = 0; row < rows; row++) {
       // paddocks are numbered down the left column and back up the right one
-      const occupant = occupants[side ? paddockCount - 1 - row : row];
+      const index = side ? paddockCount - 1 - row : row;
+      if (side && index < rows) continue; // odd count: the right column is one shorter
+      const occupant = occupants[index];
       const x = box.x + (side ? (box.width + laneWidth) / 2 : 0);
       const y = box.y + row * paddockHeight;
       const isCattle = occupant === 'dairyCows' || occupant === 'sucklerCows';
 
       svg += element('rect', {
-        x: x + 2,
-        y: y + 2,
-        width: paddockWidth - 4,
-        height: paddockHeight - 4,
+        x: x + gap,
+        y: y + gap,
+        width: paddockWidth - 2 * gap,
+        height: Math.max(0.5, paddockHeight - 2 * gap),
         fill: PADDOCK_FILLS[occupant] || 'none',
         opacity: isCattle ? 0.5 : occupant ? 0.32 : 1,
         stroke: 'var(--color-pasture)',
         'stroke-width': 1,
       });
 
-      const label = paddockLabel(occupant);
+      const label = paddockHeight >= MIN_LABELLED_PADDOCK_HEIGHT ? paddockLabel(occupant) : '';
       if (label) {
         svg += planLabel(
           x + paddockWidth / 2,
@@ -298,7 +310,7 @@ function drawPasture(box) {
   const caption = t('plan.pasture.caption', {
     hectares: formatNumber(params.pastureHa, 1),
     paddocks: paddockCount,
-    paddockHa: formatNumber(params.pastureHa / paddockCount, 2),
+    paddockArea: paddockAreaText(results.grazingPlan.paddockHa),
   });
   return element('g', { 'data-area': 'pasture' }, svg + areaCaption(box, caption));
 }
@@ -391,4 +403,18 @@ function drawArable(box, results, rotation) {
     year: planView.rotationYear,
   });
   return svg + areaCaption(box, caption);
+}
+
+/** Colours of the animals on the pasture, needed when paddocks are too small for labels. */
+function pastureLegendHtml(grazingPlan) {
+  if (!isGrazingMonth(planView.month) || params.pastureHa <= 0) return '';
+
+  const occupants = new Set(Object.values(paddockOccupants(grazingPlan.paddockCount, grazingPlan)));
+  const legendItem = occupant =>
+    element(
+      'span',
+      {},
+      element('i', { style: `background:${PADDOCK_FILLS[occupant]};opacity:.6` }) + paddockLabel(occupant)
+    );
+  return [...occupants].map(legendItem).join('');
 }

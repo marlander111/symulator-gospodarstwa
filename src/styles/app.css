@@ -14,6 +14,7 @@
   --color-meadow: #9bb859;
   --color-clover: #9a5f8c;
   --color-cereal: #c39a35;
+  --color-roots: #a0522d;
   --color-farmyard: #8a7560;
   --color-cattle: #2c6a3b;
   --color-poultry: #c39a35;
@@ -49,6 +50,7 @@
     --color-meadow: #adc96a;
     --color-clover: #c08ab4;
     --color-cereal: #d9b04c;
+    --color-roots: #d08a5c;
     --color-farmyard: #ad9479;
     --color-cattle: #6dbb7e;
     --color-poultry: #d9b04c;
@@ -81,6 +83,7 @@
   --color-meadow: #adc96a;
   --color-clover: #c08ab4;
   --color-cereal: #d9b04c;
+  --color-roots: #d08a5c;
   --color-farmyard: #ad9479;
   --color-cattle: #6dbb7e;
   --color-poultry: #d9b04c;
@@ -187,6 +190,19 @@ header.top .lead {
 }
 .loc span {
   font-family: var(--f-num);
+}
+.top-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 18px;
+  align-items: center;
+}
+.top-tools .seg {
+  margin: 0;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 
 /* Pasek wyników */
@@ -966,4 +982,56 @@ footer {
   * {
     transition: none !important;
   }
+}
+
+/* Opening balance of the farm account above the cash-flow chart */
+.opening-cash {
+  display: grid;
+  gap: 4px;
+  margin: 2px 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2, var(--surface));
+}
+.opening-cash-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 14px;
+  font-weight: 600;
+}
+.opening-cash-amount {
+  font-family: var(--f-num);
+  white-space: nowrap;
+}
+.opening-cash-amount input {
+  width: 9.5em;
+  text-align: right;
+  font: inherit;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--ink);
+}
+.opening-cash p {
+  margin: 0;
+}
+.inv-years {
+  width: 4.5em;
+}
+
+/* The four notes under the farm plan stay in a 2 × 2 grid */
+#farm-plan .notes {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 640px) {
+  #farm-plan .notes {
+    grid-template-columns: 1fr;
+  }
+}
+#plan-legend:not(:empty) {
+  margin-top: 6px;
 }

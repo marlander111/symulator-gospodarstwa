@@ -105,7 +105,8 @@ function computeGrainBalance(params, results) {
   grainNeedByAnimal.pigs = Math.max(pigGrainWithoutWhey * 0.7, pigGrainWithoutWhey - wheyDryMatter);
 
   const grainNeed = sumValues(grainNeedByAnimal);
-  const grainSupply = results.cerealHa * params.cerealYield;
+  // fodder beet and potatoes replace grain in the rations at about their dry-matter energy
+  const grainSupply = results.cerealHa * params.cerealYield + results.rootCropHa * params.rootCropYield;
   return {
     grainNeedByAnimal,
     wheyGrainSaved: pigGrainWithoutWhey - grainNeedByAnimal.pigs,

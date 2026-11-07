@@ -49,6 +49,7 @@ function renderComparison() {
   };
   document.querySelectorAll('[data-load-saved]').forEach(button =>
     button.addEventListener('click', () => {
+      endHistoryStep();
       params = { ...defaultParams(), ...savedVariants[+button.dataset.loadSaved].params };
       loadAndScroll({});
     })

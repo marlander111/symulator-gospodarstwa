@@ -12,7 +12,10 @@
   <h1 data-i18n="app.title"></h1>
   <p class="lead" data-i18n="page.header.lead"></p>
   <div class="loc" data-i18n-html="page.header.locationFacts"></div>
-  <div class="seg theme-sw" id="theme-switch" role="group" data-i18n-attr="aria-label:page.theme.groupLabel"><span class="lab" data-i18n="page.theme.label"></span><button class="btn" type="button" data-theme-option="auto" data-i18n="page.theme.auto"></button><button class="btn" type="button" data-theme-option="light" data-i18n="page.theme.light"></button><button class="btn" type="button" data-theme-option="dark" data-i18n="page.theme.dark"></button></div>
+  <div class="top-tools">
+    <div class="seg theme-sw" id="theme-switch" role="group" data-i18n-attr="aria-label:page.theme.groupLabel"><span class="lab" data-i18n="page.theme.label"></span><button class="btn" type="button" data-theme-option="auto" data-i18n="page.theme.auto"></button><button class="btn" type="button" data-theme-option="light" data-i18n="page.theme.light"></button><button class="btn" type="button" data-theme-option="dark" data-i18n="page.theme.dark"></button></div>
+    <div class="seg" id="data-tools" role="group" data-i18n-attr="aria-label:page.dataTools.groupLabel"><button class="btn ghost" type="button" id="clear-all" data-i18n="page.dataTools.clearAll" data-i18n-attr="title:page.dataTools.clearAllTitle"></button><button class="btn ghost" type="button" id="undo-params" disabled data-i18n="page.dataTools.previous" data-i18n-attr="title:page.dataTools.previousTitle"></button></div>
+  </div>
 </header>
 
 <div class="bar" role="region" data-i18n-attr="aria-label:page.kpi.regionLabel">
@@ -29,6 +32,7 @@
 
 <div class="wrap presets">
   <div class="prow" id="preset-buttons"><span class="lbl" data-i18n="page.presets.variant"></span></div>
+  <div class="prow" id="philosophy-buttons"><span class="lbl" data-i18n="page.presets.philosophies"></span></div>
   <div class="prow" id="assumption-buttons"><span class="lbl" data-i18n="page.presets.assumptions"></span></div>
   <div class="prow" id="saved-variants-row"><span class="lbl" data-i18n="page.presets.savedVariants"></span><input class="mine-name" id="saved-variant-name" type="text" maxlength="40" data-i18n-attr="aria-label:page.presets.nameLabel; placeholder:page.presets.namePlaceholder"><button class="btn ghost" type="button" id="save-variant" data-i18n="page.presets.saveCurrent"></button><span id="saved-variants" style="display:contents"></span><span class="small muted" id="saved-variants-note" data-i18n="page.presets.savedLocally"></span></div>
   <div class="prow" id="export-row"><span class="lbl" data-i18n="page.presets.exportAndReport"></span></div>
@@ -55,15 +59,16 @@
       <div class="panel-h"><h2 data-i18n="page.farmPlan.title"></h2></div>
       <p class="intro" data-i18n="page.farmPlan.intro"></p>
       <div class="seg" id="plan-months"></div>
-      <div class="seg" id="plan-years"></div>
+      <div class="seg" id="plan-grazing"></div>
       <div class="plan-grid">
-        <div class="plan-wrap"><svg id="plan-svg" viewBox="0 0 1000 540" role="img" data-i18n-attr="aria-label:page.farmPlan.mapLabel"></svg></div>
+        <div class="plan-wrap"><svg id="plan-svg" viewBox="0 0 1000 540" role="img" data-i18n-attr="aria-label:page.farmPlan.mapLabel"></svg><div class="legend" id="plan-legend"></div></div>
         <div class="note" id="plan-info" aria-live="polite"></div>
       </div>
       <div class="notes">
         <div class="note" data-i18n-html="page.farmPlan.notes.grazingOrder"></div>
         <div class="note" data-i18n-html="page.farmPlan.notes.buildings"></div>
         <div class="note" data-i18n-html="page.farmPlan.notes.waterAndFencing"></div>
+        <div class="note" id="grazing-note" aria-live="polite"></div>
       </div>
     </div>
 
@@ -102,6 +107,7 @@
 
     <div class="panel">
       <div class="panel-h"><h2 data-i18n="page.cashflow.title"></h2><p data-i18n="page.cashflow.intro"></p></div>
+      <div class="opening-cash" id="opening-cash"></div>
       <svg class="chart" id="cashflow-chart" viewBox="0 0 640 230" role="img" data-i18n-attr="aria-label:page.cashflow.chartLabel"></svg>
       <div class="tw"><table id="cashflow-table"></table></div>
       <p class="small muted" id="cashflow-note"></p>

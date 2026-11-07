@@ -24,6 +24,7 @@ const LABOUR_PROFILES = normaliseToAverageOne({
   pigs: [0.5, 0.5, 0.8, 1.2, 1.3, 1.3, 1.3, 1.3, 1.2, 1.2, 1, 0.5],
   hay: [0, 0, 0, 0, 2, 4, 2, 2, 1, 0, 0, 0],
   cereals: [0, 0, 1, 2, 1, 0, 1, 3, 2, 2, 0, 0],
+  rootCrops: [0, 0, 0.5, 2, 2, 2.5, 1.5, 0.5, 2, 2.5, 0.5, 0],
   sales: [0.75, 0.75, 0.9, 1, 1.1, 1.15, 1.15, 1.15, 1.1, 1.05, 0.95, 0.85],
   general: [0.8, 0.8, 1.3, 1.5, 1.2, 1, 1, 1, 1, 1, 0.8, 0.6],
   garden: [0.2, 0.3, 0.8, 1.5, 2, 2, 2, 1.8, 1.5, 1, 0.5, 0.2],
@@ -40,7 +41,7 @@ const LABOUR_GROUPS = [
     activities: ['layingHens', 'hatching', 'broilers', 'geese', 'ducks', 'turkeys', 'guineaFowl', 'rabbits'],
   },
   { id: 'smallLivestock', color: 'var(--color-sheep)', activities: ['sheep', 'goats', 'pigs', 'horses'] },
-  { id: 'fields', color: 'var(--color-fields)', activities: ['hay', 'cereals', 'catchCrops'] },
+  { id: 'fields', color: 'var(--color-fields)', activities: ['hay', 'cereals', 'rootCrops', 'catchCrops'] },
   {
     id: 'produce',
     color: 'var(--color-produce)',

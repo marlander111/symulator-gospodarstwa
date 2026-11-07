@@ -7,6 +7,7 @@ let slowPanelsTimer = 0;
 
 /** Called after any change of `params`: re-renders once per animation frame and remembers the settings. */
 function onParamsChanged() {
+  recordParamsChange();
   if (pendingFrame) return;
   pendingFrame = requestAnimationFrame(() => {
     pendingFrame = 0;

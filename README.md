@@ -28,7 +28,7 @@ src/
     parameters/registry.js   lista parametrów, grupy, parameterById(), defaultParams()
     parameters/<grupa>.js    parametry jednej grupy: zakres, wartość domyślna
     parameters/legacy-ids.js stare (polskie) nazwy parametrów i odczyt plików z wersji 1
-    presets.js               gotowe warianty i zestawy założeń
+    presets.js               gotowe warianty, filozofie gospodarstw, sweet spot, zestawy założeń
     simulate-farm.js         simulateFarm(params): kolejne etapy obliczeń
     stages/*.js              etapy: ziemia i zwierzęta, pasze, produkty, przychody, koszty,
                              inwestycje, dopłaty, praca, kierunki, rynek
@@ -36,15 +36,17 @@ src/
     cashflow.js              przepływy gotówki miesiąc po miesiącu
     pessimistic-scenario.js  wariant pesymistyczny
     household-budget.js      budżet domu
-    soil.js, rotation.js     klasy gleby i płodozmian
+    soil.js, rotation.js     klasy gleby i płodozmian (3–8 pól, opcjonalnie okopowe)
+    grazing.js               wypas rotacyjny: liczba kwater, wykorzystanie trawy, praca
     subsidy-rates.js         stawki dopłat
     labour-profiles.js       rozkład prac na miesiące
   ui/                        interfejs, pliki składane w jedną funkcję w kolejności z build.py
     core.js, markup.js       stan aplikacji, helpery HTML i SVG (element, cell, tableRow…)
     controls.js, presets.js  suwaki, gotowe i własne warianty
+    history.js               „Poprzednie dane” (cofanie zmian) i „Wyczyść wszystko”
     render.js, kpi-bar.js    odświeżanie paneli, pasek wyników na górze
     panels/*.js              po jednym pliku na panel
-    farm/*.js                plan rozmieszczenia i płodozmian
+    farm/*.js                plan rozmieszczenia, wypas rotacyjny i płodozmian
     calendar.js              kalendarz prac
     pdf/*.js, export.js      raport PDF, zapis i wczytanie ustawień
     theme.js, main.js        motyw, start aplikacji

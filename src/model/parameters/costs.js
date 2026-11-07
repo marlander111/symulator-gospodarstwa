@@ -29,4 +29,5 @@ defineParameterGroup('costs', [
   { id: 'sawdustPrice', min: 0, max: 600, step: 10, defaultValue: 200 },
   { id: 'sawdustPerStrawTonne', min: 0.5, max: 1.5, step: 0.05, defaultValue: 1, advanced: true },
   { id: 'strawPurchasePrice', min: 150, max: 600, step: 25, defaultValue: 300 },
+  { id: 'rootCropCostPerHa', min: 1000, max: 6000, step: 100, defaultValue: 2500, advanced: true },
 ]);

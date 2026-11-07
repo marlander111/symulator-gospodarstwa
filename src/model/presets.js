@@ -1,6 +1,8 @@
 // Ready-made farm variants and assumption sets. Labels: locales/pl.json → presets, assumptionSets.
 //
 // A preset sets every key parameter it depends on, so switching between presets is repeatable.
+// Presets of the "philosophy" group copy well-known ways of farming (Salatin, Perkins and others)
+// on this farm's land; the "sweet spot" is the most income per hour of work found by a search.
 // An assumption set (realistic, optimistic) overrides only prices, yields and work norms.
 
 const PRESETS = [
@@ -440,6 +442,175 @@ const PRESETS = [
       lambProcessedShare: 0,
     },
   },
+  {
+    id: 'lubuskieAngus',
+    group: 'philosophy',
+    params: {
+      dairyCows: 0,
+      layingHens: 30,
+      sheep: 0,
+      goats: 0,
+      geese: 0,
+      pigsForHome: 0,
+      broilers: 0,
+      ducks: 0,
+      turkeys: 0,
+      guineaFowl: 0,
+      rabbits: 0,
+      sucklerCows: 8,
+      horses: 0,
+      beehives: 0,
+      marketGardenHa: 0,
+      fruitSoldShare: 0,
+      mushroomLogs: 0,
+      pigsForSale: 0,
+      kidsSoldShare: 0,
+      sawdustForStraw: true,
+      weanersSoldShare: 100,
+      extensiveGrasslandScheme: true,
+      grazingMoveIntervalDays: 7,
+      pastureRestDays: 35,
+      pastureHa: 7.25,
+      meadowHa: 3.5,
+      cerealShare: 40,
+    },
+  },
+  {
+    id: 'perkinsRidgedale',
+    group: 'philosophy',
+    params: {
+      dairyCows: 0,
+      layingHens: 150,
+      sheep: 8,
+      goats: 0,
+      geese: 0,
+      pigsForHome: 2,
+      broilers: 300,
+      ducks: 0,
+      turkeys: 20,
+      guineaFowl: 0,
+      rabbits: 0,
+      sucklerCows: 3,
+      horses: 0,
+      beehives: 0,
+      marketGardenHa: 0.25,
+      fruitSoldShare: 50,
+      mushroomLogs: 100,
+      pigsForSale: 0,
+      kidsSoldShare: 0,
+      sawdustForStraw: true,
+      weanersSoldShare: 0,
+      finishersSoldAsMeatShare: 100,
+      farmyardHa: 2.5,
+      orchardHa: 1.2,
+      catchCrops: true,
+      grazingMoveIntervalDays: 1,
+      pastureRestDays: 40,
+      pastureHa: 6,
+      meadowHa: 0,
+      cerealShare: 68,
+    },
+  },
+  {
+    id: 'salatinPolyface',
+    group: 'philosophy',
+    params: {
+      dairyCows: 0,
+      layingHens: 150,
+      sheep: 0,
+      goats: 0,
+      geese: 0,
+      pigsForHome: 0,
+      broilers: 300,
+      ducks: 0,
+      turkeys: 20,
+      guineaFowl: 0,
+      rabbits: 3,
+      sucklerCows: 4,
+      horses: 0,
+      beehives: 0,
+      marketGardenHa: 0,
+      fruitSoldShare: 0,
+      mushroomLogs: 0,
+      pigsForSale: 2,
+      kidsSoldShare: 0,
+      sawdustForStraw: true,
+      weanersSoldShare: 0,
+      finishersSoldAsMeatShare: 100,
+      grazingMoveIntervalDays: 1,
+      pastureRestDays: 60,
+      pastureHa: 5.5,
+      meadowHa: 0,
+      cerealShare: 56,
+    },
+  },
+  {
+    id: 'grassDairy',
+    group: 'philosophy',
+    params: {
+      dairyCows: 7,
+      layingHens: 60,
+      sheep: 0,
+      goats: 0,
+      geese: 0,
+      pigsForHome: 2,
+      broilers: 0,
+      ducks: 0,
+      turkeys: 0,
+      guineaFowl: 0,
+      rabbits: 0,
+      sucklerCows: 0,
+      horses: 0,
+      beehives: 0,
+      marketGardenHa: 0,
+      fruitSoldShare: 0,
+      mushroomLogs: 0,
+      pigsForSale: 0,
+      kidsSoldShare: 0,
+      sawdustForStraw: true,
+      onceADayMilking: true,
+      cheeseShare: 60,
+      grazingMoveIntervalDays: 1,
+      pastureRestDays: 35,
+      pastureHa: 8.75,
+      meadowHa: 0,
+      cerealShare: 40,
+    },
+  },
+  {
+    id: 'sweetSpot',
+    group: 'philosophy',
+    params: {
+      dairyCows: 0,
+      layingHens: 300,
+      sheep: 0,
+      goats: 0,
+      geese: 50,
+      pigsForHome: 0,
+      broilers: 0,
+      ducks: 0,
+      turkeys: 0,
+      guineaFowl: 0,
+      rabbits: 0,
+      sucklerCows: 4,
+      horses: 0,
+      beehives: 0,
+      marketGardenHa: 0,
+      fruitSoldShare: 0,
+      mushroomLogs: 0,
+      pigsForSale: 0,
+      kidsSoldShare: 0,
+      sawdustForStraw: true,
+      weanersSoldShare: 0,
+      finishersSoldAsMeatShare: 100,
+      catchCrops: true,
+      grazingMoveIntervalDays: 3,
+      pastureRestDays: 60,
+      pastureHa: 5,
+      meadowHa: 1.5,
+      cerealShare: 72,
+    },
+  },
 ];
 
 const ASSUMPTION_SETS = [
@@ -495,3 +666,19 @@ const ASSUMPTION_SETS = [
 function presetById(id) {
   return PRESETS.find(preset => preset.id === id);
 }
+
+/** Presets shown in the row of farming philosophies; the others are plain farm variants. */
+const isPhilosophyPreset = preset => preset.group === 'philosophy';
+
+/**
+ * Gives every preset a value for each parameter that any preset sets (the default when it does
+ * not say otherwise), so that switching presets never leaves a value from the previous one.
+ */
+function completePresetParams(presets) {
+  const presetParameterIds = new Set(presets.flatMap(preset => Object.keys(preset.params)));
+  const defaults = defaultParams();
+  for (const preset of presets)
+    for (const id of presetParameterIds) if (!(id in preset.params)) preset.params[id] = defaults[id];
+}
+
+completePresetParams(PRESETS);

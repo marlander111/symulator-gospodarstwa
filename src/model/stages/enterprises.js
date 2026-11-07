@@ -31,10 +31,11 @@ function computeEnterprises(params, results) {
 
 /** Own grain and forage valued at their production cost per tonne (purchase price if none is grown). */
 function ownFeedUnitCosts(params, results) {
+  const grainLandCost =
+    results.cerealHa * params.arableCostPerHa +
+    results.rootCropHa * (params.arableCostPerHa + params.rootCropCostPerHa);
   const grainCostPerTonne =
-    results.grainSupply > 0
-      ? (results.cerealHa * params.arableCostPerHa) / results.grainSupply
-      : params.grainPurchasePrice;
+    results.grainSupply > 0 ? grainLandCost / results.grainSupply : params.grainPurchasePrice;
 
   const forageTotal = results.haySupply + results.grazingSupply;
   const forageLandCost =

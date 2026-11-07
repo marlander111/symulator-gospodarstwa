@@ -10,8 +10,11 @@
  */
 function simulateFarm(inputParams) {
   const soilFactors = computeSoilFactors(inputParams);
-  const params = adjustYieldsForSoil(inputParams, soilFactors);
-  const results = { soilFactors };
+  const grazingPlan = computeGrazingPlan(inputParams);
+  const params = adjustForMilkingRoutine(
+    adjustPastureForGrazingPlan(adjustYieldsForSoil(inputParams, soilFactors), grazingPlan)
+  );
+  const results = { soilFactors, grazingPlan };
 
   const stages = [
     computeLandUse,
@@ -46,8 +49,29 @@ function adjustYieldsForSoil(params, soilFactors) {
     cerealYield: params.cerealYield * soilFactors.arable,
     strawYield: params.strawYield * soilFactors.arable,
     cloverYield: params.cloverYield * soilFactors.arable,
+    rootCropYield: params.rootCropYield * soilFactors.arable,
     pastureYield: params.pastureYield * soilFactors.grassland,
     meadowYield: params.meadowYield * soilFactors.grassland,
+  };
+}
+
+/** Grass eaten per hectare depends on how often the herd moves and how long paddocks rest. */
+function adjustPastureForGrazingPlan(params, grazingPlan) {
+  return { ...params, pastureYield: params.pastureYield * grazingPlan.yieldFactor };
+}
+
+/** Milking once a day (New Zealand style): less milk, much less time in the parlour. */
+const ONCE_A_DAY_MILK_FACTOR = 0.8;
+const ONCE_A_DAY_HOURS_PER_COW_FACTOR = 0.65;
+const ONCE_A_DAY_DAIRY_FIXED_HOURS_FACTOR = 0.6;
+
+function adjustForMilkingRoutine(params) {
+  if (!params.onceADayMilking) return params;
+  return {
+    ...params,
+    milkPerCow: params.milkPerCow * ONCE_A_DAY_MILK_FACTOR,
+    hoursPerCow: params.hoursPerCow * ONCE_A_DAY_HOURS_PER_COW_FACTOR,
+    dairyFixedHours: params.dairyFixedHours * ONCE_A_DAY_DAIRY_FIXED_HOURS_FACTOR,
   };
 }
 

@@ -5,6 +5,7 @@
 
 function computeLabour(params, results) {
   const hoursByActivity = hoursPerActivity(params, results);
+  addPaddockMoveHours(hoursByActivity, params, results.grazingPlan);
 
   // the pessimistic scenario makes every job take longer
   const hoursMultiplier = params.hoursMultiplier || 1;
@@ -80,6 +81,7 @@ function hoursPerActivity(params, results) {
       (params.meadowHa + results.cloverHa + results.hayFromPasture / Math.max(1, params.meadowYield)) *
       params.hayHoursPerHa,
     cereals: results.cerealHa * params.cerealHoursPerHa,
+    rootCrops: results.rootCropHa * params.rootCropHoursPerHa,
     sales:
       (results.freshMilkSold / 100) * params.milkSalesHoursPer100Litres +
       (results.eggsSold / 100) * params.eggSalesHoursPer100 +
@@ -110,4 +112,13 @@ function familyHoursPerYear(params) {
   const fullTimeEquivalents =
     params.fullTimeWorkers + 0.5 * params.halfTimeWorkers + 0.25 * params.quarterTimeWorkers;
   return fullTimeEquivalents * params.fullTimeHoursPerYear;
+}
+
+/**
+ * Moving the fences more or less often than once a day changes the hours of the herd that leads
+ * the grazing (the hour norms per animal include one move a day).
+ */
+function addPaddockMoveHours(hoursByActivity, params, grazingPlan) {
+  const leadingHerd = params.dairyCows > 0 ? 'dairyCows' : params.sucklerCows > 0 ? 'beefCattle' : 'sheep';
+  hoursByActivity[leadingHerd] = Math.max(0, hoursByActivity[leadingHerd] + grazingPlan.extraMoveHours);
 }

@@ -3,6 +3,7 @@
 defineParameterGroup('dairy', [
   { id: 'dairyCows', min: 0, max: 8, step: 1, defaultValue: 4 },
   { id: 'milkPerCow', min: 2500, max: 5500, step: 100, defaultValue: 3700 },
+  { id: 'onceADayMilking', type: 'boolean', defaultValue: false },
   { id: 'milkUsedShare', min: 60, max: 95, step: 1, defaultValue: 85 },
   { id: 'cheeseShare', min: 0, max: 80, step: 5, defaultValue: 20 },
   { id: 'milkPrice', min: 2, max: 10, step: 0.25, defaultValue: 5 },

@@ -1,6 +1,9 @@
 // Summary bar at the top: net income, working hours, revenue, pessimistic result,
 // investments, feed balance and stocking density.
 
+/** Below this yearly feed need (tonnes) the feed surplus is not shown as a percentage. */
+const MIN_FEED_NEED_FOR_PERCENT = 1;
+
 function renderKpis(results, pessimistic) {
   const target = computeIncomeTarget(params);
 
@@ -61,8 +64,12 @@ function renderFeedKpi(results) {
   if (feedOk) {
     const need = results.hayNeed + results.grainNeed + results.strawNeed;
     const supply = results.haySupply + results.grainSupply + results.strawSupply;
+    // without animals there is nothing to feed, so a percentage would mean nothing
     const surplusPercent = Math.max(0, ((supply - need) / Math.max(0.1, need)) * 100);
-    byId('kpi-feed').textContent = t('kpi.feedSurplus', { percent: formatNumber(surplusPercent, 0) });
+    byId('kpi-feed').textContent =
+      need < MIN_FEED_NEED_FOR_PERCENT
+        ? t('kpi.feedNoAnimals')
+        : t('kpi.feedSurplus', { percent: formatNumber(surplusPercent, 0) });
     byId('kpi-feed-detail').textContent =
       t('kpi.feedReserve', { items: describe(balances, balance => Math.max(0, balance)) }) + sawdust;
   } else {

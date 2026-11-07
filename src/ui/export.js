@@ -110,6 +110,7 @@ function importSettings(file) {
   reader.onload = () => {
     try {
       const { name, settings } = readSettingsFile(JSON.parse(reader.result));
+      endHistoryStep();
       let loadedCount = 0;
       for (const [id, value] of Object.entries(settings)) {
         if (id in params && typeof value === typeof params[id]) {

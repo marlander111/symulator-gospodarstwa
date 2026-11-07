@@ -20,6 +20,7 @@ function buildControls() {
 
   for (const parameter of PARAMETERS) bindControl(parameter);
   byId('reset').addEventListener('click', () => {
+    endHistoryStep();
     params = defaultParams();
     syncInputs();
     onParamsChanged();

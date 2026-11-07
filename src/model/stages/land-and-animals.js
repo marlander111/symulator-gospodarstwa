@@ -12,12 +12,16 @@ function computeLandUse(params) {
     params.meadowHa -
     params.marketGardenHa;
   const usableArableHa = Math.max(0, arableHa);
-  const cerealHa = (usableArableHa * params.cerealShare) / 100;
-  const cloverHa = usableArableHa - cerealHa;
+  // root crops take one field of the rotation out of the cereals
+  const cerealAndRootHa = (usableArableHa * params.cerealShare) / 100;
+  const rotation = computeRotation(params);
+  const rootCropHa = Math.min(cerealAndRootHa, (usableArableHa * rotation.rootFields) / rotation.fieldCount);
+  const cerealHa = cerealAndRootHa - rootCropHa;
+  const cloverHa = usableArableHa - cerealAndRootHa;
   const orchardHa = Math.min(params.orchardHa, params.farmyardHa);
   const farmedHa = params.pastureHa + params.meadowHa + usableArableHa + orchardHa + params.marketGardenHa;
   const grasslandHa = params.pastureHa + params.meadowHa;
-  return { arableHa, usableArableHa, cerealHa, cloverHa, farmedHa, orchardHa, grasslandHa };
+  return { arableHa, usableArableHa, cerealHa, rootCropHa, cloverHa, farmedHa, orchardHa, grasslandHa };
 }
 
 // ---------- Animals ----------

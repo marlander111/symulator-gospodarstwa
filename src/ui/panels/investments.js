@@ -26,6 +26,11 @@ function renderInvestments(results) {
   document
     .querySelectorAll('[data-investment]')
     .forEach(input => input.addEventListener('change', () => setInvestmentTotal(results, input)));
+  document
+    .querySelectorAll('[data-investment-years]')
+    .forEach(input =>
+      input.addEventListener('change', () => setParamFromInput(input.dataset.investmentYears, input))
+    );
 }
 
 function investmentRow(item) {
@@ -45,9 +50,25 @@ function investmentRow(item) {
     cell(label),
     cell(costInput, { class: 'n' }),
     cell(unitPriceText(item), { class: 'n small muted' }),
-    cell(item.lifetimeYears, { class: 'n' }),
+    cell(item.lifetimeParam ? lifetimeInput(item, label) : item.lifetimeYears, { class: 'n' }),
     cell(formatPlnExact(item.yearlyDepreciation), { class: 'n' }),
   ]);
+}
+
+/** Editable lifetime of the "other investments" row. */
+function lifetimeInput(item, label) {
+  const parameter = parameterById(item.lifetimeParam);
+  return voidElement('input', {
+    class: 'inv-in inv-years',
+    type: 'number',
+    min: parameter.min,
+    max: parameter.max,
+    step: 1,
+    inputmode: 'numeric',
+    'data-investment-years': item.lifetimeParam,
+    value: item.lifetimeYears,
+    'aria-label': t('investmentsTable.yearsLabel', { investment: label }),
+  });
 }
 
 /** "price × quantity" for investments bought in more than one unit. */
@@ -57,6 +78,18 @@ function unitPriceText(item) {
   const price = formatParameterValue(parameterById(item.priceParam), params[item.priceParam]);
   const quantity = formatNumber(item.quantity, item.quantity < 10 ? 1 : 0);
   return `${price} × ${quantity}`;
+}
+
+/** Sets a parameter from a typed number, kept within the parameter's range. */
+function setParamFromInput(id, input) {
+  const parameter = parameterById(id);
+  const value = parseFloat(input.value);
+  if (!isFinite(value)) return;
+
+  params[id] = Math.min(parameter.max, Math.max(parameter.min, value));
+  syncInputs();
+  input.blur();
+  onParamsChanged();
 }
 
 function setInvestmentTotal(results, input) {

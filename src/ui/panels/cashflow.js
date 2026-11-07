@@ -4,6 +4,7 @@ const CASHFLOW_CHART = { width: 640, height: 230, padLeft: 56, padRight: 10, pad
 
 function renderCashflow(results) {
   const cashflow = results.cashflow;
+  renderOpeningCash(cashflow);
   renderCashflowTable(cashflow);
   renderCashflowChart(cashflow);
 
@@ -101,4 +102,43 @@ function renderCashflowChart(cashflow) {
   svg += axisText(chart.padLeft, chart.height - 4, t('cashflow.legend'));
 
   byId('cashflow-chart').innerHTML = svg;
+}
+
+/**
+ * Field for the money on the farm account on 1 January, the starting point of the balance.
+ * It is the same value as the "openingCash" slider in the household group.
+ */
+function renderOpeningCash(cashflow) {
+  const container = byId('opening-cash');
+  const input = container.querySelector('input');
+  if (input && document.activeElement === input) return; // the user is typing
+
+  const parameter = parameterById('openingCash');
+  const field = voidElement('input', {
+    id: 'opening-cash-input',
+    type: 'number',
+    min: parameter.min,
+    max: parameter.max,
+    step: 1000,
+    inputmode: 'numeric',
+    value: params.openingCash,
+  });
+  const closing = t('cashflow.openingCash.closing', {
+    closing: formatPln(cashflow.closingBalance),
+    change:
+      (cashflow.closingBalance >= params.openingCash ? '+' : '−') +
+      formatPln(Math.abs(cashflow.closingBalance - params.openingCash)),
+  });
+
+  container.innerHTML =
+    element(
+      'label',
+      { class: 'opening-cash-field', for: 'opening-cash-input' },
+      element('span', { class: 'opening-cash-title' }, t('cashflow.openingCash.title')) +
+        element('span', { class: 'opening-cash-amount' }, field + ' ' + t('cashflow.openingCash.currency'))
+    ) + element('p', { class: 'small muted' }, t('cashflow.openingCash.description') + ' ' + closing);
+
+  byId('opening-cash-input').addEventListener('change', event =>
+    setParamFromInput('openingCash', event.target)
+  );
 }

@@ -54,6 +54,8 @@ const SUBSECTION_START_IDS = new Set([
   'investMarketGarden',
   'soilClassIIIShare',
   'rotationFields',
+  'grazingMoveIntervalDays',
+  'investOther',
 ]);
 
 /**

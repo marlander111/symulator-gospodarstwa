@@ -4,7 +4,14 @@ function buildPresets() {
   const presetButton = preset =>
     element(
       'button',
-      { class: 'btn', type: 'button', 'data-preset': preset.id },
+      {
+        class: 'btn',
+        type: 'button',
+        'data-preset': preset.id,
+        title: hasMessage(`presets.${preset.id}.description`)
+          ? escapeHtml(t(`presets.${preset.id}.description`))
+          : null,
+      },
       escapeHtml(t(`presets.${preset.id}.label`)) +
         ' ' +
         element('small', {}, escapeHtml(t(`presets.${preset.id}.note`)))
@@ -21,7 +28,10 @@ function buildPresets() {
     t('presets.showPessimistic')
   );
 
-  byId('preset-buttons').insertAdjacentHTML('beforeend', PRESETS.map(presetButton).join(''));
+  const farmPresets = PRESETS.filter(preset => !isPhilosophyPreset(preset));
+  const philosophyPresets = PRESETS.filter(isPhilosophyPreset);
+  byId('preset-buttons').insertAdjacentHTML('beforeend', farmPresets.map(presetButton).join(''));
+  byId('philosophy-buttons').insertAdjacentHTML('beforeend', philosophyPresets.map(presetButton).join(''));
   byId('assumption-buttons').insertAdjacentHTML(
     'beforeend',
     ASSUMPTION_SETS.map(assumptionButton).join('') + pessimisticToggle
@@ -48,6 +58,7 @@ function buildPresets() {
 }
 
 function applyParams(values) {
+  endHistoryStep(); // a preset or a button is a step of its own
   Object.assign(params, values);
   syncInputs();
   onParamsChanged();
@@ -128,6 +139,7 @@ function renderSavedVariants() {
         render();
         return;
       }
+      endHistoryStep();
       params = { ...defaultParams(), ...savedVariants[index].params };
       syncInputs();
       onParamsChanged();
