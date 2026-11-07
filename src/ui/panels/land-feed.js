@@ -1,76 +1,120 @@
-// Panel „Ziemia i pasze”: pasek użytkowania ziemi i bilans pasz.
+// Panel "Land and feed": land-use bar and the yearly balance of pasture, hay, grain and straw.
 
-function renderLand(r) {
-  const T = p.areaTotal + p.dzierzawa;
-  const segs = [
-    { l: 'Obejście, sad, warzywnik', v: p.obejscie, c: 'var(--obejscie)' },
-    { l: 'Pastwisko', v: p.pastwisko, c: 'var(--past)' },
-    { l: 'Łąka kośna', v: p.laka, c: 'var(--laka)' },
-    { l: 'Koniczyna z trawami', v: r.koniczynaHa, c: 'var(--konicz)' },
-    { l: 'Zboża i strączkowe', v: r.zbozeHa, c: 'var(--zboze)' },
-    { l: 'Warzywa na sprzedaż', v: p.warzywaSprz, c: 'var(--c-reszta)' },
-  ].filter(x => x.v > 0.001);
-  const tot = Math.max(
-    T,
-    segs.reduce((a, s) => a + s.v, 0)
+function renderLandUse(results) {
+  const totalHa = params.ownedHa + params.leasedHa;
+  const segments = [
+    { id: 'farmyard', hectares: params.farmyardHa, color: 'var(--color-farmyard)' },
+    { id: 'pasture', hectares: params.pastureHa, color: 'var(--color-pasture)' },
+    { id: 'meadow', hectares: params.meadowHa, color: 'var(--color-meadow)' },
+    { id: 'clover', hectares: results.cloverHa, color: 'var(--color-clover)' },
+    { id: 'cereals', hectares: results.cerealHa, color: 'var(--color-cereal)' },
+    { id: 'marketGarden', hectares: params.marketGardenHa, color: 'var(--color-other)' },
+  ].filter(segment => segment.hectares > 0.001);
+  const barTotal = Math.max(
+    totalHa,
+    sumBy(segments, segment => segment.hectares)
   );
-  $('landbar').innerHTML = segs
-    .map(
-      s =>
-        `<div style="width:${(s.v / tot) * 100}%;background:${s.c}" title="${esc(s.l)}: ${fmt(s.v, 1)} ha"></div>`
-    )
-    .join('');
-  $('landlegend').innerHTML = segs
-    .map(s => `<span><i style="background:${s.c}"></i>${esc(s.l)} <b>${fmt(s.v, 1)} ha</b></span>`)
-    .join('');
+  const label = segment => escapeHtml(t(`landUse.${segment.id}`));
+  const hectares = segment => t('units.hectares', { value: formatNumber(segment.hectares, 1) });
+
+  const barSegment = segment =>
+    element('div', {
+      style: `width:${(segment.hectares / barTotal) * 100}%;background:${segment.color}`,
+      title: `${label(segment)}: ${hectares(segment)}`,
+    });
+  const legendItem = segment =>
+    element(
+      'span',
+      {},
+      element('i', { style: `background:${segment.color}` }) +
+        `${label(segment)} ` +
+        element('b', {}, hectares(segment))
+    );
+  byId('land-bar').innerHTML = segments.map(barSegment).join('');
+  byId('land-legend').innerHTML = segments.map(legendItem).join('');
 }
 
-function renderFeed(r) {
+function renderFeedBalance(results) {
   const rows = [
     {
-      l: 'Pastwisko',
-      s: 'w sezonie wypasu',
-      need: r.grazeNeed,
-      sup: r.grazeSupply,
-      c: 'var(--past)',
-      u: 't s.m.',
+      id: 'pasture',
+      need: results.grazingNeed,
+      supply: results.grazingSupply,
+      color: 'var(--color-pasture)',
+      unit: 'dryMatterTonnes',
     },
     {
-      l: 'Siano na zimę',
-      s: `${365 - p.dniWypasu} dni w wiacie`,
-      need: r.hayNeed,
-      sup: r.haySupply,
-      c: 'var(--laka)',
-      u: 't s.m.',
+      id: 'hay',
+      need: results.hayNeed,
+      supply: results.haySupply,
+      color: 'var(--color-meadow)',
+      unit: 'dryMatterTonnes',
     },
     {
-      l: 'Ziarno',
-      s: 'kury, drób, świnie, owies',
-      need: r.grainNeed,
-      sup: r.grainSupply,
-      c: 'var(--zboze)',
-      u: 't',
+      id: 'grain',
+      need: results.grainNeed,
+      supply: results.grainSupply,
+      color: 'var(--color-cereal)',
+      unit: 'tonnes',
     },
-    { l: 'Słoma', s: 'ściółka', need: r.strawNeed, sup: r.strawSupply, c: 'var(--c-owce)', u: 't' },
+    {
+      id: 'straw',
+      need: results.strawNeed,
+      supply: results.strawSupply,
+      color: 'var(--color-sheep)',
+      unit: 'tonnes',
+    },
   ];
-  $('feed').innerHTML = rows
-    .map(x => {
-      const m = Math.max(x.need, x.sup, 0.01);
-      const bal = x.sup - x.need;
-      const cls = bal < -0.05 ? 'bad' : bal < x.need * 0.05 ? 'warn' : 'ok';
-      return `<div class="frow"><div class="fl">${x.l}<span>${x.s}</span></div>
-      <div class="fbars"><div class="fb need" style="width:${(x.need / m) * 100}%"></div><div class="fb" style="width:${(x.sup / m) * 100}%;background:${x.c}"></div>
-      <div class="fnums"><span>potrzeba ${fmt(x.need, 1)} ${x.u}</span><span>z pól ${fmt(x.sup, 1)} ${x.u}</span></div></div>
-      <div class="pill ${cls}">${bal >= 0 ? '+' : '−'}${fmt(Math.abs(bal), 1)} t</div></div>`;
-    })
-    .join('');
+  const housedDays = 365 - params.grazingDays;
+  byId('feed-balance').innerHTML = rows.map(row => feedRowHtml(row, housedDays)).join('');
+
   const notes = [];
-  if (r.hayFromPast > 0.1)
-    notes.push(`Z nadwyżki pastwiska koszonej na siano: ok. ${fmt(r.hayFromPast, 1)} t s.m.`);
-  if (r.serwatkaZast > 0.005)
-    notes.push(`Serwatka z serowarni zastępuje ok. ${fmt(r.serwatkaZast * 1000, 0)} kg ziarna dla świń.`);
+  if (results.hayFromPasture > 0.1)
+    notes.push(t('feedBalance.hayFromPasture', { tonnes: formatNumber(results.hayFromPasture, 1) }));
+  if (results.wheyGrainSaved > 0.005)
+    notes.push(t('feedBalance.wheyForPigs', { kg: formatNumber(results.wheyGrainSaved * 1000, 0) }));
   notes.push(
-    `Koszt własny: ziarno ok. ${fmt(r.grainCostT, 0)} zł/t, pasza objętościowa ok. ${fmt(r.forageCostT, 0)} zł/t s.m.`
+    t('feedBalance.ownCost', {
+      grain: formatNumber(results.grainCostPerTonne, 0),
+      forage: formatNumber(results.forageCostPerTonne, 0),
+    })
   );
-  $('feednote').textContent = notes.join(' ');
+  byId('feed-note').textContent = notes.join(' ');
+}
+
+function feedRowHtml(row, housedDays) {
+  const scale = Math.max(row.need, row.supply, 0.01);
+  const balance = row.supply - row.need;
+  const status = balance < -0.05 ? 'bad' : balance < row.need * 0.05 ? 'warn' : 'ok';
+  const unit = t(`feedBalance.units.${row.unit}`);
+  const amount = value => `${formatNumber(value, 1)} ${unit}`;
+  const sign = balance >= 0 ? '+' : '−';
+  const bar = (className, widthShare, background) =>
+    element('div', {
+      class: className,
+      style: `width:${widthShare * 100}%` + (background ? `;background:${background}` : ''),
+    });
+  const label = element(
+    'div',
+    { class: 'fl' },
+    t(`feedBalance.${row.id}.label`) +
+      element('span', {}, t(`feedBalance.${row.id}.detail`, { days: housedDays }))
+  );
+  const numbers = element(
+    'div',
+    { class: 'fnums' },
+    element('span', {}, t('feedBalance.need', { amount: amount(row.need) })) +
+      element('span', {}, t('feedBalance.supply', { amount: amount(row.supply) }))
+  );
+  const bars = element(
+    'div',
+    { class: 'fbars' },
+    bar('fb need', row.need / scale) + bar('fb', row.supply / scale, row.color) + numbers
+  );
+  const pill = element(
+    'div',
+    { class: `pill ${status}` },
+    sign + t('units.tonnes', { value: formatNumber(Math.abs(balance), 1) })
+  );
+  return element('div', { class: 'frow' }, label + bars + pill);
 }

@@ -1,90 +1,110 @@
-// ---------- Przepływy gotówki: rozkład w miesiącach ----------
-const CF = {
-  R: {
-    mleko: [0, 0, 0.6, 1.1, 1.4, 1.3, 1.2, 1.1, 1, 0.9, 0.8, 0.6],
-    ser: [0.8, 0.6, 0.5, 0.5, 0.7, 0.8, 0.9, 0.9, 1, 1.1, 1.6, 2.6],
-    cieleta: [0, 0, 0.2, 1, 1, 0.3, 0, 0, 0.2, 1, 0.5, 0],
-    jaja: [0.5, 0.6, 0.9, 1.2, 1.3, 1.3, 1.2, 1.1, 1, 0.9, 0.6, 0.5],
-    koguty: [0, 0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0, 0],
-    brojlery: [0, 0, 0, 0, 0, 0.8, 1, 1, 1, 1, 0.2, 0],
-    gesi: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.3, 3, 0.7],
-    kaczki: [0, 0, 0, 0, 0, 0, 0.5, 1, 1, 1, 0.8, 0.2],
-    indyki: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2, 0.8, 3],
-    perliczki: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1.2, 0.8, 0.3],
-    kroliki: [0.3, 0.3, 0.5, 0.8, 1, 1, 1, 1, 1, 1.2, 1.2, 1],
-    owce: [0, 0, 0, 0, 0, 0.5, 1, 1.5, 1.2, 0.8, 0.3, 0],
-    jagniecina: [0, 0, 0.6, 0.6, 0.2, 0.2, 0.4, 0.8, 1, 1, 0.8, 1],
-    przetwory: [0.3, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.3, 0.5, 1, 2.5, 3],
-    owoce: [0, 0, 0, 0, 0, 0, 0.3, 1, 2, 1.5, 0.6, 0.4],
-    grzyby: [0, 0, 0.2, 1, 1.2, 0.6, 0.3, 0.5, 1.2, 1.4, 0.8, 0.2],
-    warzywa: [0.2, 0.2, 0.5, 0.3, 0.6, 1, 1.4, 1.5, 1.3, 1, 0.4, 0.2],
-    kozy: [0, 0, 0.6, 1.2, 0.8, 0.5, 0.4, 0.4, 0.6, 0.8, 0.5, 0.2],
-    swinie: [0, 0, 0, 0, 0, 0, 0, 0, 0.5, 1.5, 2, 1],
-    miod: [0, 0, 0, 0, 0, 0.6, 1.2, 1.2, 0.6, 0.3, 0.3, 0.6],
-    bydlo: [0, 0, 0, 0, 0, 0, 0, 0, 0.6, 2, 0.6, 0.2],
+// Monthly cash flow: yearly revenue, costs and subsidies spread over the months they are
+// actually paid or received, and the bank balance month by month.
+
+/** Relative weight of each month (January–December) per revenue line, cost line and subsidy. */
+const CASHFLOW_PROFILES = {
+  revenue: {
+    milk: [0, 0, 0.6, 1.1, 1.4, 1.3, 1.2, 1.1, 1, 0.9, 0.8, 0.6],
+    cheese: [0.8, 0.6, 0.5, 0.5, 0.7, 0.8, 0.9, 0.9, 1, 1.1, 1.6, 2.6],
+    calves: [0, 0, 0.2, 1, 1, 0.3, 0, 0, 0.2, 1, 0.5, 0],
+    eggs: [0.5, 0.6, 0.9, 1.2, 1.3, 1.3, 1.2, 1.1, 1, 0.9, 0.6, 0.5],
+    cockerels: [0, 0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0, 0],
+    broilers: [0, 0, 0, 0, 0, 0.8, 1, 1, 1, 1, 0.2, 0],
+    geese: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.3, 3, 0.7],
+    ducks: [0, 0, 0, 0, 0, 0, 0.5, 1, 1, 1, 0.8, 0.2],
+    turkeys: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2, 0.8, 3],
+    guineaFowl: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1.2, 0.8, 0.3],
+    rabbits: [0.3, 0.3, 0.5, 0.8, 1, 1, 1, 1, 1, 1.2, 1.2, 1],
+    sheep: [0, 0, 0, 0, 0, 0.5, 1, 1.5, 1.2, 0.8, 0.3, 0],
+    lambMeat: [0, 0, 0.6, 0.6, 0.2, 0.2, 0.4, 0.8, 1, 1, 0.8, 1],
+    processedGoods: [0.3, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.3, 0.5, 1, 2.5, 3],
+    fruit: [0, 0, 0, 0, 0, 0, 0.3, 1, 2, 1.5, 0.6, 0.4],
+    mushrooms: [0, 0, 0.2, 1, 1.2, 0.6, 0.3, 0.5, 1.2, 1.4, 0.8, 0.2],
+    vegetables: [0.2, 0.2, 0.5, 0.3, 0.6, 1, 1.4, 1.5, 1.3, 1, 0.4, 0.2],
+    goats: [0, 0, 0.6, 1.2, 0.8, 0.5, 0.4, 0.4, 0.6, 0.8, 0.5, 0.2],
+    pigs: [0, 0, 0, 0, 0, 0, 0, 0, 0.5, 1.5, 2, 1],
+    honey: [0, 0, 0, 0, 0, 0.6, 1.2, 1.2, 0.6, 0.3, 0.3, 0.6],
+    beefCattle: [0, 0, 0, 0, 0, 0, 0, 0, 0.6, 2, 0.6, 0.2],
   },
-  C: {
-    orne: [0, 0, 1.6, 1.4, 0.4, 0.3, 1.2, 1.4, 1.2, 0.6, 0, 0],
-    laka: [0, 0, 0, 0, 0, 1.5, 0.5, 1, 0, 0, 0, 0],
-    past: [0, 0, 0.8, 1, 0.4, 0, 0, 0, 0, 0, 0, 0],
-    krowy: [1, 1, 1.4, 1, 1, 1, 1, 1, 1, 1, 1, 0.6],
-    mlekoOpak: [0, 0, 0.6, 1.1, 1.4, 1.3, 1.2, 1.1, 1, 0.9, 0.8, 0.6],
-    ser: [0, 0, 0.5, 1.2, 1.5, 1.4, 1.3, 1.2, 1.1, 1, 0.5, 0.3],
-    kury: [0.6, 0.6, 2, 1.5, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.7, 0.6],
-    brojlery: [0, 0, 0, 0.8, 1.2, 1.3, 1.3, 1.3, 1.1, 0.8, 0.2, 0],
-    gesi: [0, 0, 0, 0.5, 1.5, 1, 1, 1, 1, 1.5, 1.5, 0],
-    kaczki: [0, 0, 0, 0.5, 1.5, 1.5, 1.5, 1.5, 1.2, 0.8, 0.5, 0],
-    indyki: [0, 0, 0, 0, 1, 1, 1, 1, 1.2, 1.5, 2, 1.3],
-    perliczki: [0, 0, 0, 0, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 0.8, 0],
-    przetwory: [0.3, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.3, 0.5, 1, 2.5, 3],
-    owoce: [0, 0, 0, 0, 0, 0, 0.3, 1, 2, 1.5, 0.6, 0.4],
-    grzyby: [0, 0, 2, 2, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0],
-    warzywa: [0.3, 0.5, 2, 1.8, 1.4, 1, 0.8, 0.8, 0.8, 0.8, 0.5, 0.3],
-    ule: [0, 0, 1, 1, 1, 1, 1, 1, 1, 0.5, 0.5, 0],
-    uboj: [0, 0, 0.6, 0.6, 0.2, 0.2, 0.4, 0.8, 1, 1, 0.8, 1],
-    dzierzawa: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-    stale: [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
-    energia: [1.3, 1.2, 1.1, 1, 0.9, 0.8, 0.8, 0.8, 0.9, 1, 1.1, 1.3],
-    dokup: [0, 0, 0, 0, 0, 1, 2, 2, 1, 0, 0, 0],
-    miedzyplony: [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
-    bydlo: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1.6, 1.2, 1],
+  costs: {
+    arable: [0, 0, 1.6, 1.4, 0.4, 0.3, 1.2, 1.4, 1.2, 0.6, 0, 0],
+    meadow: [0, 0, 0, 0, 0, 1.5, 0.5, 1, 0, 0, 0, 0],
+    pasture: [0, 0, 0.8, 1, 0.4, 0, 0, 0, 0, 0, 0, 0],
+    dairyCows: [1, 1, 1.4, 1, 1, 1, 1, 1, 1, 1, 1, 0.6],
+    milkPackaging: [0, 0, 0.6, 1.1, 1.4, 1.3, 1.2, 1.1, 1, 0.9, 0.8, 0.6],
+    cheese: [0, 0, 0.5, 1.2, 1.5, 1.4, 1.3, 1.2, 1.1, 1, 0.5, 0.3],
+    layingHens: [0.6, 0.6, 2, 1.5, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.7, 0.6],
+    broilers: [0, 0, 0, 0.8, 1.2, 1.3, 1.3, 1.3, 1.1, 0.8, 0.2, 0],
+    geese: [0, 0, 0, 0.5, 1.5, 1, 1, 1, 1, 1.5, 1.5, 0],
+    ducks: [0, 0, 0, 0.5, 1.5, 1.5, 1.5, 1.5, 1.2, 0.8, 0.5, 0],
+    turkeys: [0, 0, 0, 0, 1, 1, 1, 1, 1.2, 1.5, 2, 1.3],
+    guineaFowl: [0, 0, 0, 0, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 0.8, 0],
+    processedGoods: [0.3, 0.2, 0.2, 0.4, 0.2, 0.2, 0.2, 0.3, 0.5, 1, 2.5, 3],
+    fruit: [0, 0, 0, 0, 0, 0, 0.3, 1, 2, 1.5, 0.6, 0.4],
+    mushrooms: [0, 0, 2, 2, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 0],
+    vegetables: [0.3, 0.5, 2, 1.8, 1.4, 1, 0.8, 0.8, 0.8, 0.8, 0.5, 0.3],
+    beehives: [0, 0, 1, 1, 1, 1, 1, 1, 1, 0.5, 0.5, 0],
+    slaughter: [0, 0, 0.6, 0.6, 0.2, 0.2, 0.4, 0.8, 1, 1, 0.8, 1],
+    landLease: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+    fixed: [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+    energy: [1.3, 1.2, 1.1, 1, 0.9, 0.8, 0.8, 0.8, 0.9, 1, 1.1, 1.3],
+    purchases: [0, 0, 0, 0, 0, 1, 2, 2, 1, 0, 0, 0],
+    catchCrops: [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+    beefCattle: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1.6, 1.2, 1],
   },
-  dop: [0.08, 0.08, 0.06, 0, 0, 0, 0, 0, 0, 0.5, 0.18, 0.1],
-  dobrostan: [0, 0, 0.3, 0.3, 0.2, 0.2, 0, 0, 0, 0, 0, 0],
+  // advance payments from mid-October, the rest by the end of June
+  subsidies: [0.08, 0.08, 0.06, 0, 0, 0, 0, 0, 0, 0.5, 0.18, 0.1],
+  animalWelfare: [0, 0, 0.3, 0.3, 0.2, 0.2, 0, 0, 0, 0, 0, 0],
 };
-const FLAT = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-function spread(total, prof) {
-  const pr = prof || FLAT;
-  const sm = pr.reduce((a, b) => a + b, 0) || 1;
-  return pr.map(w => (total * w) / sm);
+
+const EVEN_MONTHS = Array(12).fill(1);
+
+/** Splits a yearly amount into 12 monthly amounts proportional to the profile. */
+function spreadOverMonths(total, profile = EVEN_MONTHS) {
+  const weightSum = profile.reduce((sum, weight) => sum + weight, 0) || 1;
+  return profile.map(weight => (total * weight) / weightSum);
 }
-function cashflow(r, p) {
-  const M = Array.from({ length: 12 }, () => ({ wplywy: 0, dop: 0, wydatki: 0, dom: 0, netto: 0, saldo: 0 }));
-  for (const k in r.R)
-    spread(r.R[k], CF.R[k]).forEach((v, i) => {
-      M[i].wplywy += v;
-    });
-  for (const k in r.C)
-    spread(r.C[k], CF.C[k]).forEach((v, i) => {
-      M[i].wydatki += v;
-    });
-  for (const k in r.Dp)
-    spread(r.Dp[k], k === 'dobrostan' ? CF.dobrostan : CF.dop).forEach((v, i) => {
-      M[i].dop += v;
-    });
-  const naDom = Math.max(0, p.wydDom - p.dzieci800 * 800);
-  let saldo = p.gotowkaStart,
-    min = Infinity,
-    minM = 0;
-  M.forEach((m, i) => {
-    m.dom = naDom;
-    m.netto = m.wplywy + m.dop - m.wydatki;
-    saldo += m.netto - m.dom;
-    m.saldo = saldo;
-    if (saldo < min) {
-      min = saldo;
-      minM = i;
+
+/**
+ * @param {object} results - output of simulateFarm (revenueItems, costItems, subsidyItems)
+ * @param {object} params
+ * @returns {{months: object[], minBalance: number, minBalanceMonth: number,
+ *   householdDraw: number, closingBalance: number}}
+ */
+function computeMonthlyCashflow(results, params) {
+  const months = Array.from({ length: 12 }, () => ({
+    inflows: 0,
+    subsidy: 0,
+    outflows: 0,
+    household: 0,
+    netIncome: 0,
+    balance: 0,
+  }));
+  const addToMonths = (field, items, profileOf) => {
+    for (const [item, total] of Object.entries(items))
+      spreadOverMonths(total, profileOf(item)).forEach((amount, month) => (months[month][field] += amount));
+  };
+  addToMonths('inflows', results.revenueItems, item => CASHFLOW_PROFILES.revenue[item]);
+  addToMonths('outflows', results.costItems, item => CASHFLOW_PROFILES.costs[item]);
+  addToMonths('subsidy', results.subsidyItems, item =>
+    item === 'animalWelfare' ? CASHFLOW_PROFILES.animalWelfare : CASHFLOW_PROFILES.subsidies
+  );
+
+  const childBenefit = params.childBenefitChildren * CHILD_BENEFIT_PER_MONTH;
+  const householdDraw = Math.max(0, params.householdMonthlySpending - childBenefit);
+  let balance = params.openingCash;
+  let minBalance = Infinity;
+  let minBalanceMonth = 0;
+  months.forEach((month, index) => {
+    month.household = householdDraw;
+    month.netIncome = month.inflows + month.subsidy - month.outflows;
+    balance += month.netIncome - month.household;
+    month.balance = balance;
+    if (balance < minBalance) {
+      minBalance = balance;
+      minBalanceMonth = index;
     }
   });
-  return { M, min, minM, naDom, koniec: saldo };
+
+  return { months, minBalance, minBalanceMonth, householdDraw, closingBalance: balance };
 }

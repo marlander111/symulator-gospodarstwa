@@ -1,31 +1,77 @@
-// Panel „Inwestycje”: kwoty powiązane z suwakami cen jednostkowych.
+// Panel "Investments": amounts tied two-way to the unit-price sliders. Typing a total sets the
+// unit price so that quantity × price equals the typed amount.
 
-function renderInv(r) {
+const INVESTMENT_COLUMNS = ['investment', 'cost', 'unitPrice', 'years', 'perYear'];
+
+function renderInvestments(results) {
+  // do not rebuild the table while the user is typing in it
   if (document.activeElement && document.activeElement.classList.contains('inv-in')) return;
-  let t = `<thead><tr><th>Inwestycja</th><th class="n">Koszt (wpisz swój)</th><th class="n">Cena jednostkowa</th><th class="n">Lata</th><th class="n">Rocznie</th></tr></thead><tbody>`;
-  for (const i of r.I) {
-    if (i.q <= 0) continue;
-    const d = DEF.find(x => x.id === i.pid);
-    const unit =
-      i.q === 1 ? '' : `${fmtVal(d, p[i.pid])}${i.q !== 1 ? ` × ${fmt(i.q, i.q < 10 ? 1 : 0)}` : ''}`;
-    t += `<tr><td>${esc(i.l)}</td><td class="n"><input class="inv-in" type="number" min="0" step="500" inputmode="numeric" data-inv="${i.k}" value="${Math.round(i.c)}" aria-label="Koszt: ${esc(i.l)}"></td><td class="n small muted">${unit}</td><td class="n">${i.life}</td><td class="n">${zl0(i.a)}</td></tr>`;
-  }
-  t += `<tr class="tot"><td>Razem</td><td class="n">${zl0(r.capex)}</td><td></td><td class="n"></td><td class="n">${zl0(r.amort)}</td></tr></tbody>`;
-  $('t-inv').innerHTML = t;
-  document.querySelectorAll('[data-inv]').forEach(el =>
-    el.addEventListener('change', () => {
-      const it = r.I.find(x => x.k === el.dataset.inv);
-      const v = parseFloat(el.value);
-      if (!it || !isFinite(v) || v < 0 || it.q <= 0) return;
-      p[it.pid] = Math.round((v / it.q) * 100) / 100;
-      const inp = $('in-' + it.pid),
-        d = DEF.find(x => x.id === it.pid);
-      if (inp) {
-        inp.value = p[it.pid];
-        $('out-' + it.pid).textContent = fmtVal(d, p[it.pid]);
-      }
-      el.blur();
-      changed();
-    })
+
+  const header = tableHeader(INVESTMENT_COLUMNS.map(column => t(`investmentsTable.columns.${column}`)));
+  const rows = results.investmentItems.filter(item => item.quantity > 0).map(investmentRow);
+  rows.push(
+    tableRow(
+      [
+        cell(t('money.total')),
+        cell(formatPlnExact(results.capex), { class: 'n' }),
+        cell(''),
+        cell('', { class: 'n' }),
+        cell(formatPlnExact(results.depreciation), { class: 'n' }),
+      ],
+      { class: 'tot' }
+    )
   );
+  byId('investments-table').innerHTML = header + tableBody(rows);
+
+  document
+    .querySelectorAll('[data-investment]')
+    .forEach(input => input.addEventListener('change', () => setInvestmentTotal(results, input)));
+}
+
+function investmentRow(item) {
+  const label = escapeHtml(t(`investments.${item.id}`));
+  const costInput = voidElement('input', {
+    class: 'inv-in',
+    type: 'number',
+    min: 0,
+    step: 500,
+    inputmode: 'numeric',
+    'data-investment': item.id,
+    value: Math.round(item.cost),
+    'aria-label': t('investmentsTable.costLabel', { investment: label }),
+  });
+
+  return tableRow([
+    cell(label),
+    cell(costInput, { class: 'n' }),
+    cell(unitPriceText(item), { class: 'n small muted' }),
+    cell(item.lifetimeYears, { class: 'n' }),
+    cell(formatPlnExact(item.yearlyDepreciation), { class: 'n' }),
+  ]);
+}
+
+/** "price × quantity" for investments bought in more than one unit. */
+function unitPriceText(item) {
+  if (item.quantity === 1) return '';
+
+  const price = formatParameterValue(parameterById(item.priceParam), params[item.priceParam]);
+  const quantity = formatNumber(item.quantity, item.quantity < 10 ? 1 : 0);
+  return `${price} × ${quantity}`;
+}
+
+function setInvestmentTotal(results, input) {
+  const item = results.investmentItems.find(candidate => candidate.id === input.dataset.investment);
+  const total = parseFloat(input.value);
+  if (!item || !isFinite(total) || total < 0 || item.quantity <= 0) return;
+
+  const id = item.priceParam;
+  params[id] = Math.round((total / item.quantity) * 100) / 100;
+
+  const slider = byId('input-' + id);
+  if (slider) {
+    slider.value = params[id];
+    byId('output-' + id).textContent = formatParameterValue(parameterById(id), params[id]);
+  }
+  input.blur();
+  onParamsChanged();
 }

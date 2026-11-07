@@ -1,9 +1,12 @@
-// Start aplikacji.
+// Starts the app: fills static texts, builds the controls and renders all panels.
 
+applyTranslations(document);
+renderCoverCropGuide();
+initTheme();
 buildControls();
 buildPresets();
-buildMine();
-buildPlanCtl();
+buildSavedVariants();
+buildPlanControls();
 buildExport();
 syncInputs();
 render();

@@ -1,89 +1,118 @@
-// Panel „Czas pracy w roku”: godziny w miesiącach na tle limitu i czasu rodziny.
+// Panel "Working time": hours per month stacked by activity group against the family's time
+// and the weekly limit, and a table of hours per activity.
 
-function renderLab(r) {
-  const C = {
-    krowy: 'var(--c-krowy)',
-    drob: 'var(--c-drob)',
-    owce: 'var(--c-owce)',
-    pole: 'var(--c-pole)',
-    warz: 'var(--c-warz)',
-    przetw: 'var(--c-przetw)',
-    reszta: 'var(--c-reszta)',
-  };
-  const W = 640,
-    H = 270,
-    pl = 44,
-    pr = 10,
-    pt = 14,
-    pb = 30;
-  const cap = r.dostepne / 12;
-  const lim = p.limitTydz * 4.33;
-  const max = Math.max(r.szczyt, cap, lim, 1);
-  const step = niceStep(max);
-  const top = Math.ceil(max / step) * step;
-  const y = v => pt + (1 - v / top) * (H - pt - pb);
-  let s = '';
-  for (let v = 0; v <= top + 1e-9; v += step) {
-    s += `<line class="grid" x1="${pl}" x2="${W - pr}" y1="${y(v)}" y2="${y(v)}"></line><text x="${pl - 6}" y="${y(v) + 4}" text-anchor="end" class="ax">${fmt(v, 0)}</text>`;
-  }
-  const mon = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-  const bw = (W - pl - pr) / 12;
-  r.mies.forEach((m, i) => {
-    let acc = 0;
-    const x = pl + i * bw + bw * 0.16,
-      w = bw * 0.68;
-    LAB_GROUPS.forEach(g => {
-      const v = m[g.id];
-      if (v <= 0) return;
-      s += `<rect x="${x}" y="${y(acc + v)}" width="${w}" height="${Math.max(0.5, y(acc) - y(acc + v))}" fill="${C[g.id]}"><title>${mon[i]}: ${g.l} ${fmt(v, 0)} h</title></rect>`;
-      acc += v;
-    });
-    s += `<text x="${x + w / 2}" y="${H - 10}" text-anchor="middle" class="ax">${mon[i]}</text>`;
-  });
-  if (cap > 0)
-    s += `<line x1="${pl}" x2="${W - pr}" y1="${y(cap)}" y2="${y(cap)}" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="6 4"></line><text x="${W - pr}" y="${y(cap) - 5}" text-anchor="end" font-size="12">czas rodziny: ${fmt(cap, 0)} h/mies.</text>`;
-  else s += `<text x="${W - pr}" y="${pt + 12}" text-anchor="end" class="ax">godziny w miesiącu</text>`;
-  s += `<line x1="${pl}" x2="${W - pr}" y1="${y(lim)}" y2="${y(lim)}" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="2 4"></line><text x="${pl + 6}" y="${y(lim) - 5}" font-size="12" fill="var(--bad)">Twój limit: ${fmt(p.limitTydz, 0)} h/tydz.</text>`;
-  $('lab').innerHTML = s;
-  $('lablegend').innerHTML = LAB_GROUPS.map(
-    g => `<span><i style="background:${C[g.id]}"></i>${g.l}</span>`
+const LABOUR_CHART = { width: 640, height: 270, padLeft: 44, padRight: 10, padTop: 14, padBottom: 30 };
+
+function renderLabour(results) {
+  renderLabourChart(results);
+
+  byId('labour-legend').innerHTML = LABOUR_GROUPS.map(
+    group => `<span><i style="background:${group.color}"></i>${t(`labourGroups.${group.id}`)}</span>`
   ).join('');
-  $('lab-sub').textContent =
-    `Średnio ${fmt(r.tydzSr, 0)} h tygodniowo, w najcięższym miesiącu ok. ${fmt(r.tydzSzczyt, 0)} h. Rodzina ma ok. ${fmt(r.dostepne / 52, 0)} h tygodniowo.`;
-  const HL = {
-    krowy: 'Krowy: dojenie, mycie, wypas',
-    ser: 'Serowarstwo',
-    kury: 'Kury nieśne',
-    brojlery: 'Kurczaki',
-    gesi: 'Gęsi',
-    kroliki: 'Króliki',
-    owce: 'Owce',
-    kozy: 'Kozy',
-    swinie: 'Świnie',
-    siano: 'Siano',
-    zboza: 'Zboża',
-    sprzedaz: 'Sprzedaż i dowozy',
-    ogolne: 'Ogrodzenia, naprawy, papiery',
-    ogrod: 'Sad i warzywnik dla domu',
-    warzywa: 'Warzywa na sprzedaż',
-    ule: 'Pszczoły',
-    konie: 'Konie',
-    bydlo: 'Bydło mięsne',
-    miedzyplony: 'Międzyplony',
-    wyleg: 'Własny wylęg i kogutki',
-    kaczki: 'Kaczki',
-    indyki: 'Indyki',
-    perliczki: 'Perliczki',
-    przetwory: 'Przetwórstwo i wysyłka',
-    owoce: 'Owoce: zbiór, tłoczenie, sprzedaż',
-    grzyby: 'Boczniaki na kłodach',
-  };
-  const entries = Object.entries(r.H)
-    .filter(([k, v]) => v > 0.5)
+
+  byId('labour-summary').textContent = t('labour.summary', {
+    average: formatNumber(results.weeklyHoursAverage, 0),
+    peak: formatNumber(results.weeklyHoursPeak, 0),
+    available: formatNumber(results.availableHours / 52, 0),
+  });
+
+  renderLabourTable(results);
+}
+
+function renderLabourChart(results) {
+  const chart = LABOUR_CHART;
+  const familyHoursPerMonth = results.availableHours / 12;
+  const limitPerMonth = params.weeklyHoursLimit * WEEKS_PER_MONTH;
+  const max = Math.max(results.peakMonthHours, familyHoursPerMonth, limitPerMonth, 1);
+  const step = niceAxisStep(max);
+  const top = Math.ceil(max / step) * step;
+  const y = hours => chart.padTop + (1 - hours / top) * (chart.height - chart.padTop - chart.padBottom);
+  const right = chart.width - chart.padRight;
+  const monthLabels = messages('months.numerals');
+
+  let svg = '';
+  for (let hours = 0; hours <= top + 1e-9; hours += step) {
+    svg += horizontalLine(chart, y(hours), { class: 'grid' });
+    svg += axisText(chart.padLeft - 6, y(hours) + 4, formatNumber(hours, 0), 'end');
+  }
+
+  const slot = (chart.width - chart.padLeft - chart.padRight) / 12;
+  results.monthlyHours.forEach((month, index) => {
+    const x = chart.padLeft + index * slot + slot * 0.16;
+    const width = slot * 0.68;
+    let stacked = 0;
+    for (const group of LABOUR_GROUPS) {
+      const hours = month[group.id];
+      if (hours <= 0) continue;
+      const tooltip = t('labour.barTooltip', {
+        month: monthLabels[index],
+        group: t(`labourGroups.${group.id}`),
+        hours: formatNumber(hours, 0),
+      });
+      const bar = {
+        x,
+        y: y(stacked + hours),
+        width,
+        height: Math.max(0.5, y(stacked) - y(stacked + hours)),
+        fill: group.color,
+      };
+      svg += withTooltip('rect', bar, tooltip);
+      stacked += hours;
+    }
+    svg += axisText(x + width / 2, chart.height - 10, monthLabels[index], 'middle');
+  });
+
+  if (familyHoursPerMonth > 0) {
+    const familyY = y(familyHoursPerMonth);
+    const label = t('labour.familyTime', { hours: formatNumber(familyHoursPerMonth, 0) });
+    svg += horizontalLine(chart, familyY, {
+      stroke: 'var(--ink)',
+      'stroke-width': 1.5,
+      'stroke-dasharray': '6 4',
+    });
+    svg += element('text', { x: right, y: familyY - 5, 'text-anchor': 'end', 'font-size': 12 }, label);
+  } else {
+    svg += axisText(right, chart.padTop + 12, t('labour.axisLabel'), 'end');
+  }
+
+  const limitY = y(limitPerMonth);
+  const limitLabel = t('labour.yourLimit', { hours: formatNumber(params.weeklyHoursLimit, 0) });
+  svg += horizontalLine(chart, limitY, {
+    stroke: 'var(--bad)',
+    'stroke-width': 1.5,
+    'stroke-dasharray': '2 4',
+  });
+  svg += element(
+    'text',
+    { x: chart.padLeft + 6, y: limitY - 5, 'font-size': 12, fill: 'var(--bad)' },
+    limitLabel
+  );
+
+  byId('labour-chart').innerHTML = svg;
+}
+
+function renderLabourTable(results) {
+  const activities = Object.entries(results.hoursByActivity)
+    .filter(([, hours]) => hours > 0.5)
     .sort((a, b) => b[1] - a[1]);
-  let t = `<thead><tr><th>Zajęcie</th><th class="n">h/rok</th><th class="n">h/tydz.</th><th class="n">udział</th></tr></thead><tbody>`;
-  for (const [k, v] of entries)
-    t += `<tr><td>${HL[k]}</td><td class="n">${fmt(v, 0)}</td><td class="n">${fmt(v / 52, 1)}</td><td class="n">${fmt((v / r.godziny) * 100, 0)}%</td></tr>`;
-  t += `<tr class="tot"><td>Razem</td><td class="n">${fmt(r.godziny, 0)}</td><td class="n">${fmt(r.tydzSr, 1)}</td><td class="n">100%</td></tr></tbody>`;
-  $('t-lab').innerHTML = t;
+  const columns = ['activity', 'perYear', 'perWeek', 'share'];
+  const percent = value => t('units.percent', { value });
+
+  const rows = activities.map(
+    ([activity, hours]) =>
+      `<tr><td>${t(`labour.activities.${activity}`)}</td>` +
+      numberCell(formatNumber(hours, 0)) +
+      numberCell(formatNumber(hours / 52, 1)) +
+      numberCell(percent(formatNumber((hours / results.totalHours) * 100, 0))) +
+      '</tr>'
+  );
+  const totalRow =
+    `<tr class="tot"><td>${t('money.total')}</td>` +
+    numberCell(formatNumber(results.totalHours, 0)) +
+    numberCell(formatNumber(results.weeklyHoursAverage, 1)) +
+    numberCell(percent(100)) +
+    '</tr>';
+
+  const header = tableHeader(columns.map(column => t(`labour.columns.${column}`)));
+  byId('labour-table').innerHTML = `${header}<tbody>${rows.join('')}${totalRow}</tbody>`;
 }

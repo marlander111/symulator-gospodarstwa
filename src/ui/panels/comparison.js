@@ -1,44 +1,116 @@
-// Sekcja „Porównanie wariantów”.
+// Section "Compare variants": every preset and saved variant under realistic assumptions and in the
+// pessimistic scenario, with a button that loads it.
 
-function renderCmp() {
-  const rea = ASSUME.find(a => a.id === 'realnie').set;
-  let t = `<thead><tr><th>Wariant</th><th class="n">Na czysto (realnie)</th><th class="n">Na czysto (wariant pesymistyczny)</th><th class="n">Godziny / rok</th><th class="n">Szczyt h/tydz. (wariant pesymistyczny)</th><th class="n">Inwestycje</th><th>Pasze z pól</th><th></th></tr></thead><tbody>`;
-  for (const v of PRESETS) {
-    const a = compute(Object.assign({}, p, v.set, rea));
-    const b = compute(gorzej(Object.assign({}, p, v.set, rea)));
-    const ok = x => x.grainBal >= -0.05 && x.hayBal >= -0.05 && x.strawBal >= -0.05;
-    const lack = x =>
-      [
-        x.grainBal < -0.05 ? `ziarna ${fmt(-x.grainBal, 1)} t` : '',
-        x.hayBal < -0.05 ? `siana ${fmt(-x.hayBal, 1)} t` : '',
-        x.strawBal < -0.05 ? `słomy ${fmt(-x.strawBal, 1)} t` : '',
-      ]
-        .filter(Boolean)
-        .join(', ');
-    t += `<tr><td><b>${esc(v.l)}</b><br><span class="small muted">${esc(v.note)}</span></td><td class="n">${zl(a.netto)}</td><td class="n${b.netto < celEff(p) ? ' neg' : ''}">${zl(b.netto)}</td><td class="n">${fmt(a.godziny, 0)}</td><td class="n${b.tydzSzczyt > p.limitTydz ? ' neg' : ''}">${fmt(b.tydzSzczyt, 0)}</td><td class="n">${zl(a.capex)}</td><td>${ok(a) ? '<span class="pill ok">wystarcza</span>' : `<span class="pill bad">brakuje: ${lack(a)}</span>`} ${ok(b) ? '' : `<span class="pill warn">w wariancie pesymistycznym brakuje: ${lack(b)}</span>`}</td><td><button class="btn" type="button" data-load="${v.id}">Wczytaj</button></td></tr>`;
+function renderComparison() {
+  const realistic = ASSUMPTION_SETS.find(set => set.id === 'realistic').params;
+  const target = computeIncomeTarget(params);
+  const columns = [
+    'variant',
+    'netRealistic',
+    'netPessimistic',
+    'hours',
+    'peakPessimistic',
+    'investments',
+    'feed',
+    'load',
+  ];
+  let html = tableHeader(
+    columns.map(column => (column === 'load' ? '' : t(`comparison.columns.${column}`))),
+    index => index > 0 && index < 6
+  );
+  html += '<tbody>';
+
+  for (const preset of PRESETS) {
+    const variantParams = { ...params, ...preset.params, ...realistic };
+    html += comparisonRowHtml({
+      title: t(`presets.${preset.id}.label`),
+      subtitle: t(`presets.${preset.id}.note`),
+      variantParams,
+      target,
+      showShortageDetails: true,
+      loadButtonData: { 'data-load-preset': preset.id },
+    });
   }
-  mine.forEach((m, i) => {
-    const a = compute(Object.assign(defaults(), m.p));
-    const b = compute(gorzej(Object.assign(defaults(), m.p)));
-    const ok = x => x.grainBal >= -0.05 && x.hayBal >= -0.05 && x.strawBal >= -0.05;
-    t += `<tr><td><b>${esc(m.name)}</b><br><span class="small muted">mój wariant, ceny jak zapisano</span></td><td class="n">${zl(a.netto)}</td><td class="n${b.netto < celEff(p) ? ' neg' : ''}">${zl(b.netto)}</td><td class="n">${fmt(a.godziny, 0)}</td><td class="n${b.tydzSzczyt > p.limitTydz ? ' neg' : ''}">${fmt(b.tydzSzczyt, 0)}</td><td class="n">${zl(a.capex)}</td><td>${ok(a) ? '<span class="pill ok">wystarcza</span>' : '<span class="pill bad">brakuje</span>'}</td><td><button class="btn" type="button" data-loadmine="${i}">Wczytaj</button></td></tr>`;
+  savedVariants.forEach((variant, index) => {
+    html += comparisonRowHtml({
+      title: variant.name,
+      subtitle: t('comparison.savedVariant'),
+      variantParams: { ...defaultParams(), ...variant.params },
+      target,
+      showShortageDetails: false,
+      loadButtonData: { 'data-load-saved': index },
+    });
   });
-  t += `</tbody>`;
-  $('t-cmp').innerHTML = t;
-  document.querySelectorAll('[data-loadmine]').forEach(b =>
-    b.addEventListener('click', () => {
-      p = Object.assign(defaults(), mine[+b.dataset.loadmine].p);
-      syncInputs();
-      changed();
-      document.getElementById('ctrls').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  byId('comparison-table').innerHTML = html + `</tbody>`;
+
+  const loadAndScroll = values => {
+    applyParams(values);
+    byId('controls').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  document.querySelectorAll('[data-load-saved]').forEach(button =>
+    button.addEventListener('click', () => {
+      params = { ...defaultParams(), ...savedVariants[+button.dataset.loadSaved].params };
+      loadAndScroll({});
     })
   );
-  document.querySelectorAll('[data-load]').forEach(b =>
-    b.addEventListener('click', () => {
-      Object.assign(p, PRESETS.find(v => v.id === b.dataset.load).set);
-      syncInputs();
-      changed();
-      document.getElementById('ctrls').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    })
+  document
+    .querySelectorAll('[data-load-preset]')
+    .forEach(button =>
+      button.addEventListener('click', () => loadAndScroll(presetById(button.dataset.loadPreset).params))
+    );
+}
+
+function comparisonRowHtml({ title, subtitle, variantParams, target, showShortageDetails, loadButtonData }) {
+  const realistic = simulateFarm(variantParams);
+  const pessimistic = simulateFarm(applyPessimisticScenario(variantParams));
+  const feedCell = showShortageDetails
+    ? feedStatusHtml(realistic, 'bad', 'comparison.missing') +
+      ' ' +
+      (feedIsSufficient(pessimistic)
+        ? ''
+        : feedStatusHtml(pessimistic, 'warn', 'comparison.missingPessimistic'))
+    : feedIsSufficient(realistic)
+      ? element('span', { class: 'pill ok' }, t('comparison.enough'))
+      : element('span', { class: 'pill bad' }, t('comparison.missingShort'));
+  const titleHtml =
+    element('b', {}, escapeHtml(title)) +
+    '<br>' +
+    element('span', { class: 'small muted' }, escapeHtml(subtitle));
+  const loadButton = element(
+    'button',
+    { class: 'btn', type: 'button', ...loadButtonData },
+    t('comparison.load')
   );
+
+  return tableRow([
+    cell(titleHtml),
+    numberCell(formatPln(realistic.netIncome)),
+    numberCell(formatPln(pessimistic.netIncome), pessimistic.netIncome < target),
+    numberCell(formatNumber(realistic.totalHours, 0)),
+    numberCell(
+      formatNumber(pessimistic.weeklyHoursPeak, 0),
+      pessimistic.weeklyHoursPeak > params.weeklyHoursLimit
+    ),
+    numberCell(formatPln(realistic.capex)),
+    cell(feedCell),
+    cell(loadButton),
+  ]);
+}
+
+const feedIsSufficient = results =>
+  results.grainBalance >= -0.05 && results.hayBalance >= -0.05 && results.strawBalance >= -0.05;
+
+/** "enough" pill, or a pill listing the missing grain, hay and straw. */
+function feedStatusHtml(results, level, missingKey) {
+  if (feedIsSufficient(results))
+    return level === 'bad' ? `<span class="pill ok">${t('comparison.enough')}</span>` : '';
+  const shortages = [
+    ['grain', results.grainBalance],
+    ['hay', results.hayBalance],
+    ['straw', results.strawBalance],
+  ]
+    .filter(([, balance]) => balance < -0.05)
+    .map(([feed, balance]) => t(`comparison.shortage.${feed}`, { tonnes: formatNumber(-balance, 1) }))
+    .join(', ');
+  return `<span class="pill ${level}">${t(missingKey, { items: shortages })}</span>`;
 }

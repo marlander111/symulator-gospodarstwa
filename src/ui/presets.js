@@ -1,115 +1,162 @@
-// Gotowe warianty i „Moje warianty” zapisane w przeglądarce.
+// Ready-made variants, assumption sets and the user's own variants saved in this browser.
 
-// ---------- Warianty ----------
 function buildPresets() {
-  $('row-var').insertAdjacentHTML(
-    'beforeend',
-    PRESETS.map(
-      v =>
-        `<button class="btn" type="button" data-var="${v.id}">${esc(v.l)} <small>${esc(v.note)}</small></button>`
-    ).join('')
+  const presetButton = preset =>
+    element(
+      'button',
+      { class: 'btn', type: 'button', 'data-preset': preset.id },
+      escapeHtml(t(`presets.${preset.id}.label`)) +
+        ' ' +
+        element('small', {}, escapeHtml(t(`presets.${preset.id}.note`)))
+    );
+  const assumptionButton = set =>
+    element(
+      'button',
+      { class: 'btn', type: 'button', 'data-assumption': set.id },
+      escapeHtml(t(`assumptionSets.${set.id}`))
+    );
+  const pessimisticToggle = element(
+    'button',
+    { class: 'btn ghost', type: 'button', id: 'view-pessimistic', 'aria-pressed': 'false' },
+    t('presets.showPessimistic')
   );
-  $('row-ass').insertAdjacentHTML(
+
+  byId('preset-buttons').insertAdjacentHTML('beforeend', PRESETS.map(presetButton).join(''));
+  byId('assumption-buttons').insertAdjacentHTML(
     'beforeend',
-    ASSUME.map(a => `<button class="btn" type="button" data-ass="${a.id}">${esc(a.l)}</button>`).join('') +
-      `<button class="btn ghost" type="button" id="view-g" aria-pressed="false">Pokaż wszystko w wariancie pesymistycznym</button>`
+    ASSUMPTION_SETS.map(assumptionButton).join('') + pessimisticToggle
   );
-  $('view-g').addEventListener('click', () => {
-    viewG = !viewG;
-    $('view-g').setAttribute('aria-pressed', viewG);
-    $('view-g').classList.toggle('on', viewG);
+
+  byId('view-pessimistic').addEventListener('click', () => {
+    showPessimistic = !showPessimistic;
+    byId('view-pessimistic').setAttribute('aria-pressed', showPessimistic);
+    byId('view-pessimistic').classList.toggle('on', showPessimistic);
     render();
   });
-  document.querySelectorAll('[data-var]').forEach(b =>
-    b.addEventListener('click', () => {
-      Object.assign(p, PRESETS.find(v => v.id === b.dataset.var).set);
-      syncInputs();
-      changed();
-    })
-  );
-  document.querySelectorAll('[data-ass]').forEach(b =>
-    b.addEventListener('click', () => {
-      Object.assign(p, ASSUME.find(a => a.id === b.dataset.ass).set);
-      syncInputs();
-      changed();
-    })
-  );
+  document
+    .querySelectorAll('[data-preset]')
+    .forEach(button =>
+      button.addEventListener('click', () => applyParams(presetById(button.dataset.preset).params))
+    );
+  document
+    .querySelectorAll('[data-assumption]')
+    .forEach(button =>
+      button.addEventListener('click', () =>
+        applyParams(ASSUMPTION_SETS.find(set => set.id === button.dataset.assumption).params)
+      )
+    );
 }
-// ---------- Moje warianty (localStorage) ----------
-const LSV = 'gosp-lwowek-moje-v1';
-let mine = [];
-try {
-  mine = JSON.parse(localStorage.getItem(LSV) || '[]') || [];
-} catch (e) {
-  mine = [];
+
+function applyParams(values) {
+  Object.assign(params, values);
+  syncInputs();
+  onParamsChanged();
 }
-function saveMine() {
+
+// ---------- Saved variants ----------
+
+const SAVED_VARIANTS_STORAGE_KEY = 'gosp-lwowek-moje-v1';
+const savedVariants = loadSavedVariants();
+
+function loadSavedVariants() {
   try {
-    localStorage.setItem(LSV, JSON.stringify(mine));
+    const stored = JSON.parse(localStorage.getItem(SAVED_VARIANTS_STORAGE_KEY) || '[]') || [];
+    // version 1 stored the settings under `p` with Polish parameter ids
+    return stored.map(variant => ({
+      name: variant.name,
+      params: migrateLegacyParameterIds(variant.params || variant.p),
+    }));
+  } catch (error) {
+    return [];
+  }
+}
+
+/** @returns {boolean} false when the browser does not allow saving */
+function storeSavedVariants() {
+  try {
+    localStorage.setItem(SAVED_VARIANTS_STORAGE_KEY, JSON.stringify(savedVariants));
     return true;
-  } catch (e) {
+  } catch (error) {
     return false;
   }
 }
-function renderMine() {
-  $('mine-list').innerHTML = mine
-    .map(
-      (m, i) =>
-        `<button class="btn" type="button" data-mine="${i}">${esc(m.name)}<span class="x" data-del="${i}" role="button" aria-label="Usuń ${esc(m.name)}" title="Usuń">×</span></button>`
-    )
+
+function buildSavedVariants() {
+  const nameInput = byId('saved-variant-name');
+  byId('save-variant').addEventListener('click', () => {
+    const name =
+      (nameInput.value || '').trim() || t('savedVariants.defaultName', { number: savedVariants.length + 1 });
+    const existing = savedVariants.findIndex(variant => variant.name === name);
+    const variant = { name, params: { ...params } };
+    if (existing >= 0) savedVariants[existing] = variant;
+    else savedVariants.push(variant);
+
+    const stored = storeSavedVariants();
+    nameInput.value = '';
+    byId('saved-variants-note').textContent = stored
+      ? t('savedVariants.saved', { name })
+      : t('savedVariants.storageUnavailable');
+    renderSavedVariants();
+    render();
+  });
+  nameInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') byId('save-variant').click();
+  });
+  renderSavedVariants();
+}
+
+function renderSavedVariants() {
+  byId('saved-variants').innerHTML = savedVariants
+    .map((variant, index) => {
+      const name = escapeHtml(variant.name);
+      const deleteLabel = t('savedVariants.delete', { name });
+      return (
+        `<button class="btn" type="button" data-saved-variant="${index}">${name}` +
+        `<span class="x" data-delete-variant="${index}" role="button" aria-label="${deleteLabel}" ` +
+        `title="${t('savedVariants.deleteTitle')}">×</span></button>`
+      );
+    })
     .join('');
-  document.querySelectorAll('[data-mine]').forEach(b =>
-    b.addEventListener('click', e => {
-      const del = e.target.closest('[data-del]');
-      const i = +b.dataset.mine;
-      if (del) {
-        mine.splice(i, 1);
-        saveMine();
-        renderMine();
+
+  document.querySelectorAll('[data-saved-variant]').forEach(button =>
+    button.addEventListener('click', event => {
+      const index = +button.dataset.savedVariant;
+      if (event.target.closest('[data-delete-variant]')) {
+        savedVariants.splice(index, 1);
+        storeSavedVariants();
+        renderSavedVariants();
         render();
         return;
       }
-      p = Object.assign(defaults(), mine[i].p);
+      params = { ...defaultParams(), ...savedVariants[index].params };
       syncInputs();
-      changed();
+      onParamsChanged();
     })
   );
 }
-function buildMine() {
-  $('mine-save').addEventListener('click', () => {
-    const name = ($('mine-name').value || '').trim() || `Wariant ${mine.length + 1}`;
-    const ex = mine.findIndex(m => m.name === name);
-    const item = { name, p: Object.assign({}, p) };
-    if (ex >= 0) mine[ex] = item;
-    else mine.push(item);
-    const ok = saveMine();
-    $('mine-name').value = '';
-    $('mine-note').textContent = ok
-      ? `Zapisano „${name}” w tej przeglądarce.`
-      : 'Ta przeglądarka nie pozwala zapisać. Wariant działa do zamknięcia strony.';
-    renderMine();
-    render();
-  });
-  $('mine-name').addEventListener('keydown', e => {
-    if (e.key === 'Enter') $('mine-save').click();
-  });
-  renderMine();
-}
-function sameAs(q) {
-  return DEF.every(d => q[d.id] === undefined || q[d.id] === p[d.id]);
+
+// ---------- Which buttons match the current settings ----------
+
+/** True when every value of the set equals the current one (numbers compared with a tolerance). */
+function matchesCurrentParams(values) {
+  return Object.keys(values).every(id => Math.abs(+params[id] - values[id]) < 1e-9);
 }
 
-function matches(set) {
-  return Object.keys(set).every(k => Math.abs(+p[k] - set[k]) < 1e-9);
+/** True when a saved variant has exactly the current settings. */
+function equalsCurrentParams(values) {
+  return PARAMETERS.every(
+    parameter => values[parameter.id] === undefined || values[parameter.id] === params[parameter.id]
+  );
 }
-function markPresets() {
-  document
-    .querySelectorAll('[data-var]')
-    .forEach(b => b.classList.toggle('on', matches(PRESETS.find(v => v.id === b.dataset.var).set)));
-  document
-    .querySelectorAll('[data-ass]')
-    .forEach(b => b.classList.toggle('on', matches(ASSUME.find(a => a.id === b.dataset.ass).set)));
-  document
-    .querySelectorAll('[data-mine]')
-    .forEach(b => b.classList.toggle('on', sameAs(mine[+b.dataset.mine].p)));
+
+function markActivePresets() {
+  const highlight = (selector, isActive) =>
+    document.querySelectorAll(selector).forEach(button => button.classList.toggle('on', isActive(button)));
+  highlight('[data-preset]', button => matchesCurrentParams(presetById(button.dataset.preset).params));
+  highlight('[data-assumption]', button =>
+    matchesCurrentParams(ASSUMPTION_SETS.find(set => set.id === button.dataset.assumption).params)
+  );
+  highlight('[data-saved-variant]', button =>
+    equalsCurrentParams(savedVariants[+button.dataset.savedVariant].params)
+  );
 }

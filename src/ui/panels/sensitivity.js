@@ -1,70 +1,136 @@
-// Panel „Co najbardziej zmienia wynik”: każde założenie ±20%.
+// Panel "What changes the result most": each assumption moved by ±20%, as a tornado chart.
+// Factor names: locales/pl.json → sensitivity.factors.
 
-// ---------- Co najbardziej zmienia wynik (±20%) ----------
-const SENS = [
-  ['cenaSera', 'Cena sera'],
-  ['cenaMleka', 'Cena mleka'],
-  ['mleko', 'Mleko od krowy'],
-  ['wydSera', 'Wydajność sera'],
-  ['cenaJaja', 'Cena jajka'],
-  ['niesnosc', 'Nieśność'],
-  ['cenaTuszki', 'Cena kurczaka'],
-  ['cenaGesi', 'Cena gęsi'],
-  ['cenaMiesaJag', 'Cena jagnięciny'],
-  ['cenaKaczki', 'Cena kaczki'],
-  ['cenaWieprzowiny', 'Cena wieprzowiny'],
-  ['cenaMiodu', 'Cena miodu'],
-  ['plonPast', 'Plon pastwiska'],
-  ['plonLaki', 'Plon łąki'],
-  ['plonZboz', 'Plon zbóż'],
-  ['plonKoniczyny', 'Plon koniczyny'],
-  ['kStale', 'Koszty stałe'],
-  ['paszaKura', 'Pasza na kurę'],
-  ['cenaKurki', 'Cena kurki'],
-  ['czynsz', 'Czynsz dzierżawny'],
+const SENSITIVITY_FACTORS = [
+  'cheesePrice',
+  'milkPrice',
+  'milkPerCow',
+  'cheeseYield',
+  'eggPrice',
+  'eggsPerHen',
+  'broilerPricePerKg',
+  'goosePrice',
+  'lambMeatPricePerKg',
+  'duckPricePerKg',
+  'porkBoxPricePerKg',
+  'honeyPrice',
+  'pastureYield',
+  'meadowYield',
+  'cerealYield',
+  'cloverYield',
+  'fixedCosts',
+  'henFeedGramsPerDay',
+  'pulletPrice',
+  'leaseRentPerHa',
 ];
-function renderSens() {
-  const base = compute(p).netto,
-    rows = [];
-  for (const [id, l] of SENS) {
-    if (p[id] === undefined || !p[id]) continue;
-    const lo = compute(Object.assign({}, p, { [id]: p[id] * 0.8 })).netto - base;
-    const hi = compute(Object.assign({}, p, { [id]: p[id] * 1.2 })).netto - base;
-    if (Math.abs(hi) + Math.abs(lo) < 200) continue;
-    rows.push({ l, lo, hi, span: Math.abs(hi - lo) });
+
+const SENSITIVITY_STEP = 0.2;
+const SENSITIVITY_MIN_EFFECT_PLN = 200;
+const SENSITIVITY_MAX_ROWS = 12;
+
+/** Change of net income when each factor is 20% lower and 20% higher, largest effect first. */
+function sensitivityRows() {
+  const baseNet = simulateFarm(params).netIncome;
+  const netChangeWith = (id, factor) =>
+    simulateFarm({ ...params, [id]: params[id] * factor }).netIncome - baseNet;
+
+  const rows = [];
+  for (const id of SENSITIVITY_FACTORS) {
+    if (!params[id]) continue;
+
+    const lower = netChangeWith(id, 1 - SENSITIVITY_STEP);
+    const higher = netChangeWith(id, 1 + SENSITIVITY_STEP);
+    if (Math.abs(higher) + Math.abs(lower) < SENSITIVITY_MIN_EFFECT_PLN) continue;
+
+    rows.push({
+      label: t(`sensitivity.factors.${id}`),
+      lower,
+      higher,
+      span: Math.abs(higher - lower),
+    });
   }
+
   rows.sort((a, b) => b.span - a.span);
-  const R = rows.slice(0, 12),
-    W = 640,
-    rh = 24,
-    pl = 150,
-    pr = 70,
-    top = 22,
-    H = top + R.length * rh + 26;
-  const mx = Math.max(1, ...R.map(x => Math.max(Math.abs(x.lo), Math.abs(x.hi))));
-  const cx = pl + (W - pl - pr) / 2,
-    sc = (W - pl - pr) / 2 / mx;
-  let s = `<text x="${cx}" y="14" text-anchor="middle" class="ax">wynik ${zl(base)}: zmiana przy −20% (lewo) i +20% (prawo)</text>`;
-  R.forEach((x, i) => {
-    const y = top + i * rh;
-    s += `<text x="${pl - 8}" y="${y + 16}" text-anchor="end" font-size="12.5">${esc(x.l)}</text>`;
-    for (const [v, side] of [
-      [x.lo, 'lo'],
-      [x.hi, 'hi'],
-    ]) {
-      const w = Math.abs(v) * sc,
-        x0 = v >= 0 ? cx : cx - w;
-      s += `<rect x="${x0}" y="${y + 4}" width="${Math.max(1, w)}" height="${rh - 8}" rx="2" fill="${v >= 0 ? 'var(--ok)' : 'var(--bad)'}" opacity="${side === 'hi' ? 0.75 : 0.5}"><title>${esc(x.l)} ${side === 'hi' ? '+20%' : '−20%'}: ${v >= 0 ? '+' : ''}${zl(v)}</title></rect>`;
-    }
-    const big = x.hi >= x.lo ? x.hi : x.lo;
-    s += `<text x="${W - pr + 6}" y="${y + 16}" class="ax">±${fmt(Math.round(Math.max(Math.abs(x.lo), Math.abs(x.hi)) / 100) / 10, 1)} tys.</text>`;
+  return { baseNet, rows: rows.slice(0, SENSITIVITY_MAX_ROWS) };
+}
+
+function renderSensitivity() {
+  const { baseNet, rows } = sensitivityRows();
+  const chart = { width: 640, rowHeight: 24, padLeft: 150, padRight: 70, top: 22 };
+  const height = chart.top + rows.length * chart.rowHeight + 26;
+  const plotWidth = chart.width - chart.padLeft - chart.padRight;
+  const largestEffect = row => Math.max(Math.abs(row.lower), Math.abs(row.higher));
+  const maxEffect = Math.max(1, ...rows.map(largestEffect));
+  const centre = chart.padLeft + plotWidth / 2;
+  const scale = plotWidth / 2 / maxEffect;
+
+  let svg = element(
+    'text',
+    { x: centre, y: 14, 'text-anchor': 'middle', class: 'ax' },
+    t('sensitivity.title', { net: formatPln(baseNet) })
+  );
+
+  rows.forEach((row, index) => {
+    const y = chart.top + index * chart.rowHeight;
+    const label = escapeHtml(row.label);
+    svg += element(
+      'text',
+      { x: chart.padLeft - 8, y: y + 16, 'text-anchor': 'end', 'font-size': 12.5 },
+      label
+    );
+    svg += sensitivityBar({ chart, centre, scale, y, label, effect: row.lower, isHigher: false });
+    svg += sensitivityBar({ chart, centre, scale, y, label, effect: row.higher, isHigher: true });
+
+    const thousands = formatNumber(Math.round(largestEffect(row) / 100) / 10, 1);
+    svg += axisText(
+      chart.width - chart.padRight + 6,
+      y + 16,
+      '±' + t('units.thousandsPln', { value: thousands })
+    );
   });
-  s += `<line x1="${cx}" x2="${cx}" y1="${top}" y2="${top + R.length * rh}" stroke="var(--muted)"></line>`;
-  $('sens').setAttribute('viewBox', `0 0 ${W} ${H}`);
-  $('sens').innerHTML = s;
-  $('sens-note').textContent = R.length
-    ? `Najbardziej liczą się: ${R.slice(0, 3)
-        .map(x => x.l.toLowerCase())
-        .join(', ')}. Te liczby sprawdź u siebie w pierwszej kolejności.`
-    : '';
+
+  svg += element('line', {
+    x1: centre,
+    x2: centre,
+    y1: chart.top,
+    y2: chart.top + rows.length * chart.rowHeight,
+    stroke: 'var(--muted)',
+  });
+
+  const chartElement = byId('sensitivity-chart');
+  chartElement.setAttribute('viewBox', `0 0 ${chart.width} ${height}`);
+  chartElement.innerHTML = svg;
+  byId('sensitivity-note').textContent = sensitivityNote(rows);
+}
+
+/** One bar of the tornado chart: green to the right when the result improves, red to the left. */
+function sensitivityBar({ chart, centre, scale, y, label, effect, isHigher }) {
+  const width = Math.abs(effect) * scale;
+  const direction = isHigher ? '+20%' : '−20%';
+  const sign = effect >= 0 ? '+' : '';
+  const tooltip = `${label} ${direction}: ${sign}${formatPln(effect)}`;
+
+  return withTooltip(
+    'rect',
+    {
+      x: effect >= 0 ? centre : centre - width,
+      y: y + 4,
+      width: Math.max(1, width),
+      height: chart.rowHeight - 8,
+      rx: 2,
+      fill: effect >= 0 ? 'var(--ok)' : 'var(--bad)',
+      opacity: isHigher ? 0.75 : 0.5,
+    },
+    tooltip
+  );
+}
+
+function sensitivityNote(rows) {
+  if (!rows.length) return '';
+
+  const topFactors = rows
+    .slice(0, 3)
+    .map(row => row.label.toLowerCase())
+    .join(', ');
+  return t('sensitivity.note', { factors: topFactors });
 }

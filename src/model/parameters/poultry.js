@@ -1,0 +1,25 @@
+// Parameters of the "poultry" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+
+defineParameterGroup('poultry', [
+  { id: 'broilers', min: 0, max: 600, step: 10, defaultValue: 0 },
+  { id: 'broilerCarcassKg', min: 1.5, max: 3.5, step: 0.1, defaultValue: 2.3 },
+  { id: 'broilerPricePerKg', min: 20, max: 60, step: 1, defaultValue: 32 },
+  { id: 'broilerFeedKg', min: 5, max: 10, step: 0.5, defaultValue: 7, advanced: true },
+  { id: 'geese', min: 0, max: 50, step: 1, defaultValue: 10 },
+  { id: 'goosePrice', min: 100, max: 400, step: 10, defaultValue: 220 },
+  { id: 'ducks', min: 0, max: 300, step: 5, defaultValue: 0 },
+  { id: 'duckCarcassKg', min: 1.8, max: 4, step: 0.1, defaultValue: 2.8, advanced: true },
+  { id: 'duckPricePerKg', min: 25, max: 90, step: 1, defaultValue: 45 },
+  { id: 'duckGrainKg', min: 6, max: 20, step: 0.5, defaultValue: 12, advanced: true },
+  { id: 'turkeys', min: 0, max: 100, step: 1, defaultValue: 0 },
+  { id: 'turkeyCarcassKg', min: 4, max: 12, step: 0.5, defaultValue: 7, advanced: true },
+  { id: 'turkeyPricePerKg', min: 25, max: 90, step: 1, defaultValue: 40 },
+  { id: 'turkeyGrainKg', min: 15, max: 45, step: 1, defaultValue: 30, advanced: true },
+  { id: 'guineaFowl', min: 0, max: 300, step: 5, defaultValue: 0 },
+  { id: 'guineaFowlCarcassKg', min: 1, max: 2, step: 0.05, defaultValue: 1.4, advanced: true },
+  { id: 'guineaFowlPricePerKg', min: 30, max: 100, step: 1, defaultValue: 55 },
+  { id: 'guineaFowlGrainKg', min: 4, max: 12, step: 0.5, defaultValue: 7, advanced: true },
+  { id: 'rabbits', min: 0, max: 10, step: 1, defaultValue: 0 },
+  { id: 'rabbitsRearedPerDoe', min: 10, max: 40, step: 1, defaultValue: 24 },
+  { id: 'rabbitPrice', min: 20, max: 120, step: 5, defaultValue: 65 },
+]);

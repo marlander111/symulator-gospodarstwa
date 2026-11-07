@@ -1,25 +1,32 @@
-// Przełącznik motywu: automatyczny, jasny, ciemny.
+// Colour theme switch: automatic (follows the system), light or dark; remembered in this browser.
 
-const LST = 'gosp-motyw';
-function setTheme(t) {
-  if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+const THEME_STORAGE_KEY = 'gosp-motyw';
+
+function setTheme(theme) {
+  if (theme === 'light' || theme === 'dark') document.documentElement.setAttribute('data-theme', theme);
   else document.documentElement.removeAttribute('data-theme');
   document
-    .querySelectorAll('[data-th]')
-    .forEach(b => b.classList.toggle('on', b.dataset.th === (t || 'auto')));
+    .querySelectorAll('[data-theme-option]')
+    .forEach(button => button.classList.toggle('on', button.dataset.themeOption === (theme || 'auto')));
   try {
-    localStorage.setItem(LST, t || 'auto');
-  } catch (e) {}
-}
-let th0 = 'auto';
-try {
-  th0 = localStorage.getItem(LST) || 'auto';
-} catch (e) {}
-setTheme(th0);
-$('theme-sw').addEventListener('click', e => {
-  const b = e.target.closest('[data-th]');
-  if (b) {
-    setTheme(b.dataset.th);
-    render();
+    localStorage.setItem(THEME_STORAGE_KEY, theme || 'auto');
+  } catch (error) {
+    // not remembered
   }
-});
+}
+
+function initTheme() {
+  let savedTheme = 'auto';
+  try {
+    savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'auto';
+  } catch (error) {
+    // use the automatic theme
+  }
+  setTheme(savedTheme);
+  byId('theme-switch').addEventListener('click', event => {
+    const button = event.target.closest('[data-theme-option]');
+    if (!button) return;
+    setTheme(button.dataset.themeOption);
+    render(); // chart colours are read from the theme
+  });
+}

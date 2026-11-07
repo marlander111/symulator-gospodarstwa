@@ -1,165 +1,204 @@
-// Panel „Pieniądze”: wykres od sprzedaży do wyniku, tabele przychodów, kosztów, dopłat i wartości dla domu.
+// Panel "Money": waterfall chart from sales to net income, and tables of revenue, costs,
+// subsidies and the value of food produced for the household.
 
-function renderMoney(r) {
-  // waterfall
-  const S = r.przychod,
-    D = r.doplaty,
-    K = r.koszty,
-    A = r.amort,
-    N = r.netto;
-  const top = Math.max(S + D, 1);
-  const W = 640,
-    H = 250,
-    pl = 10,
-    pr = 10,
-    pt = 26,
-    pb = 36;
-  const ih = H - pt - pb;
-  const minV = Math.min(0, N);
-  const y = v => pt + ((top - v) / (top - minV)) * ih;
-  const bars = [
-    { l: 'Sprzedaż', a: 0, b: S, c: 'var(--accent)' },
-    { l: 'Dopłaty', a: S, b: S + D, c: 'var(--c-pole)' },
-    { l: 'Koszty', a: S + D, b: S + D - K, c: 'var(--bad)' },
-    { l: 'Amortyzacja', a: S + D - K, b: N, c: 'var(--warn)' },
-    { l: 'Na czysto', a: 0, b: N, c: N >= 0 ? 'var(--ok)' : 'var(--bad)' },
-  ];
-  const bw = (W - pl - pr) / bars.length;
-  let s = `<line class="grid" x1="${pl}" x2="${W - pr}" y1="${y(0)}" y2="${y(0)}"></line>`;
-  bars.forEach((b, i) => {
-    const x = pl + i * bw + bw * 0.18,
-      w = bw * 0.64;
-    const y1 = y(Math.max(b.a, b.b)),
-      y2 = y(Math.min(b.a, b.b));
-    const val = b.l === 'Koszty' ? -K : b.l === 'Amortyzacja' ? -A : b.b - b.a;
-    s += `<rect x="${x}" y="${y1}" width="${w}" height="${Math.max(1, y2 - y1)}" fill="${b.c}" rx="2"><title>${b.l}: ${zl0(val)}</title></rect>`;
-    if (i < bars.length - 1)
-      s += `<line x1="${x + w}" x2="${x + bw}" y1="${y(b.b)}" y2="${y(b.b)}" stroke="var(--muted)" stroke-dasharray="3 3"></line>`;
-    s += `<text x="${x + w / 2}" y="${y1 - 7}" text-anchor="middle" font-size="13" class="num">${val < 0 ? '−' : ''}${fmt(Math.abs(val) / 1000, 0)} tys.</text>`;
-    s += `<text x="${x + w / 2}" y="${H - 12}" text-anchor="middle" class="ax">${b.l}</text>`;
+function renderMoney(results) {
+  renderWaterfall(results);
+  renderRevenueTable(results);
+  renderCostsTable(results);
+  renderSubsidiesTable(results);
+  renderHomeUseTable(results);
+}
+
+/** Dashed line carrying the running total from one bar to the next. */
+function waterfallConnector(fromX, toX, y) {
+  return element('line', {
+    x1: fromX,
+    x2: toX,
+    y1: y,
+    y2: y,
+    stroke: 'var(--muted)',
+    'stroke-dasharray': '3 3',
   });
-  $('wf').innerHTML = s;
+}
 
-  const RL = {
-    mleko: 'Mleko surowe',
-    ser: 'Sery',
-    cieleta: 'Cielęta i krowy wybrakowane',
-    jaja: 'Jaja (i stare kury)',
-    brojlery: 'Kurczaki',
-    gesi: 'Gęsi',
-    kroliki: 'Króliki',
-    owce: 'Jagnięta żywcem i owce wybrakowane',
-    jagniecina: 'Jagnięcina (RHD)',
-    warzywa: 'Warzywa (RWS, targ)',
-    miod: 'Miód',
-    kozy: 'Koźlęcina',
-    swinie: 'Wieprzowina: tuczniki w paczkach',
-    bydlo: 'Bydło mięsne: odsadki, opasy',
-    kaczki: 'Kaczki',
-    indyki: 'Indyki',
-    perliczki: 'Perliczki',
-    przetwory: 'Przetwory: półgęsek, wędliny (RHD)',
-    koguty: 'Kogutki rosołowe (własny wylęg)',
-    owoce: 'Owoce i sok',
-    grzyby: 'Boczniaki z kłód',
-  };
-  const RD = {
-    mleko: `${fmt(r.mlekoSwieze, 0)} l × ${fmt(p.cenaMleka, 2)} zł`,
-    ser: `${fmt(r.serSprz, 0)} kg × ${fmt(p.cenaSera, 0)} zł`,
-    cieleta: `${fmt(r.cieletaSprz, 1)} cieląt, ${fmt(r.remontKrow, 1)} krów`,
-    jaja: `${fmt(r.jajaSprz, 0)} szt. × ${fmt(p.cenaJaja, 2)} zł`,
-    brojlery: `${fmt(p.brojlery * 0.95, 0)} szt. × ${fmt(p.wagaTuszki, 1)} kg`,
-    gesi: `${fmt(p.gesi * 0.9, 0)} szt.`,
-    kroliki: `${fmt(p.kroliki * p.odchowKrol * 0.9, 0)} szt.`,
-    owce: `${fmt(r.jagZyweN, 1)} jagniąt × ${fmt(p.cenaJag, 0)} zł`,
-    jagniecina: `${fmt(r.jagMiesoN, 1)} jagniąt, ${fmt(r.miesoKg, 0)} kg tuszy × ${fmt(p.cenaMiesaJag, 0)} zł`,
-    warzywa: `${fmt(p.warzywaSprz, 2)} ha × ${fmt(p.cenaWarzywHa, 0)} zł`,
-    miod: `${fmt(r.rynek.miodKg, 0)} kg × ${fmt(p.cenaMiodu, 0)} zł`,
-  };
-  let t = `<thead><tr><th>Przychody</th><th class="n">zł/rok</th></tr></thead><tbody>`;
-  for (const k in r.R)
-    if (r.R[k] > 0.5)
-      t += `<tr><td>${RL[k]}<br><span class="small muted">${RD[k]}</span></td><td class="n">${zl0(r.R[k])}</td></tr>`;
-  t += `<tr class="tot"><td>Razem sprzedaż</td><td class="n">${zl0(r.przychod)}</td></tr></tbody>`;
-  $('t-rev').innerHTML = t;
+function renderWaterfall(results) {
+  const { revenue: sales, subsidies, costs, depreciation, netIncome } = results;
+  const chart = { width: 640, height: 250, padLeft: 10, padRight: 10, padTop: 26, padBottom: 36 };
+  const top = Math.max(sales + subsidies, 1);
+  const bottom = Math.min(0, netIncome);
+  const plotHeight = chart.height - chart.padTop - chart.padBottom;
+  const y = value => chart.padTop + ((top - value) / (top - bottom)) * plotHeight;
 
-  const CL = {
-    orne: 'Grunty orne',
-    laka: 'Łąka',
-    past: 'Pastwisko',
-    krowy: 'Krowy i jałówki',
-    mlekoOpak: 'Butelki, badania mleka',
-    ser: 'Materiały do serów',
-    kury: 'Kury: wymiana stada, minerały, wytłaczanki',
-    brojlery: 'Kurczaki',
-    gesi: 'Gęsi',
-    kroliki: 'Króliki',
-    owce: 'Owce',
-    konie: 'Konie: kowal, weterynarz, minerały',
-    dzierzawa: 'Czynsz dzierżawny',
-    uboj: 'Ubój, rozbiór, dowóz do rzeźni',
-    warzywa: 'Warzywa: nasiona, kompost, woda, opakowania',
-    ule: 'Pszczoły: pokarm, leki, słoiki',
-    kozy: 'Kozy',
-    swinie: 'Świnie',
-    stale: 'KRUS, ubezpieczenia, certyfikat',
-    sprzedaz: 'Dowozy, targ',
-    energia: 'Prąd i woda',
-    dokup: 'Dokupione pasze i ściółka (trociny)',
-    miedzyplony: 'Międzyplony: nasiona eko, siew',
-    bydlo: 'Bydło mięsne: weterynarz, ubój',
-    kaczki: 'Kaczki: pisklęta, ubój',
-    indyki: 'Indyki: pisklęta, ubój',
-    perliczki: 'Perliczki: pisklęta, ubój',
-    przetwory: 'Przetwory: materiały i wysyłka',
-    owoce: 'Owoce: tłocznia, opakowania',
-    grzyby: 'Kłody: grzybnia, drewno',
-  };
-  t = `<thead><tr><th>Koszty</th><th class="n">zł/rok</th></tr></thead><tbody>`;
-  for (const k in r.C)
-    if (r.C[k] > 0.5)
-      t += `<tr><td${k === 'dokup' ? ' class="neg"' : ''}>${CL[k]}</td><td class="n">${zl0(r.C[k])}</td></tr>`;
-  t += `<tr><td>Amortyzacja inwestycji</td><td class="n">${zl0(r.amort)}</td></tr>`;
-  t += `<tr class="tot"><td>Razem z amortyzacją</td><td class="n">${zl0(r.koszty + r.amort)}</td></tr></tbody>`;
-  $('t-cost').innerHTML = t;
+  // each bar runs from `from` to `to`; costs and depreciation show their amount as negative
+  const bars = [
+    { id: 'sales', from: 0, to: sales, color: 'var(--accent)' },
+    { id: 'subsidies', from: sales, to: sales + subsidies, color: 'var(--color-fields)' },
+    {
+      id: 'costs',
+      from: sales + subsidies,
+      to: sales + subsidies - costs,
+      value: -costs,
+      color: 'var(--bad)',
+    },
+    {
+      id: 'depreciation',
+      from: sales + subsidies - costs,
+      to: netIncome,
+      value: -depreciation,
+      color: 'var(--warn)',
+    },
+    { id: 'net', from: 0, to: netIncome, color: netIncome >= 0 ? 'var(--ok)' : 'var(--bad)' },
+  ];
+  const slot = (chart.width - chart.padLeft - chart.padRight) / bars.length;
+  let svg = horizontalLine(chart, y(0), { class: 'grid' });
+  bars.forEach((bar, index) => {
+    if (bar.value === undefined) bar.value = bar.to - bar.from;
+    const label = t(`money.waterfall.${bar.id}`);
+    const x = chart.padLeft + index * slot + slot * 0.18;
+    const width = slot * 0.64;
+    const yTop = y(Math.max(bar.from, bar.to));
+    const yBottom = y(Math.min(bar.from, bar.to));
+    const thousands = t('units.thousandsPln', { value: formatNumber(Math.abs(bar.value) / 1000, 0) });
+    const isLast = index === bars.length - 1;
 
-  const DL = {
-    pwd: ['Podstawowe wsparcie dochodu', `${fmt(RATES.pwd, 2)} zł/ha`],
-    redys: ['Płatność redystrybucyjna', `${fmt(RATES.redys, 2)} zł/ha`],
-    krowy: ['Do krów', `${fmt(RATES.krowy, 2)} zł/szt.`],
-    bydlo: ['Do młodego bydła', `${fmt(RATES.bydlo, 2)} zł/szt.`],
-    owce: ['Do owiec', `${fmt(RATES.owce, 2)} zł/szt.`],
-    kozy: ['Do kóz', `${fmt(RATES.kozy, 2)} zł/szt.`],
-    eko: [
-      'Rolnictwo ekologiczne',
-      `TUZ ${fmt(RATES.ekoTUZ, 0)}, orne ${fmt(RATES.ekoOrne, 0)}, sad ${fmt(RATES.ekoSad, 0)}, warzywa ${fmt(RATES.ekoWarz, 0)} zł/ha`,
-    ],
-    premia: ['Premia za obsadę zwierząt', `${fmt(RATES.premia, 0)} zł/ha`],
-    ekst: ['Ekstensywne TUZ', `${fmt(RATES.ekstTUZ, 2)} zł/ha`],
-    mlody: ['Młody rolnik', `${fmt(RATES.mlody, 2)} zł/ha`],
-    onw: ['ONW', `${fmt(p.onw, 0)} zł/ha`],
-    dobrostan: ['Dobrostan zwierząt', 'stawki za 2024 r.: krowy, owce, kozy, kury'],
-    wegiel: ['Rolnictwo węglowe: międzyplony, obornik, struktura upraw', `${fmt(p.wartPkt, 0)} zł/pkt`],
-  };
-  t = `<thead><tr><th>Dopłaty (${fmt(r.UR, 1)} ha)</th><th class="n">zł/rok</th></tr></thead><tbody>`;
-  for (const k in r.Dp)
-    if (r.Dp[k] > 0.5)
-      t += `<tr><td>${DL[k][0]}<br><span class="small muted">${DL[k][1]}</span></td><td class="n">${zl0(r.Dp[k])}</td></tr>`;
-  t += `<tr class="tot"><td>Razem dopłaty</td><td class="n">${zl0(r.doplaty)}</td></tr></tbody>`;
-  $('t-dop').innerHTML = t;
+    svg += withTooltip(
+      'rect',
+      { x, y: yTop, width, height: Math.max(1, yBottom - yTop), fill: bar.color, rx: 2 },
+      `${label}: ${formatPlnExact(bar.value)}`
+    );
+    if (!isLast) svg += waterfallConnector(x + width, x + slot, y(bar.to));
+    svg += element(
+      'text',
+      { x: x + width / 2, y: yTop - 7, 'text-anchor': 'middle', 'font-size': 13, class: 'num' },
+      (bar.value < 0 ? '−' : '') + thousands
+    );
+    svg += axisText(x + width / 2, chart.height - 12, label, 'middle');
+  });
+  byId('waterfall').innerHTML = svg;
+}
 
-  const HL = {
-    swinie: `Wieprzowina (${fmt(p.swinie * 85, 0)} kg × 25 zł)`,
-    barf: `Mięso dla psa z kóz (ok. ${fmt(r.barfKg, 0)} kg)`,
-    jaja: 'Jaja dla domu',
-    mleko: 'Mleko dla domu',
-    ser: 'Ser dla domu',
-    owoce: 'Owoce dla domu',
-    grzyby: 'Grzyby dla domu',
+/**
+ * Table with one row per item above 0.5 zł and a total row.
+ * @param {object} table
+ * @param {string} table.header - first column title
+ * @param {string} table.valueHeader - amount column title
+ * @param {object} table.items - amount per item id
+ * @param {(item: string) => string} table.label
+ * @param {(item: string) => string} [table.detail] - small text under the label
+ * @param {(item: string) => ?string} [table.rowClass] - class of the label cell
+ * @param {string} [table.extraRows] - rows added before the total
+ * @param {string} table.totalLabel
+ * @param {number} table.total
+ */
+function itemsTableHtml(table) {
+  const header = tableHeader([table.header, table.valueHeader]);
+  const rows = Object.entries(table.items)
+    .filter(([, amount]) => amount > 0.5)
+    .map(([item, amount]) => {
+      const detail = table.detail && table.detail(item);
+      const detailHtml = detail ? '<br>' + element('span', { class: 'small muted' }, detail) : '';
+      const rowAttributes = table.rowClass ? { class: table.rowClass(item) } : {};
+      return tableRow([
+        cell(table.label(item) + detailHtml, rowAttributes),
+        numberCell(formatPlnExact(amount)),
+      ]);
+    });
+  const totalRow = tableRow([cell(table.totalLabel), numberCell(formatPlnExact(table.total))], {
+    class: 'tot',
+  });
+  return header + tableBody([...rows, table.extraRows || '', totalRow]);
+}
+
+function renderRevenueTable(results) {
+  const n = formatNumber;
+  const details = {
+    milk: { litres: n(results.freshMilkSold, 0), price: n(params.milkPrice, 2) },
+    cheese: { kg: n(results.cheeseSold, 0), price: n(params.cheesePrice, 0) },
+    calves: { calves: n(results.calvesSold, 1), cows: n(results.cowReplacements, 1) },
+    eggs: { eggs: n(results.eggsSold, 0), price: n(params.eggPrice, 2) },
+    broilers: { count: n(params.broilers * 0.95, 0), kg: n(params.broilerCarcassKg, 1) },
+    geese: { count: n(params.geese * 0.9, 0) },
+    rabbits: { count: n(params.rabbits * params.rabbitsRearedPerDoe * 0.9, 0) },
+    sheep: { lambs: n(results.lambsSoldLive, 1), price: n(params.lambLivePrice, 0) },
+    lambMeat: {
+      lambs: n(results.lambsSoldAsMeat, 1),
+      kg: n(results.lambMeatKg, 0),
+      price: n(params.lambMeatPricePerKg, 0),
+    },
+    vegetables: { hectares: n(params.marketGardenHa, 2), price: n(params.vegetableSalesPerHa, 0) },
+    honey: { kg: n(results.market.honeyKg, 0), price: n(params.honeyPrice, 0) },
   };
-  t = `<thead><tr><th>Dla domu (nie gotówka)</th><th class="n">wartość</th></tr></thead><tbody>`;
-  for (const k in r.home)
-    if (r.home[k] > 0.5) t += `<tr><td>${HL[k]}</td><td class="n">${zl0(r.home[k])}</td></tr>`;
-  t += `<tr class="tot"><td>Razem</td><td class="n">${zl0(r.homeTotal)}</td></tr></tbody>`;
-  $('t-home').innerHTML = t;
+  byId('revenue-table').innerHTML = itemsTableHtml({
+    header: t('money.revenueHeader'),
+    valueHeader: t('money.perYear'),
+    items: results.revenueItems,
+    label: item => t(`revenueItems.${item}.label`),
+    detail: item => (details[item] ? t(`revenueItems.${item}.detail`, details[item]) : ''),
+    totalLabel: t('money.revenueTotal'),
+    total: results.revenue,
+  });
+}
+
+function renderCostsTable(results) {
+  byId('costs-table').innerHTML = itemsTableHtml({
+    header: t('money.costsHeader'),
+    valueHeader: t('money.perYear'),
+    items: results.costItems,
+    label: item => t(`costItems.${item}`),
+    rowClass: item => (item === 'purchases' ? 'neg' : null),
+    extraRows: tableRow([cell(t('money.depreciation')), numberCell(formatPlnExact(results.depreciation))]),
+    totalLabel: t('money.costsTotal'),
+    total: results.costs + results.depreciation,
+  });
+}
+
+function renderSubsidiesTable(results) {
+  const rate = (value, decimals) => formatNumber(value, decimals);
+  const rates = SUBSIDY_RATES;
+  const perHa = (value, decimals = 2) => t('units.plnPerHa', { value: rate(value, decimals) });
+  const perHead = value => t('money.plnPerHead', { value: rate(value, 2) });
+  const details = {
+    basicPayment: perHa(rates.basicPayment),
+    redistributive: perHa(rates.redistributive),
+    dairyCows: perHead(rates.dairyCows),
+    beefCattle: perHead(rates.beefCattle),
+    sheep: perHead(rates.sheep),
+    goats: perHead(rates.goats),
+    organic: t('subsidyItems.organic.detail', {
+      grassland: rate(rates.organicGrassland, 0),
+      arable: rate(rates.organicArable, 0),
+      orchard: rate(rates.organicOrchard, 0),
+      vegetables: rate(rates.organicVegetables, 0),
+    }),
+    livestockBonus: perHa(rates.livestockBonus, 0),
+    extensiveGrassland: perHa(rates.extensiveGrasslandScheme),
+    youngFarmer: perHa(rates.youngFarmer),
+    lessFavouredArea: perHa(params.lessFavouredAreaRate, 0),
+    animalWelfare: t('subsidyItems.animalWelfare.detail'),
+    carbonFarming: t('subsidyItems.carbonFarming.detail', { value: rate(params.ecoSchemePointValue, 0) }),
+  };
+  byId('subsidies-table').innerHTML = itemsTableHtml({
+    header: t('money.subsidiesHeader', { hectares: formatNumber(results.farmedHa, 1) }),
+    valueHeader: t('money.perYear'),
+    items: results.subsidyItems,
+    label: item => t(`subsidyItems.${item}.label`),
+    detail: item => details[item],
+    totalLabel: t('money.subsidiesTotal'),
+    total: results.subsidies,
+  });
+}
+
+function renderHomeUseTable(results) {
+  const values = {
+    pigs: { kg: formatNumber(params.pigsForHome * 85, 0) },
+    dogFood: { kg: formatNumber(results.dogFoodKg, 0) },
+  };
+  byId('home-use-table').innerHTML = itemsTableHtml({
+    header: t('money.homeUseHeader'),
+    valueHeader: t('money.value'),
+    items: results.homeUse,
+    label: item => t(`homeUse.${item}`, values[item]),
+    totalLabel: t('money.total'),
+    total: results.homeUseTotal,
+  });
 }

@@ -1,0 +1,12 @@
+{
+  "name": "symulator-gospodarstwa",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Interactive planner of finances, labour and feed for a small organic family farm.",
+  "scripts": {
+    "build": "python3 build.py",
+    "test": "python3 build.py && node --test tests/*.test.js",
+    "lint": "python3 build.py && eslint build/app.js",
+    "format": "prettier --write \"src/**/*.{js,css,json}\" tests eslint.config.js"
+  }
+}

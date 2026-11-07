@@ -1,53 +1,86 @@
-// Panel suwaków: budowa grup, separatory podsekcji, synchronizacja z `p`.
+// Controls panel: one collapsible group per parameter group, with subsection titles,
+// sliders and switches bound to `params`.
 
-// ---------- Suwaki ----------
-const OPEN = [];
+const OPEN_GROUPS = [];
+
 function buildControls() {
-  const box = $('ctrls');
   let html = '';
-  for (const g in GROUPS) {
-    const items = DEF.filter(d => d.g === g);
-    html += `<details class="grp" id="grp-${g}" ${OPEN.includes(g) ? 'open' : ''}><summary><span>${GROUPS[g]}</span><span class="sumv" id="sum-${g}"></span></summary><div class="grp-body">`;
-    for (const d of items) {
-      if (SEPS[d.id]) html += `<div class="ctl-sep" role="presentation">${esc(SEPS[d.id])}</div>`;
-      if (d.t === 'bool') {
-        html += `<label class="sw"><input type="checkbox" id="in-${d.id}"><span>${esc(d.l)}${d.h ? `<br><span class="help muted small">${esc(d.h)}</span>` : ''}</span></label>`;
-      } else {
-        html += `<div class="ctl${d.a ? ' adv' : ''}"><div class="ctl-top"><label for="in-${d.id}">${esc(d.l)}</label><output id="out-${d.id}"></output></div><input type="range" id="in-${d.id}" min="${d.min}" max="${d.max}" step="${d.s}">${d.h ? `<p class="help">${esc(d.h)}</p>` : ''}</div>`;
-      }
-      if (d.id === 'laka') html += `<div class="derived" id="derived-orne"></div>`;
-    }
+  for (const group of PARAMETER_GROUP_IDS) {
+    const isOpen = OPEN_GROUPS.includes(group) ? 'open' : '';
+    const title = element('span', {}, t(`parameterGroups.${group}`));
+    const summary = element('span', { class: 'sumv', id: `summary-${group}` });
+    html += `<details class="grp" id="group-${group}" ${isOpen}>
+      <summary>${title}${summary}</summary>
+      <div class="grp-body">`;
+    for (const parameter of PARAMETERS.filter(item => item.group === group)) html += controlHtml(parameter);
     html += `</div></details>`;
   }
-  html += `<button class="btn ghost reset" id="reset" type="button">Przywróć ustawienia domyślne</button>`;
-  box.innerHTML = html;
-  for (const d of DEF) {
-    const el = $('in-' + d.id);
-    if (d.t === 'bool')
-      el.addEventListener('change', () => {
-        p[d.id] = el.checked;
-        changed();
-      });
-    else
-      el.addEventListener('input', () => {
-        p[d.id] = parseFloat(el.value);
-        $('out-' + d.id).textContent = fmtVal(d, p[d.id]);
-        changed();
-      });
-  }
-  $('reset').addEventListener('click', () => {
-    p = defaults();
+  html += `<button class="btn ghost reset" id="reset" type="button">${t('controls.reset')}</button>`;
+  byId('controls').innerHTML = html;
+
+  for (const parameter of PARAMETERS) bindControl(parameter);
+  byId('reset').addEventListener('click', () => {
+    params = defaultParams();
     syncInputs();
-    changed();
+    onParamsChanged();
   });
 }
+
+function controlHtml(parameter) {
+  const { id } = parameter;
+  const label = escapeHtml(parameterLabel(parameter));
+  const hint = escapeHtml(parameterHint(parameter));
+  let html = '';
+  if (SUBSECTION_START_IDS.has(id))
+    html += `<div class="ctl-sep" role="presentation">${escapeHtml(t(`subsections.${id}`))}</div>`;
+
+  if (parameter.type === 'boolean') {
+    const help = hint ? `<br><span class="help muted small">${hint}</span>` : '';
+    html += `<label class="sw"><input type="checkbox" id="input-${id}"><span>${label}${help}</span></label>`;
+  } else {
+    const help = hint ? element('p', { class: 'help' }, hint) : '';
+    const slider = voidElement('input', {
+      type: 'range',
+      id: `input-${id}`,
+      min: parameter.min,
+      max: parameter.max,
+      step: parameter.step,
+    });
+    html += `<div class="ctl${parameter.advanced ? ' adv' : ''}">
+      <div class="ctl-top"><label for="input-${id}">${label}</label><output id="output-${id}"></output></div>
+      ${slider}${help}
+    </div>`;
+  }
+  // arable land is what remains after the land uses above it
+  if (id === 'meadowHa') html += `<div class="derived" id="derived-arable"></div>`;
+  return html;
+}
+
+function bindControl(parameter) {
+  const input = byId('input-' + parameter.id);
+  if (parameter.type === 'boolean') {
+    input.addEventListener('change', () => {
+      params[parameter.id] = input.checked;
+      onParamsChanged();
+    });
+  } else {
+    input.addEventListener('input', () => {
+      params[parameter.id] = parseFloat(input.value);
+      byId('output-' + parameter.id).textContent = formatParameterValue(parameter, params[parameter.id]);
+      onParamsChanged();
+    });
+  }
+}
+
+/** Moves every control to the current value in `params`. */
 function syncInputs() {
-  for (const d of DEF) {
-    const el = $('in-' + d.id);
-    if (d.t === 'bool') el.checked = !!p[d.id];
-    else {
-      el.value = p[d.id];
-      $('out-' + d.id).textContent = fmtVal(d, p[d.id]);
+  for (const parameter of PARAMETERS) {
+    const input = byId('input-' + parameter.id);
+    if (parameter.type === 'boolean') {
+      input.checked = !!params[parameter.id];
+    } else {
+      input.value = params[parameter.id];
+      byId('output-' + parameter.id).textContent = formatParameterValue(parameter, params[parameter.id]);
     }
   }
 }

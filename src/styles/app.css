@@ -10,18 +10,18 @@
   --line: #cfd8cb;
   --accent: #2c6a3b;
   --accent-ink: #ffffff;
-  --past: #4f8f4a;
-  --laka: #9bb859;
-  --konicz: #9a5f8c;
-  --zboze: #c39a35;
-  --obejscie: #8a7560;
-  --c-krowy: #2c6a3b;
-  --c-drob: #c39a35;
-  --c-owce: #8a6143;
-  --c-pole: #7f9a3c;
-  --c-reszta: #6b7f93;
-  --c-warz: #9a5f8c;
-  --c-przetw: #b0563a;
+  --color-pasture: #4f8f4a;
+  --color-meadow: #9bb859;
+  --color-clover: #9a5f8c;
+  --color-cereal: #c39a35;
+  --color-farmyard: #8a7560;
+  --color-cattle: #2c6a3b;
+  --color-poultry: #c39a35;
+  --color-sheep: #8a6143;
+  --color-fields: #7f9a3c;
+  --color-other: #6b7f93;
+  --color-produce: #9a5f8c;
+  --color-processing: #b0563a;
   --ok: #2b7a4b;
   --warn: #a86a10;
   --bad: #b0392e;
@@ -45,18 +45,18 @@
     --line: #2f3a30;
     --accent: #6dbb7e;
     --accent-ink: #0e1a10;
-    --past: #6aaa63;
-    --laka: #adc96a;
-    --konicz: #c08ab4;
-    --zboze: #d9b04c;
-    --obejscie: #ad9479;
-    --c-krowy: #6dbb7e;
-    --c-drob: #d9b04c;
-    --c-owce: #b88a66;
-    --c-pole: #a5c25a;
-    --c-reszta: #8fa6bb;
-    --c-warz: #c08ab4;
-    --c-przetw: #d98466;
+    --color-pasture: #6aaa63;
+    --color-meadow: #adc96a;
+    --color-clover: #c08ab4;
+    --color-cereal: #d9b04c;
+    --color-farmyard: #ad9479;
+    --color-cattle: #6dbb7e;
+    --color-poultry: #d9b04c;
+    --color-sheep: #b88a66;
+    --color-fields: #a5c25a;
+    --color-other: #8fa6bb;
+    --color-produce: #c08ab4;
+    --color-processing: #d98466;
     --ok: #62c48b;
     --warn: #e2a64a;
     --bad: #e8786c;
@@ -77,18 +77,18 @@
   --line: #2f3a30;
   --accent: #6dbb7e;
   --accent-ink: #0e1a10;
-  --past: #6aaa63;
-  --laka: #adc96a;
-  --konicz: #c08ab4;
-  --zboze: #d9b04c;
-  --obejscie: #ad9479;
-  --c-krowy: #6dbb7e;
-  --c-drob: #d9b04c;
-  --c-owce: #b88a66;
-  --c-pole: #a5c25a;
-  --c-reszta: #8fa6bb;
-  --c-warz: #c08ab4;
-  --c-przetw: #d98466;
+  --color-pasture: #6aaa63;
+  --color-meadow: #adc96a;
+  --color-clover: #c08ab4;
+  --color-cereal: #d9b04c;
+  --color-farmyard: #ad9479;
+  --color-cattle: #6dbb7e;
+  --color-poultry: #d9b04c;
+  --color-sheep: #b88a66;
+  --color-fields: #a5c25a;
+  --color-other: #8fa6bb;
+  --color-produce: #c08ab4;
+  --color-processing: #d98466;
   --ok: #62c48b;
   --warn: #e2a64a;
   --bad: #e8786c;
@@ -363,10 +363,10 @@ summary:focus-visible {
     grid-template-columns: 1fr;
   }
 }
-#plansvg [data-a] {
+#plan-svg [data-a] {
   cursor: pointer;
 }
-#plansvg [data-a]:hover {
+#plan-svg [data-a]:hover {
   stroke-width: 3;
 }
 .sub-h {
@@ -947,8 +947,8 @@ section.full .intro {
   font-weight: 600;
   white-space: nowrap;
 }
-#t-cmp td:first-child,
-#t-kier td:first-child {
+#comparison-table td:first-child,
+#enterprises-table td:first-child {
   min-width: 150px;
 }
 .cal td {

@@ -1,0 +1,26 @@
+// Parameters of the "subsidies" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+
+defineParameterGroup('subsidies', [
+  { id: 'organicPayment', type: 'boolean', defaultValue: true },
+  { id: 'livestockDensityBonus', type: 'boolean', defaultValue: true },
+  { id: 'catchCrops', type: 'boolean', defaultValue: false },
+  { id: 'carbonManure', type: 'boolean', defaultValue: false },
+  { id: 'carbonCropDiversity', type: 'boolean', defaultValue: false },
+  { id: 'ecoSchemePointValue', min: 50, max: 150, step: 1, defaultValue: 100, advanced: true },
+  { id: 'catchCropCostPerHa', min: 100, max: 900, step: 25, defaultValue: 400, advanced: true },
+  { id: 'catchCropHoursPerHa', min: 0.5, max: 6, step: 0.5, defaultValue: 2, advanced: true },
+  { id: 'catchCropForageYield', min: 0, max: 3, step: 0.1, defaultValue: 1, advanced: true },
+  { id: 'catchCropMix', min: 0, max: 5, step: 1, defaultValue: 0, advanced: true },
+  { id: 'stubbleCrop', type: 'boolean', defaultValue: false },
+  { id: 'stubbleCropMix', min: 0, max: 2, step: 1, defaultValue: 0, advanced: true },
+  { id: 'stubbleCropForageYield', min: 0, max: 3, step: 0.1, defaultValue: 0.3, advanced: true },
+  { id: 'stubbleCropCostPerHa', min: 50, max: 600, step: 25, defaultValue: 250, advanced: true },
+  { id: 'extensiveGrasslandScheme', type: 'boolean', defaultValue: false },
+  { id: 'youngFarmerEligible', type: 'boolean', defaultValue: false },
+  { id: 'lessFavouredAreaRate', min: 0, max: 850, step: 1, defaultValue: 0 },
+  { id: 'welfareCowsGrazing', type: 'boolean', defaultValue: true },
+  { id: 'welfareCowsSpace', type: 'boolean', defaultValue: false },
+  { id: 'welfareSheepGoats', type: 'boolean', defaultValue: true },
+  { id: 'welfareHens', type: 'boolean', defaultValue: true },
+  { id: 'otherWelfarePayments', min: 0, max: 10000, step: 100, defaultValue: 0 },
+]);

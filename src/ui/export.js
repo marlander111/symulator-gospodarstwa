@@ -1,142 +1,166 @@
-// Zapis i wczytanie ustawień z pliku (.json), zapis raportu PDF.
+// Saving the settings to a .json file, loading them back, and saving the PDF report.
+// In claude.ai files are saved through the "downloads" capability; elsewhere (e.g. GitHub
+// Pages) through an ordinary browser download.
 
-// ---------- Zapis i wczytanie ustawień ----------
-let dl = null;
-// Poza claude.ai (np. GitHub Pages) zapis idzie zwykłym pobraniem pliku przez przeglądarkę
-const nativeDl = {
-  save: async ({ filename, data }) => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(
-      new Blob([
-        typeof data === 'string' && filename.endsWith('.pdf')
-          ? Uint8Array.from(data, c => c.charCodeAt(0))
-          : data,
-      ])
-    );
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
+const SETTINGS_FILE_FORMAT = { app: 'symulator-gospodarstwa', version: 2 };
+
+/** PDF report sections offered as checkboxes; see PDF_REPORT_SECTIONS. */
+const PDF_SECTION_CHOICES = [
+  'summary',
+  'money',
+  'cashflow',
+  'enterprises',
+  'nextSteps',
+  'labour',
+  'market',
+  'investments',
+  'rotation',
+  'household',
+];
+
+/** The active way of saving files, or null when this view cannot save files. */
+let fileSaver = null;
+
+const browserDownloadSaver = {
+  async save({ filename, data }) {
+    // the PDF is built as a binary string: one character per byte
+    const bytes =
+      typeof data === 'string' && filename.endsWith('.pdf')
+        ? Uint8Array.from(data, c => c.charCodeAt(0))
+        : data;
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([bytes]));
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
     setTimeout(() => {
-      URL.revokeObjectURL(a.href);
-      a.remove();
+      URL.revokeObjectURL(link.href);
+      link.remove();
     }, 1000);
     return { status: 'saved' };
   },
 };
-async function initDownloads() {
-  if (typeof claude === 'undefined') dl = nativeDl;
-  else {
+
+async function initFileSaver() {
+  if (typeof claude === 'undefined') {
+    fileSaver = browserDownloadSaver;
+  } else {
     try {
-      dl = await claude.use('downloads');
-    } catch (e) {
-      dl = null;
+      fileSaver = await claude.use('downloads');
+    } catch (error) {
+      fileSaver = null;
     }
   }
-  document.querySelectorAll('.needs-dl').forEach(b => {
-    b.hidden = !dl;
+  document.querySelectorAll('.needs-dl').forEach(element => {
+    element.hidden = !fileSaver;
   });
-  $('exp-note').textContent = dl
-    ? ''
-    : 'Zapis plików nie jest dostępny w tym widoku (otwórz aplikację w claude.ai).';
+  showExportNote(fileSaver ? '' : t('export.unavailable'));
 }
-function variantName() {
-  const nm = ($('mine-name') && $('mine-name').value.trim()) || '';
-  if (nm) return nm;
-  const pr = PRESETS.find(x => matches(x.set));
-  return pr ? pr.l : 'Własne ustawienia';
+
+const showExportNote = text => {
+  byId('export-note').textContent = text;
+};
+
+/** Name of the current settings: the typed name, a matching preset, or "custom settings". */
+function currentVariantName() {
+  const typedName = byId('saved-variant-name')?.value.trim();
+  if (typedName) return typedName;
+  const preset = PRESETS.find(candidate => matchesCurrentParams(candidate.params));
+  return preset ? t(`presets.${preset.id}.label`) : t('export.customSettings');
 }
-const slug = s =>
-  s
+
+/** File-name friendly version of a name, e.g. "Mleko + jaja" → "mleko-jaja". */
+function slugify(name) {
+  const slug = name
     .toLowerCase()
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .replace(/ł/g, 'l')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
-    .slice(0, 40) || 'wariant';
-async function saveFile(name, data, ext) {
-  if (!dl) return;
-  $('exp-note').textContent = '';
+    .slice(0, 40);
+  return slug || t('export.fallbackFileName');
+}
+
+async function saveFile(name, data, extension) {
+  if (!fileSaver) return;
+  showExportNote('');
   try {
-    await dl.save({ filename: `${name}.${ext}`, data });
-    $('exp-note').textContent = 'Plik zapisany.';
-  } catch (e) {
-    $('exp-note').textContent =
-      e && e.code === 'declined' ? 'Zapis anulowany.' : 'Nie udało się zapisać pliku.';
+    await fileSaver.save({ filename: `${name}.${extension}`, data });
+    showExportNote(t('export.saved'));
+  } catch (error) {
+    showExportNote(t(error?.code === 'declined' ? 'export.cancelled' : 'export.failed'));
   }
 }
-function exportJson() {
-  const nm = variantName();
-  saveFile(
-    `symulator-${slug(nm)}`,
-    JSON.stringify(
-      {
-        app: 'symulator-gospodarstwa',
-        wersja: 1,
-        nazwa: nm,
-        data: new Date().toISOString().slice(0, 10),
-        ustawienia: p,
-      },
-      null,
-      1
-    ),
-    'json'
-  );
+
+function exportSettings() {
+  const name = currentVariantName();
+  const file = {
+    ...SETTINGS_FILE_FORMAT,
+    name,
+    date: new Date().toISOString().slice(0, 10),
+    settings: params,
+  };
+  saveFile(`${t('export.settingsFilePrefix')}-${slugify(name)}`, JSON.stringify(file, null, 1), 'json');
 }
-function importJson(file) {
-  const fr = new FileReader();
-  fr.onload = () => {
+
+/** Loads settings from a file saved by this app (any version); unknown keys are ignored. */
+function importSettings(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
     try {
-      const o = JSON.parse(fr.result),
-        s = o.ustawienia || o;
-      let n = 0;
-      for (const k in s)
-        if (k in p && typeof s[k] === typeof p[k]) {
-          p[k] = s[k];
-          n++;
+      const { name, settings } = readSettingsFile(JSON.parse(reader.result));
+      let loadedCount = 0;
+      for (const [id, value] of Object.entries(settings)) {
+        if (id in params && typeof value === typeof params[id]) {
+          params[id] = value;
+          loadedCount++;
         }
-      if (o.nazwa && $('mine-name')) $('mine-name').value = o.nazwa;
+      }
+      if (name && byId('saved-variant-name')) byId('saved-variant-name').value = name;
       syncInputs();
-      changed();
-      $('exp-note').textContent = `Wczytano ${n} ustawień${o.nazwa ? ` („${o.nazwa}”)` : ''}.`;
-    } catch (e) {
-      $('exp-note').textContent = 'To nie jest plik z ustawieniami symulatora.';
+      onParamsChanged();
+      const nameNote = name ? t('export.loadedName', { name }) : '';
+      showExportNote(t('export.loaded', { count: loadedCount, name: nameNote }));
+    } catch (error) {
+      showExportNote(t('export.notSettingsFile'));
     }
   };
-  fr.readAsText(file);
+  reader.readAsText(file);
 }
 
 function exportPdf() {
-  saveFile(`raport-${slug(variantName())}`, makePdf(), 'pdf');
+  saveFile(`${t('export.reportFilePrefix')}-${slugify(currentVariantName())}`, buildPdfReport(), 'pdf');
 }
 
 function buildExport() {
-  const SECT = [
-    ['kpi', 'Podsumowanie'],
-    ['money', 'Pieniądze'],
-    ['cf', 'Przepływy gotówki'],
-    ['kier', 'Kierunki'],
-    ['next', 'Co dalej'],
-    ['lab', 'Czas pracy'],
-    ['rynek', 'Co sprzedać'],
-    ['inv', 'Inwestycje'],
-    ['rot', 'Płodozmian'],
-    ['dom', 'Budżet domu'],
-  ];
-  $('row-exp').insertAdjacentHTML(
+  const sectionCheckboxes = PDF_SECTION_CHOICES.map(
+    id =>
+      `<label class="sw"><input type="checkbox" data-pdf-section="${id}" checked>` +
+      `<span>${t(`pdf.sections.${id}.choice`)}</span></label>`
+  ).join('');
+
+  byId('export-row').insertAdjacentHTML(
     'beforeend',
-    `
-    <button class="btn needs-dl" type="button" id="exp-json">Zapisz ustawienia do pliku</button>
-    <label class="btn" for="imp-json">Wczytaj z pliku</label><input id="imp-json" type="file" accept=".json,application/json" hidden>
-    <details class="pdf-box needs-dl"><summary class="btn">Raport PDF</summary><div class="pdf-pick">${SECT.map(([k, l]) => `<label class="sw"><input type="checkbox" data-pdf="${k}" checked><span>${l}</span></label>`).join('')}<button class="btn on" type="button" id="exp-pdf">Zapisz PDF</button></div></details>
-    <span class="small muted" id="exp-note"></span>`
+    `<button class="btn needs-dl" type="button" id="export-json">${t('export.saveSettings')}</button>
+    <label class="btn" for="import-json">${t('export.loadSettings')}</label>
+    <input id="import-json" type="file" accept=".json,application/json" hidden>
+    <details class="pdf-box needs-dl">
+      <summary class="btn">${t('export.pdfReport')}</summary>
+      <div class="pdf-pick">
+        ${sectionCheckboxes}
+        <button class="btn on" type="button" id="export-pdf">${t('export.savePdf')}</button>
+      </div>
+    </details>
+    <span class="small muted" id="export-note"></span>`
   );
-  $('exp-json').addEventListener('click', exportJson);
-  $('imp-json').addEventListener('change', e => {
-    const f = e.target.files[0];
-    if (f) importJson(f);
-    e.target.value = '';
+
+  byId('export-json').addEventListener('click', exportSettings);
+  byId('import-json').addEventListener('change', event => {
+    const file = event.target.files[0];
+    if (file) importSettings(file);
+    event.target.value = ''; // allow loading the same file again
   });
-  $('exp-pdf').addEventListener('click', exportPdf);
-  initDownloads();
+  byId('export-pdf').addEventListener('click', exportPdf);
+  initFileSaver();
 }

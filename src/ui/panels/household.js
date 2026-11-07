@@ -1,25 +1,67 @@
-// Panel „Budżet domu”: wydatki rodziny, 800+, zapas i porównanie z wynikiem gospodarstwa.
+// Panel "Household budget": family spending, child benefit, safety margin and how the farm's
+// result compares with what the family needs.
 
-function renderDom(r, ro) {
-  const d = r.dom,
-    rows = [
-      ['Wydatki domu', d.wyd, `${fmt(p.wydDom, 0)} zł miesięcznie`],
-      [`Zapas ${p.zapasDom}%`, d.zapas, ''],
-      ['Oszczędzanie: emerytura, rezerwa', d.odklad, ''],
-      ['minus 800+', -d.z800, `${p.dzieci800} × 800 zł miesięcznie`],
-    ];
-  let t = `<thead><tr><th>Pozycja</th><th class="n">zł/rok</th><th></th></tr></thead><tbody>`;
-  for (const [l, v, n] of rows)
-    t += `<tr><td>${l}</td><td class="n${v < 0 ? ' neg' : ''}">${zl0(v)}</td><td class="small muted">${n}</td></tr>`;
-  t += `<tr class="tot"><td>Potrzeba z gospodarstwa</td><td class="n">${zl0(d.potrzeba)}</td><td class="small muted">${zl0(d.potrzeba / 12)} miesięcznie</td></tr>`;
-  t += `<tr><td>Bez 800+ (gdy dzieci dorosną)</td><td class="n">${zl0(d.bez800)}</td><td class="small muted">${zl0(d.bez800 / 12)} miesięcznie</td></tr>`;
-  t += `<tr><td>Wynik realnie</td><td class="n">${zl0(r.netto)}</td><td class="small muted">${zl0(r.netto / 12)} miesięcznie</td></tr>`;
-  t += `<tr><td>Wynik w wariancie pesymistycznym</td><td class="n${ro.netto < d.potrzeba ? ' neg' : ''}">${zl0(ro.netto)}</td><td class="small muted">${zl0(ro.netto / 12)} miesięcznie</td></tr></tbody>`;
-  $('t-dom').innerHTML = t;
-  const nad = ro.netto - d.potrzeba;
-  $('dom-note').textContent =
-    (nad >= 0
-      ? `W wariancie pesymistycznym zostaje ok. ${zl(nad)} rocznie ponad potrzeby (z 800+). `
-      : `W wariancie pesymistycznym brakuje ok. ${zl(-nad)} rocznie do potrzeb. `) +
-    `Wynik pesymistyczny razem z 800+ to ok. ${d.wyd > 0 ? fmt((ro.netto + d.z800) / d.wyd, 1) : '–'} × roczne wydatki domu. Amortyzacja (${zl(r.amort)} rocznie) jest już odjęta: odkładaj ją osobno na naprawy i wymianę sprzętu. ${p.celZBudzetu ? 'Minimum na czysto liczy się teraz z tego budżetu.' : 'Włącz „Licz minimum z budżetu domu”, żeby próg w pasku liczył się stąd.'}`;
+function renderHouseholdBudget(results, pessimistic) {
+  const budget = results.householdBudget;
+  const perMonth = amount => t('household.perMonth', { amount: formatPlnExact(amount) });
+  const rows = [
+    [
+      t('household.spending'),
+      budget.spending,
+      t('household.spendingDetail', { amount: formatNumber(params.householdMonthlySpending, 0) }),
+    ],
+    [t('household.margin', { percent: params.householdSafetyMargin }), budget.margin, ''],
+    [t('household.savings'), budget.savings, ''],
+    [
+      t('household.childBenefit'),
+      -budget.childBenefit,
+      t('household.childBenefitDetail', {
+        children: params.childBenefitChildren,
+        amount: CHILD_BENEFIT_PER_MONTH,
+      }),
+    ],
+  ];
+
+  const amountCell = (amount, isNegative = amount < 0) => numberCell(formatPlnExact(amount), isNegative);
+  const noteCell = note => cell(note, { class: 'small muted' });
+  const summaryRow = (label, amount, attributes = {}) =>
+    tableRow([cell(label), amountCell(amount, false), noteCell(perMonth(amount / 12))], attributes);
+
+  const header = tableHeader([t('household.item'), t('money.perYear'), ''], index => index === 1);
+  const body = [
+    ...rows.map(([label, amount, note]) => tableRow([cell(label), amountCell(amount), noteCell(note)])),
+    summaryRow(t('household.required'), budget.required, { class: 'tot' }),
+    summaryRow(t('household.withoutChildBenefit'), budget.withoutChildBenefit),
+    summaryRow(t('household.realisticResult'), results.netIncome),
+    tableRow([
+      cell(t('household.pessimisticResult')),
+      amountCell(pessimistic.netIncome, pessimistic.netIncome < budget.required),
+      noteCell(perMonth(pessimistic.netIncome / 12)),
+    ]),
+  ];
+  byId('household-table').innerHTML = header + tableBody(body);
+
+  byId('household-note').textContent = householdNote(results, pessimistic);
+}
+
+/** Whether the pessimistic result covers the family's needs, and how the target is set. */
+function householdNote(results, pessimistic) {
+  const budget = results.householdBudget;
+  const surplus = pessimistic.netIncome - budget.required;
+  const coverage =
+    surplus >= 0
+      ? t('household.surplus', { amount: formatPln(surplus) })
+      : t('household.shortfall', { amount: formatPln(-surplus) });
+  const yearsOfSpending =
+    budget.spending > 0
+      ? formatNumber((pessimistic.netIncome + budget.childBenefit) / budget.spending, 1)
+      : '–';
+  const summary = t('household.summary', {
+    ratio: yearsOfSpending,
+    depreciation: formatPln(results.depreciation),
+  });
+  const target = t(
+    params.targetFromHouseholdBudget ? 'household.targetFromBudget' : 'household.targetSetDirectly'
+  );
+  return [coverage, summary, target].join(' ');
 }

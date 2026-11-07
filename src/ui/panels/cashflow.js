@@ -1,53 +1,104 @@
-// Panel „Przepływy gotówki”: tabela i wykres miesiąc po miesiącu.
+// Panel "Cash flow": table and chart month by month, with the bank balance.
 
-// ---------- Przepływy gotówki ----------
-function renderCF(r) {
-  const cf = r.cf,
-    M = cf.M;
-  let t = `<thead><tr><th>Miesiąc</th><th class="n">Sprzedaż</th><th class="n">Dopłaty</th><th class="n">Koszty</th><th class="n">Wynik</th><th class="n">Na dom</th><th class="n">Saldo konta</th></tr></thead><tbody>`;
-  let sw = 0,
-    sd = 0,
-    sk = 0,
-    sdom = 0;
-  M.forEach((m, i) => {
-    sw += m.wplywy;
-    sd += m.dop;
-    sk += m.wydatki;
-    sdom += m.dom;
-    t += `<tr class="${i === cf.minM ? 'sel' : ''}"><td>${MN[i]}</td><td class="n">${zl(m.wplywy)}</td><td class="n">${zl(m.dop)}</td><td class="n">${zl(m.wydatki)}</td><td class="n${m.netto < 0 ? ' neg' : ''}">${zl(m.netto)}</td><td class="n">${zl(m.dom)}</td><td class="n${m.saldo < 0 ? ' neg' : ''}">${zl(m.saldo)}</td></tr>`;
+const CASHFLOW_CHART = { width: 640, height: 230, padLeft: 56, padRight: 10, padTop: 14, padBottom: 40 };
+
+function renderCashflow(results) {
+  const cashflow = results.cashflow;
+  renderCashflowTable(cashflow);
+  renderCashflowChart(cashflow);
+
+  const lowestBalance = t('cashflow.lowestBalance', {
+    month: messages('months.names')[cashflow.minBalanceMonth].toLowerCase(),
+    amount: formatPln(cashflow.minBalance),
   });
-  t += `<tr class="tot"><td>Rok</td><td class="n">${zl(sw)}</td><td class="n">${zl(sd)}</td><td class="n">${zl(sk)}</td><td class="n">${zl(sw + sd - sk)}</td><td class="n">${zl(sdom)}</td><td class="n">${zl(cf.koniec)}</td></tr></tbody>`;
-  $('t-cf').innerHTML = t;
-  // wykres
-  const Wd = 640,
-    Hd = 230,
-    pl = 56,
-    pr = 10,
-    pt = 14,
-    pb = 40,
-    cw = (Wd - pl - pr) / 12;
-  const vals = M.map(m => m.netto - m.dom),
-    sal = M.map(m => m.saldo);
-  const lo = Math.min(0, ...vals, ...sal, p.gotowkaStart),
-    hi = Math.max(1, ...vals, ...sal, p.gotowkaStart);
-  const y = v => pt + ((hi - v) / (hi - lo)) * (Hd - pt - pb);
-  let s = '';
-  const st = niceStep(hi - lo);
-  for (let v = Math.ceil(lo / st) * st; v <= hi; v += st)
-    s += `<line x1="${pl}" x2="${Wd - pr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"></line><text x="${pl - 6}" y="${y(v) + 4}" text-anchor="end" class="ax">${fmt(v / 1000, 0)} tys.</text>`;
-  s += `<line x1="${pl}" x2="${Wd - pr}" y1="${y(0)}" y2="${y(0)}" stroke="var(--muted)"></line>`;
-  vals.forEach((v, i) => {
-    const x0 = pl + i * cw + cw * 0.2,
-      bw = cw * 0.6;
-    s += `<rect x="${x0}" y="${Math.min(y(v), y(0))}" width="${bw}" height="${Math.max(1, Math.abs(y(v) - y(0)))}" fill="${v < 0 ? 'var(--bad)' : 'var(--c-krowy)'}" opacity=".75"><title>${MN[i]}: ${zl(v)} po wypłacie na dom</title></rect><text x="${pl + i * cw + cw / 2}" y="${Hd - pb + 16}" text-anchor="middle" class="ax">${MS[i]}</text>`;
+  const warning = cashflow.minBalance < 0 ? t('cashflow.belowZero') + ' ' : '';
+  const explanation = t('cashflow.explanation', { household: formatPln(cashflow.householdDraw) });
+  byId('cashflow-note').textContent = `${lowestBalance} ${warning}${explanation}`;
+}
+
+function renderCashflowTable(cashflow) {
+  const monthNames = messages('months.names');
+  const columns = ['month', 'sales', 'subsidies', 'costs', 'result', 'household', 'balance'];
+  const money = (amount, canBeNegative = false) => numberCell(formatPln(amount), canBeNegative && amount < 0);
+  const totals = { inflows: 0, subsidy: 0, outflows: 0, household: 0 };
+
+  const rows = cashflow.months.map((month, index) => {
+    for (const field in totals) totals[field] += month[field];
+    const selected = index === cashflow.minBalanceMonth ? 'sel' : '';
+    return (
+      `<tr class="${selected}"><td>${monthNames[index]}</td>` +
+      money(month.inflows) +
+      money(month.subsidy) +
+      money(month.outflows) +
+      money(month.netIncome, true) +
+      money(month.household) +
+      money(month.balance, true) +
+      '</tr>'
+    );
   });
-  s += `<polyline fill="none" stroke="var(--ink)" stroke-width="2" points="${sal.map((v, i) => `${pl + i * cw + cw / 2},${y(v)}`).join(' ')}"></polyline>`;
-  sal.forEach(
-    (v, i) =>
-      (s += `<circle cx="${pl + i * cw + cw / 2}" cy="${y(v)}" r="3" fill="var(--ink)"><title>${MN[i]}: saldo ${zl(v)}</title></circle>`)
-  );
-  s += `<text x="${pl}" y="${Hd - 4}" class="ax">słupki: miesiąc po wypłacie na dom · linia: saldo konta</text>`;
-  $('cfchart').innerHTML = s;
-  $('cf-note').textContent =
-    `Najniżej na koncie w miesiącu ${MN[cf.minM].toLowerCase()}: ${zl(cf.min)}. ${cf.min < 0 ? 'Saldo spada poniżej zera: zwiększ gotówkę na start albo przesuń wydatki. ' : ''}Na dom co miesiąc ${zl(cf.naDom)} (wydatki minus 800+). Dopłaty: zaliczki zwykle od 16 października, reszta do wiosny; dobrostan często dopiero wiosną następnego roku. Inwestycje i amortyzacja nie są tu liczone. To, co zostaje na koniec roku, to wynik na czysto plus amortyzacja minus wypłaty na dom: odłóż część na naprawy i wymianę sprzętu.`;
+  const totalRow =
+    `<tr class="tot"><td>${t('cashflow.year')}</td>` +
+    money(totals.inflows) +
+    money(totals.subsidy) +
+    money(totals.outflows) +
+    money(totals.inflows + totals.subsidy - totals.outflows) +
+    money(totals.household) +
+    money(cashflow.closingBalance) +
+    '</tr>';
+
+  const header = tableHeader(columns.map(column => t(`cashflow.columns.${column}`)));
+  byId('cashflow-table').innerHTML = `${header}<tbody>${rows.join('')}${totalRow}</tbody>`;
+}
+
+/** Bars: the month's result after the household draw; line: the bank balance. */
+function renderCashflowChart(cashflow) {
+  const chart = CASHFLOW_CHART;
+  const monthNames = messages('months.names');
+  const numerals = messages('months.numerals');
+  const slot = (chart.width - chart.padLeft - chart.padRight) / 12;
+  const afterHousehold = cashflow.months.map(month => month.netIncome - month.household);
+  const balances = cashflow.months.map(month => month.balance);
+  const low = Math.min(0, ...afterHousehold, ...balances, params.openingCash);
+  const high = Math.max(1, ...afterHousehold, ...balances, params.openingCash);
+  const y = value =>
+    chart.padTop + ((high - value) / (high - low)) * (chart.height - chart.padTop - chart.padBottom);
+  const slotCentre = index => chart.padLeft + index * slot + slot / 2;
+
+  let svg = '';
+  const step = niceAxisStep(high - low);
+  for (let value = Math.ceil(low / step) * step; value <= high; value += step) {
+    const label = t('units.thousandsPln', { value: formatNumber(value / 1000, 0) });
+    svg += horizontalLine(chart, y(value), { stroke: 'var(--line)' });
+    svg += axisText(chart.padLeft - 6, y(value) + 4, label, 'end');
+  }
+  svg += horizontalLine(chart, y(0), { stroke: 'var(--muted)' });
+
+  afterHousehold.forEach((value, index) => {
+    const tooltip = t('cashflow.barTooltip', { month: monthNames[index], amount: formatPln(value) });
+    const bar = {
+      x: chart.padLeft + index * slot + slot * 0.2,
+      y: Math.min(y(value), y(0)),
+      width: slot * 0.6,
+      height: Math.max(1, Math.abs(y(value) - y(0))),
+      fill: value < 0 ? 'var(--bad)' : 'var(--color-cattle)',
+      opacity: '.75',
+    };
+    svg += withTooltip('rect', bar, tooltip);
+    svg += axisText(slotCentre(index), chart.height - chart.padBottom + 16, numerals[index], 'middle');
+  });
+
+  const balancePoints = balances.map((value, index) => `${slotCentre(index)},${y(value)}`).join(' ');
+  svg += element('polyline', {
+    fill: 'none',
+    stroke: 'var(--ink)',
+    'stroke-width': 2,
+    points: balancePoints,
+  });
+  balances.forEach((value, index) => {
+    const tooltip = t('cashflow.balanceTooltip', { month: monthNames[index], amount: formatPln(value) });
+    svg += withTooltip('circle', { cx: slotCentre(index), cy: y(value), r: 3, fill: 'var(--ink)' }, tooltip);
+  });
+  svg += axisText(chart.padLeft, chart.height - 4, t('cashflow.legend'));
+
+  byId('cashflow-chart').innerHTML = svg;
 }

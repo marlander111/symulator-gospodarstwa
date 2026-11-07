@@ -1,419 +1,73 @@
-// Kalendarz roku: prace z włączonych kierunków, godziny i gotówka w miesiącach.
+// Calendar of the year: tasks of the enterprises the farm actually runs, with the hours
+// and cash of each month. Texts: locales/pl.json → calendar.
 
-// ---------- Kalendarz z prac aktywnych kierunków ----------
-const TASKS = [
+/**
+ * Rows of the calendar; a row is shown when `isActive` returns true. Each row's texts live
+ * under calendar.tasks.<id>: `label` and twelve `months` (an empty text means nothing to do).
+ */
+const CALENDAR_ROWS = [
+  { id: 'dairyCows', isActive: () => params.dairyCows > 0 },
+  { id: 'cheese', isActive: () => params.dairyCows > 0 && params.cheeseShare > 0 },
+  { id: 'sucklerCows', isActive: () => params.sucklerCows > 0 },
   {
-    on: () => p.krowy > 0,
-    l: 'Krowy',
-    m: [
-      'zasuszanie, siano z łąki nienawożonej',
-      'kojec porodowy, bolusy wapniowe pod ręką',
-      'wycielenia; 1–2 kg owsa po porodzie',
-      'ok. 20 IV start wypasu, magnez w lizawce',
-      'wypas rotacyjny co 1–3 dni, szczyt mleka',
-      'krycie lub inseminacja',
-      'powtórki krycia',
-      'w suszy siano z zapasu',
-      'badanie ciąży',
-      'koniec wypasu ok. 31 X',
-      'krowy w wiacie',
-      'spokojnie, zasuszanie od połowy I',
-    ],
+    id: 'layingHens',
+    isActive: () => params.layingHens > 0,
+    monthsKey: () => (params.winterPolytunnel ? 'monthsWithWinterTunnel' : 'months'),
   },
-  {
-    on: () => p.krowy > 0 && p.ser > 0,
-    l: 'Sery',
-    m: [
-      'sprzedaż z dojrzewalni',
-      '—',
-      'pierwsze sery po wycieleniach',
-      'sery na zapas',
-      'najwięcej sera',
-      'sery na zapas',
-      'sery dojrzewające',
-      'sery dojrzewające',
-      '—',
-      'sery na święta',
-      'sprzedaż świąteczna',
-      'sprzedaż świąteczna',
-    ],
-  },
-  {
-    on: () => p.mamki > 0,
-    l: 'Mamki',
-    m: [
-      'siano, wiata',
-      'przygotowanie do wycieleń',
-      'wycielenia',
-      'wypas od ok. 20 IV',
-      'wypas',
-      'byk do stada',
-      'krycie',
-      'wypas',
-      'odsadzanie, ważenie',
-      'sprzedaż odsadków',
-      'opasy na zimę, brakowanie',
-      'siano',
-    ],
-  },
-  {
-    on: () => p.kury > 0,
-    l: 'Kury',
-    m: () => [
-      p.tunelZima ? 'kury w tunelu, dosypywanie ściółki' : 'kury przy obejściu',
-      'zamówienie kurek i piskląt',
-      'pierwsze dni na wybiegu',
-      'mobilny kurnik za krowami',
-      'kurnik za krowami',
-      'kurnik za krowami',
-      'kurnik za krowami',
-      'kurnik za krowami',
-      'plan wymiany stada',
-      'ostatnie tygodnie na pastwisku',
-      p.tunelZima ? 'kury do tunelu' : 'kurniki do obejścia',
-      'zima, doświetlanie do 16 h',
-    ],
-  },
-  {
-    on: () => p.wylegWlasny && p.kury > 0,
-    l: 'Wylęg',
-    m: [
-      '—',
-      'koguty w stadzie, zbieranie jaj',
-      'nakładanie jaj, szczepienie piskląt',
-      'wylęgi, odchowalnia',
-      'odchowalnia',
-      'kogutki na wybiegu',
-      'sprzedaż kogutków',
-      'sprzedaż kogutków',
-      'młode kurki do stada',
-      '—',
-      '—',
-      '—',
-    ],
-  },
-  {
-    on: () => p.brojlery > 0,
-    l: 'Kurczaki',
-    m: [
-      '—',
-      '—',
-      'zamówienie piskląt',
-      'pierwsza partia piskląt',
-      'zagrody na pastwisku',
-      'ubój 1. partii, 2. partia',
-      'ubój i sprzedaż',
-      '3. partia',
-      'ubój i sprzedaż',
-      'ostatni ubój',
-      '—',
-      '—',
-    ],
-  },
-  {
-    on: () => p.gesi > 0,
-    l: 'Gęsi',
-    m: [
-      '—',
-      '—',
-      '—',
-      'gąsięta',
-      'na wybiegu w sadzie',
-      'wypas',
-      'wypas',
-      'ściernisko',
-      'ściernisko',
-      'tuczenie owsem',
-      'św. Marcin: ubój, sprzedaż',
-      '—',
-    ],
-  },
-  {
-    on: () => p.kaczki > 0,
-    l: 'Kaczki',
-    m: [
-      '—',
-      '—',
-      '—',
-      'kaczęta',
-      'na wybiegu, brodzik',
-      'wybieg',
-      'ubój i sprzedaż',
-      'ubój i sprzedaż',
-      'ubój i sprzedaż',
-      'ostatni ubój',
-      '—',
-      '—',
-    ],
-  },
-  {
-    on: () => p.indyki > 0,
-    l: 'Indyki',
-    m: [
-      '—',
-      '—',
-      '—',
-      '—',
-      'indyczęta (osobno od kur)',
-      'wybieg',
-      'wybieg',
-      'wybieg',
-      'wybieg',
-      'zamówienia na święta',
-      'zamówienia na święta',
-      'ubój i sprzedaż przed świętami',
-    ],
-  },
-  {
-    on: () => p.perliczki > 0,
-    l: 'Perliczki',
-    m: [
-      '—',
-      '—',
-      '—',
-      '—',
-      'pisklęta',
-      'wybieg',
-      'wybieg',
-      'wybieg',
-      'ubój i sprzedaż',
-      'ubój i sprzedaż',
-      'ubój i sprzedaż',
-      '—',
-    ],
-  },
-  {
-    on: () => p.kroliki > 0,
-    l: 'Króliki',
-    m: [
-      'krycie w zagrodzie zimowej',
-      '—',
-      'klatki ruchome na trawę',
-      'mioty',
-      'przesuwanie klatek',
-      'przesuwanie klatek',
-      'ubój i sprzedaż',
-      'ubój i sprzedaż',
-      'ubój i sprzedaż',
-      'ubój i sprzedaż',
-      'klatki do zimowania',
-      '—',
-    ],
-  },
-  {
-    on: () => p.owce > 0,
-    l: 'Owce',
-    m: [
-      'wiata, siano',
-      'ostatnie tygodnie ciąży: lepsze siano',
-      'wykoty',
-      'na pastwisko za krowami',
-      'badanie kału, odrobaczanie według wyniku',
-      'racice, strzyża',
-      'odsadzanie jagniąt',
-      'sprzedaż jagniąt',
-      'sprzedaż jagniąt',
-      'tryk do owiec',
-      'zimowe zagrody',
-      'siano',
-    ],
-  },
-  {
-    on: () => p.kozy > 0,
-    l: 'Kozy',
-    m: [
-      'wiata',
-      '—',
-      'koźlęta',
-      'wybieg',
-      'na zarośla',
-      'na zarośla',
-      'na zarośla',
-      'na zarośla',
-      'na zarośla',
-      'krycie',
-      'wiata',
-      'mięso dla psów',
-    ],
-  },
-  {
-    on: () => p.swinie > 0,
-    l: 'Świnie',
-    m: [
-      '—',
-      '—',
-      '—',
-      'prosięta',
-      'na wybiegu',
-      'na wybiegu',
-      'na wybiegu',
-      'na wybiegu',
-      'na wybiegu',
-      'dokarmianie',
-      'ubój dla domu',
-      'ubój dla domu',
-    ],
-  },
-  {
-    on: () => true,
-    l: 'Pola i łąki',
-    m: [
-      'naprawy maszyn, plan płodozmianu, badanie siana',
-      'sprawdzenie ogrodzeń',
-      'obornik na pola, siew owsa z grochem',
-      'wsiewka koniczyny, wapnowanie według badania gleby',
-      'koniec maja: pierwszy pokos koniczyny',
-      'siano z łąki',
-      'żniwa ozimin, drugi pokos koniczyny',
-      'żniwa mieszanki, drugi pokos łąki, słoma',
-      'siew ozimin, trzeci pokos koniczyny',
-      'obornik pod oziminy, badanie gleby',
-      '—',
-      'rozliczenie roku, plan na następny',
-    ],
-  },
-  {
-    on: () => p.warzywaSprz > 0,
-    l: 'Warzywa',
-    m: [
-      'plan, nasiona, zapisy do RWS',
-      'rozsada w tunelu',
-      'rozsada, siewy',
-      'sadzenie',
-      'koszyki RWS',
-      'zbiory',
-      'pełnia zbiorów',
-      'pełnia zbiorów',
-      'zbiory, przechowalnia',
-      'ostatnie zbiory',
-      'tunel: zimowe sałaty',
-      '—',
-    ],
-  },
-  {
-    on: () => p.owoceSprz > 0,
-    l: 'Sad',
-    m: [
-      'cięcie zimowe',
-      'cięcie zimowe',
-      '—',
-      'kwitnienie',
-      '—',
-      '—',
-      'wczesne odmiany',
-      'zbiór, tłocznia',
-      'zbiór, tłocznia',
-      'zbiór, sok',
-      'sprzedaż soku',
-      '—',
-    ],
-  },
-  {
-    on: () => p.klody > 0,
-    l: 'Grzyby',
-    m: [
-      '—',
-      'ścinka i moczenie kłód',
-      'szczepienie kłód',
-      'zbiór wiosenny',
-      'zbiór',
-      '—',
-      '—',
-      '—',
-      'zbiór jesienny',
-      'zbiór',
-      'moczenie kłód',
-      '—',
-    ],
-  },
-  {
-    on: () => p.ule > 0,
-    l: 'Pszczoły',
-    m: [
-      '—',
-      '—',
-      'przegląd wiosenny',
-      'rozwój rodzin',
-      'miodobranie (rzepak)',
-      'miodobranie',
-      'miodobranie',
-      'zakarmianie, leczenie',
-      'zakarmianie',
-      '—',
-      '—',
-      'leczenie zimowe',
-    ],
-  },
-  {
-    on: () => r0().przetwVal > 0,
-    l: 'Przetwórstwo',
-    m: [
-      'wysyłka zimowa',
-      '—',
-      '—',
-      '—',
-      '—',
-      '—',
-      '—',
-      '—',
-      'zapisy na święta',
-      'wędzenie, półgęski',
-      'wędzenie, wysyłka',
-      'wysyłka świąteczna',
-    ],
-  },
-  {
-    on: () => p.miedzyplony,
-    l: 'Międzyplony',
-    m: [
-      'zimują, nie ruszać do 15 II',
-      'od 15 II wypas owiec lub mulcz',
-      'przyoranie przed siewem owsa',
-      'wsiewka koniczyny w owies',
-      '—',
-      '—',
-      '—',
-      'siew po żniwach',
-      'siew do 1 października',
-      'wypas owiec na międzyplonie',
-      '—',
-      '—',
-    ],
-  },
-  {
-    on: () => true,
-    l: 'Papiery',
-    m: [
-      'KRUS (do końca III), plan',
-      'umowa z jednostką certyfikującą',
-      'wniosek o dopłaty (zwykle od 15 III)',
-      '—',
-      '—',
-      'KRUS',
-      '—',
-      '—',
-      'KRUS, podatek rolny',
-      'zaliczki dopłat od 16 X',
-      'podatek rolny',
-      'KRUS, rozliczenie RHD',
-    ],
-  },
+  { id: 'hatching', isActive: () => params.ownHatching && params.layingHens > 0 },
+  { id: 'broilers', isActive: () => params.broilers > 0 },
+  { id: 'geese', isActive: () => params.geese > 0 },
+  { id: 'ducks', isActive: () => params.ducks > 0 },
+  { id: 'turkeys', isActive: () => params.turkeys > 0 },
+  { id: 'guineaFowl', isActive: () => params.guineaFowl > 0 },
+  { id: 'rabbits', isActive: () => params.rabbits > 0 },
+  { id: 'sheep', isActive: () => params.sheep > 0 },
+  { id: 'goats', isActive: () => params.goats > 0 },
+  { id: 'pigs', isActive: () => params.pigsForHome > 0 },
+  { id: 'fieldsAndMeadows', isActive: () => true },
+  { id: 'marketGarden', isActive: () => params.marketGardenHa > 0 },
+  { id: 'orchard', isActive: () => params.fruitSoldShare > 0 },
+  { id: 'mushrooms', isActive: () => params.mushroomLogs > 0 },
+  { id: 'bees', isActive: () => params.beehives > 0 },
+  { id: 'processing', isActive: results => results.processedValue > 0 },
+  { id: 'catchCrops', isActive: () => params.catchCrops },
+  { id: 'paperwork', isActive: () => true },
 ];
-let _r = null;
-const r0 = () => _r || {};
-function renderCal(r) {
-  if (!r) return;
-  _r = r;
-  const act = TASKS.filter(t => t.on());
-  let t = `<thead><tr><th>Miesiąc</th><th>Prace (tylko Twoje kierunki)</th><th class="n">h/tydz.</th><th class="n">Wpływy</th><th class="n">Wydatki</th><th class="n">Saldo konta</th></tr></thead><tbody>`;
-  for (let i = 0; i < 12; i++) {
-    const m = r.cf.M[i];
-    const tasks = act
-      .map(a => [a.l, (typeof a.m === 'function' ? a.m() : a.m)[i]])
-      .filter(([, x]) => x && x !== '—')
-      .map(([l, x]) => `<span class="tk"><b>${l}:</b> ${esc(x)}</span>`)
+
+const CALENDAR_COLUMNS = ['month', 'tasks', 'hoursPerWeek', 'inflows', 'outflows', 'balance'];
+const NUMERIC_CALENDAR_COLUMNS = ['hoursPerWeek', 'inflows', 'outflows', 'balance'];
+
+function renderCalendar(results) {
+  if (!results) return;
+
+  const activeRows = CALENDAR_ROWS.filter(row => row.isActive(results)).map(row => ({
+    label: t(`calendar.tasks.${row.id}.label`),
+    months: messages(`calendar.tasks.${row.id}.${row.monthsKey ? row.monthsKey() : 'months'}`),
+  }));
+  const monthNames = messages('months.names');
+
+  const header = CALENDAR_COLUMNS.map(column => {
+    const className = NUMERIC_CALENDAR_COLUMNS.includes(column) ? ' class="n"' : '';
+    return `<th${className}>${t(`calendar.columns.${column}`)}</th>`;
+  }).join('');
+
+  const bodyRows = results.cashflow.months.map((cash, month) => {
+    const tasks = activeRows
+      .filter(row => row.months[month])
+      .map(row => `<span class="tk"><b>${row.label}:</b> ${escapeHtml(row.months[month])}</span>`)
       .join('');
-    t += `<tr data-m="${i}" class="${i === month ? 'sel' : ''}"><td>${MN[i]}</td><td>${tasks}</td><td class="n">${fmt(r.mies[i].total / 4.33, 0)}</td><td class="n">${zl(m.wplywy + m.dop)}</td><td class="n">${zl(m.wydatki + m.dom)}</td><td class="n${m.saldo < 0 ? ' neg' : ''}">${zl(m.saldo)}</td></tr>`;
-  }
-  $('t-cal').innerHTML = t + `</tbody>`;
+    const hoursPerWeek = results.monthlyHours[month].total / WEEKS_PER_MONTH;
+    const selected = month === planView.month ? 'sel' : '';
+
+    return `<tr data-calendar-month="${month}" class="${selected}">
+      <td>${monthNames[month]}</td>
+      <td>${tasks}</td>
+      <td class="n">${formatNumber(hoursPerWeek, 0)}</td>
+      <td class="n">${formatPln(cash.inflows + cash.subsidy)}</td>
+      <td class="n">${formatPln(cash.outflows + cash.household)}</td>
+      <td class="n${cash.balance < 0 ? ' neg' : ''}">${formatPln(cash.balance)}</td>
+    </tr>`;
+  });
+
+  byId('calendar-table').innerHTML = `<thead><tr>${header}</tr></thead><tbody>${bodyRows.join('')}</tbody>`;
 }

@@ -1,0 +1,27 @@
+// Parameters of the "labour" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+
+defineParameterGroup('labour', [
+  { id: 'dairyFixedHours', min: 0, max: 800, step: 10, defaultValue: 400 },
+  { id: 'hoursPerCow', min: 30, max: 200, step: 5, defaultValue: 90 },
+  { id: 'cheeseHoursPer100Litres', min: 1, max: 6, step: 0.5, defaultValue: 3 },
+  { id: 'milkSalesHoursPer100Litres', min: 0, max: 3, step: 0.1, defaultValue: 1 },
+  { id: 'eggSalesHoursPer100', min: 0, max: 1, step: 0.05, defaultValue: 0.4 },
+  { id: 'salesFixedHours', min: 0, max: 400, step: 10, defaultValue: 100 },
+  { id: 'hensFixedHours', min: 0, max: 200, step: 10, defaultValue: 60 },
+  { id: 'hoursPerHen', min: 0.3, max: 3, step: 0.1, defaultValue: 1 },
+  { id: 'hoursPerBroiler', min: 0.2, max: 1.2, step: 0.05, defaultValue: 0.6 },
+  { id: 'hoursPerGoose', min: 0.5, max: 4, step: 0.5, defaultValue: 1.5 },
+  { id: 'hoursPerDuck', min: 0.3, max: 2, step: 0.05, defaultValue: 0.8 },
+  { id: 'hoursPerTurkey', min: 0.5, max: 5, step: 0.25, defaultValue: 2 },
+  { id: 'hoursPerGuineaFowl', min: 0.3, max: 2, step: 0.05, defaultValue: 0.7 },
+  { id: 'hoursPerRabbitDoe', min: 5, max: 50, step: 1, defaultValue: 20 },
+  { id: 'hoursPerEwe', min: 2, max: 15, step: 0.5, defaultValue: 6 },
+  { id: 'abattoirTripHours', min: 0.5, max: 5, step: 0.25, defaultValue: 1.5 },
+  { id: 'lambSalesHoursPerLamb', min: 0, max: 3, step: 0.1, defaultValue: 0.75 },
+  { id: 'hoursPerGoat', min: 2, max: 15, step: 0.5, defaultValue: 6 },
+  { id: 'hoursPerPig', min: 10, max: 50, step: 1, defaultValue: 25 },
+  { id: 'hayHoursPerHa', min: 4, max: 25, step: 1, defaultValue: 10 },
+  { id: 'cerealHoursPerHa', min: 8, max: 30, step: 1, defaultValue: 15 },
+  { id: 'generalHours', min: 50, max: 400, step: 10, defaultValue: 150 },
+  { id: 'gardenHoursPerHa', min: 50, max: 600, step: 10, defaultValue: 240 },
+]);
