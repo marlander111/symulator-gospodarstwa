@@ -1269,8 +1269,8 @@
     },
     "sweetSpot": {
       "label": "Sweet spot",
-      "note": "Najwięcej zł na godzinę",
-      "description": "Wynik przeszukania tysięcy kombinacji na 14 ha bez dzierżawy: najwyższy dochód na godzinę pracy przy co najmniej 5 tys. zł miesięcznie w wariancie pesymistycznym, paszach z własnych pól i szczycie poniżej 60 h tygodniowo. Wyszły kury nieśne, gęsi i kilka mamek z opasem sprzedawanym w paczkach, do tego międzyplony i wypas co 3 dni z długim odpoczynkiem kwater. Krów mlecznych nie ma, bo dojenie zabiera najwięcej godzin."
+      "note": "Całe 14 ha, najwięcej zł/h",
+      "description": "Wynik przeszukania tysięcy kombinacji na 14 ha bez dzierżawy: najwyższy dochód na godzinę pracy, gdy cała ziemia jest wykorzystana (każda pasza najwyżej 10% ponad potrzeby zwierząt), przy co najmniej takim dochodzie jak poprzednio, paszach z własnych pól i szczycie poniżej 60 h tygodniowo. Wyszły kury nieśne, gęsi, kaczki i kilka mamek z opasem sprzedawanym w paczkach, wypas co 3 dni z długim odpoczynkiem kwater. Krów mlecznych nie ma, bo dojenie zabiera najwięcej godzin. Pasze bilansują się na styk, więc w słabym roku trzeba część dokupić; wynik pesymistyczny już to uwzględnia."
     }
   },
   "assumptionSets": {
