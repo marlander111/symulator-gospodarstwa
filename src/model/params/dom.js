@@ -1,0 +1,57 @@
+// Parametry grupy „Budżet domu”.
+
+DEF.push(
+  {
+    g: 'dom',
+    id: 'celZBudzetu',
+    t: 'bool',
+    l: 'Licz minimum na czysto z budżetu domu',
+    v: false,
+    h: 'Gdy włączone, próg wariantu pesymistycznego liczy się sam z wydatków, zapasu i oszczędzania poniżej, pomniejszonych o 800+. Gdy wyłączone, obowiązuje suwak minimum w grupie „Ludzie”.',
+  },
+  {
+    g: 'dom',
+    id: 'wydDom',
+    l: 'Wydatki domu',
+    min: 2000,
+    max: 15000,
+    s: 100,
+    v: 5100,
+    u: 'zł/mies.',
+    h: 'Szacunek dla 5 osób, oszczędnie, ponad połowa jedzenia własna, własny opał i woda. Bez KRUS i podatku rolnego, które są w kosztach gospodarstwa.',
+  },
+  { g: 'dom', id: 'zapasDom', l: 'Zapas ponad wydatki', min: 0, max: 50, s: 5, v: 20, u: '%' },
+  {
+    g: 'dom',
+    id: 'odkladDom',
+    l: 'Oszczędzanie: emerytura, fundusz awaryjny',
+    min: 0,
+    max: 40000,
+    s: 1000,
+    v: 10000,
+    u: 'zł/rok',
+    h: 'Emerytura z KRUS będzie niska, więc warto odkładać np. na IKZE.',
+  },
+  {
+    g: 'dom',
+    id: 'gotowkaStart',
+    l: 'Gotówka na koncie 1 stycznia',
+    min: 0,
+    max: 200000,
+    s: 1000,
+    v: 20000,
+    u: 'zł',
+    h: 'Od tej kwoty liczę saldo w tabeli przepływów gotówki.',
+  },
+  {
+    g: 'dom',
+    id: 'dzieci800',
+    l: 'Dzieci z 800+',
+    min: 0,
+    max: 8,
+    s: 1,
+    v: 3,
+    u: 'os.',
+    h: '800 zł miesięcznie na dziecko do 18 lat.',
+  }
+);

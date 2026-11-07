@@ -1,0 +1,282 @@
+<title>Symulator gospodarstwa rodzinnego</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rokkitt:wght@500;700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* @@STYLES@@ */
+</style>
+
+<header class="wrap top">
+  <div class="eyebrow">Planer finansów, pracy i pasz · 14 ha pod Lwówkiem Śląskim</div>
+  <h1>Symulator gospodarstwa rodzinnego</h1>
+  <p class="lead">14 ha, krowy jersey na trawie, kury w mobilnym kurniku, owce i drób na pastwisku. Wszystkie pasze, siano i słoma z własnych pól. Przesuwaj suwaki: bilans pasz, czas pracy i pieniądze przeliczają się od razu.</p>
+  <div class="loc"><span>51°07′N 15°35′E</span><span>ok. 250–400 m n.p.m.</span><span>ok. 680 mm opadów/rok</span><span>średnio ok. 7,6–8 °C</span><span>wypas ok. 20 IV – 31 X</span></div>
+  <div class="seg theme-sw" id="theme-sw" role="group" aria-label="Motyw kolorów"><span class="lab">Motyw:</span><button class="btn" type="button" data-th="auto">Automatyczny</button><button class="btn" type="button" data-th="light">Jasny</button><button class="btn" type="button" data-th="dark">Ciemny</button></div>
+</header>
+
+<div class="bar" role="region" aria-label="Wynik na bieżąco">
+  <div class="wrap">
+    <div class="kpi main"><div class="k">Dochód / rok</div><div class="v" id="k-net">–</div><div class="s" id="k-nets">–</div></div>
+    <div class="kpi"><div class="k">Praca / rok</div><div class="v" id="k-h">–</div><div class="s" id="k-hs">–</div></div>
+    <div class="kpi hide-s"><div class="k">Przychód / rok</div><div class="v" id="k-rev">–</div><div class="s" id="k-revs">–</div></div>
+    <div class="kpi"><div class="k" title="Wariant pesymistyczny">Pesymistycznie</div><div class="v" id="k-ost">–</div><div class="s" id="k-osts">–</div></div>
+    <div class="kpi hide-s"><div class="k">Inwestycje</div><div class="v" id="k-cap">–</div><div class="s" id="k-caps">–</div></div>
+    <div class="kpi"><div class="k">Pasze</div><div class="v" id="k-feed">–</div><div class="s" id="k-feeds">–</div></div>
+    <div class="kpi hide-s"><div class="k">Obsada</div><div class="v" id="k-djp">–</div><div class="s">DJP na ha użytków</div></div>
+  </div>
+</div>
+
+<div class="wrap presets">
+  <div class="prow" id="row-var"><span class="lbl">Wariant</span></div>
+  <div class="prow" id="row-ass"><span class="lbl">Założenia</span></div>
+  <div class="prow" id="row-mine"><span class="lbl">Moje warianty</span><input class="mine-name" id="mine-name" type="text" maxlength="40" placeholder="Nazwa, np. Plan 2027" aria-label="Nazwa wariantu"><button class="btn ghost" type="button" id="mine-save">Zapisz obecne ustawienia</button><span id="mine-list" style="display:contents"></span><span class="small muted" id="mine-note">Zapisane tylko w tej przeglądarce.</span></div>
+  <div class="prow" id="row-exp"><span class="lbl">Zapis i raport</span></div>
+</div>
+
+<div class="wrap layout">
+  <aside class="ctrls" id="ctrls" aria-label="Ustawienia"></aside>
+
+  <div class="res">
+    <div class="panel">
+      <div class="panel-h"><h2>Co wychodzi</h2><p>Bilans liczony na rok w pełnym działaniu (rok 3).</p></div>
+      <div class="warns" id="warns"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>Ziemia i pasze</h2><p>Potrzeba (obrys) i produkcja z własnych pól (wypełnienie).</p></div>
+      <div class="landbar" id="landbar"></div>
+      <div class="legend" id="landlegend"></div>
+      <div class="feed" id="feed"></div>
+      <p class="small muted" id="feednote"></p>
+    </div>
+
+    <div class="panel" id="plan">
+      <div class="panel-h"><h2>Plan rozmieszczenia</h2></div>
+      <p class="intro">Schemat, nie mapa: proporcje pól zmieniają się razem z suwakami. Wybierz miesiąc i rok płodozmianu, kliknij pole, żeby zobaczyć, co się na nim dzieje. Pastwisko podzielone na kwatery z aleją i wodą przez środek, żeby krowy, za nimi owce, a za nimi kury przechodziły codziennie na świeżą trawę.</p>
+      <div class="seg" id="plan-mon"></div>
+      <div class="seg" id="plan-year"></div>
+      <div class="plan-grid">
+        <div class="plan-wrap"><svg id="plansvg" viewBox="0 0 1000 540" role="img" aria-label="Schemat rozmieszczenia gospodarstwa"></svg></div>
+        <div class="note" id="plan-info" aria-live="polite"></div>
+      </div>
+      <div class="notes">
+        <div class="note"><h3>Kolejność na pastwisku</h3><p>Krowy wchodzą pierwsze i zjadają górę runi. 1–3 dni później owce dojadają niższe trawy i zioła. 3–4 dni po krowach przyjeżdża mobilny kurnik: kury rozgrzebują placki, zjadają larwy much i nawożą. Krowy i owce mają w większości różne pasożyty, więc taka kolejność przerywa ich cykl.</p></div>
+        <div class="note"><h3>Budynki: tanio i lekko</h3><ul><li>Stara obora: dojarnia, mleczarnia, serownia (wymagają osobnego, zmywalnego pomieszczenia).</li><li>Wiata szkieletowa z OSB lub deskami, otwarta od wschodu, z głęboką ściółką: krowy i jałówki.</li><li>Druga wiata lub przedłużenie: owce i kozy, nocna zagroda przed wilkami.</li><li>Kurniki mobilne na płozach, ciągnięte C-360; zimą stoją przy obejściu.</li></ul></div>
+        <div class="note"><h3>Woda i ogrodzenie</h3><ul><li>Rura PE wzdłuż alei z szybkozłączkami co 2–3 kwatery, poidło przenośne.</li><li>Obwód: 2–3 druty stałe (przy owcach 4–5), wewnątrz taśmy na przenośnych słupkach.</li><li>Elektryzator z odpowiednim zapasem mocy, uziemienie w kilku punktach.</li></ul></div>
+      </div>
+    </div>
+
+    <div class="panel" id="plodozmian">
+      <div class="panel-h"><h2>Płodozmian na gruntach ornych</h2></div>
+      <p class="intro">W gospodarstwie ekologicznym azot daje koniczyna i obornik, więc część gruntów ornych zawsze jest pod koniczyną z trawami. Liczbę pól wybierasz niżej (lub w grupie „Ziemia”), udział zbóż suwakiem. Kliknij rok, żeby zobaczyć go na planie.</p>
+      <div class="seg" id="rot-ctl"></div>
+      <div class="tw"><table class="rot" id="t-rot"></table></div>
+      <p class="small" id="rot-note"></p>
+      <div class="tw"><table id="t-crops"></table></div>
+    
+      <h3 class="sub-h" id="miedzyplony">Międzyplony i ekoschematy</h3>
+      <p class="intro">Międzyplon to zielona okrywa między dwiema uprawami głównymi: chroni glebę zimą, wiąże azot, karmi życie glebowe i daje paszę owcom. W ekoschemacie „Rolnictwo węglowe” międzyplon ozimy lub wsiewka to 5 pkt/ha, ok. 500 zł/ha. Włączasz je przyciskami przy płodozmianie albo w grupie „Dopłaty”.</p>
+      <div class="notes">
+        <div class="note" id="mp-sum"></div>
+        <div class="note" id="mp-where"></div>
+      </div>
+      <div class="tw"><table id="t-mix">
+        <thead><tr><th>Mieszanka</th><th>Wysiew (orientacyjnie)</th><th>Kiedy i gdzie</th><th>Po co</th></tr></thead>
+        <tbody>
+          <tr><td><b>Żyto ozime z wyką kosmatą</b></td><td>żyto 60–80 kg/ha, wyka 25–40 kg/ha</td><td>Po żniwach, do 1 października. Przed owsem z grochem.</td><td>Najpewniejsza: zimuje, wyka wiąże azot, żyto chroni glebę. Wypas owiec jesienią i od połowy lutego, potem przyoranie przed siewem owsa.</td></tr>
+          <tr><td><b>Mieszanka landsberska</b>: wyka ozima, koniczyna krwistoczerwona, życica wielokwiatowa</td><td>wyka 20–30, koniczyna 15–20, życica 15–20 kg/ha</td><td>Siew sierpień – wrzesień. Przed późno sianą uprawą lub warzywami.</td><td>W maju daje pokos zielonki lub sianokiszonki dla krów, ale dla owsa to za późno. Dobra przed warzywami.</td></tr>
+          <tr><td><b>Wsiewka koniczyny w owies</b></td><td>koniczyna czerwona 8–12 kg/ha, życica lub tymotka 4–8 kg/ha</td><td>Kwiecień, razem z owsem z grochem lub zaraz po nim.</td><td>Liczy się jako wsiewka śródplonowa (utrzymać min. 8 tygodni po zbiorze). Od razu staje się polem koniczyny w płodozmianie.</td></tr>
+          <tr><td><b>Rzepik ozimy z żytem</b></td><td>rzepik 6–10 kg/ha, żyto 60–80 kg/ha</td><td>Po żniwach, do końca sierpnia (rzepik potrzebuje czasu przed zimą). Przed owsem.</td><td>Dużo paszy na jesienny wypas owiec i gęsi (październik–listopad), zimuje. Rzepik to kapustowate: nie wysiewaj, jeśli w płodozmianie są kapustne warzywa lub rzepak.</td></tr>
+          <tr><td><b>Mieszanka wielogatunkowa z żytem</b>: rzodkiew oleista, facelia, wyka, koniczyna krwistoczerwona, owies lub gryka</td><td>gotowe mieszanki zwykle 25–40 kg/ha plus żyto 30–50 kg/ha</td><td>Po żniwach, sierpień. Przed owsem lub warzywami.</td><td>Najwięcej życia w glebie: różne korzenie, kwiaty dla pszczół. Część przemarza, żyto zostaje zielone do 15 lutego. Droższe nasiona.</td></tr>
+          <tr><td><b>Pszenżyto z peluszką ozimą</b></td><td>pszenżyto 80–100 kg/ha, peluszka 40–60 kg/ha</td><td>Wrzesień. Przed późną uprawą lub warzywami.</td><td>W maju zielonka lub sianokiszonka bogata w białko. Jak landsberska: przed owsem za późno.</td></tr>
+          <tr><td><b>Facelia, gryka, seradela</b></td><td>facelia 6–8, gryka 30–40, seradela 20–30 kg/ha</td><td>Po wczesnych żniwach, lipiec – sierpień.</td><td>Szybka, miododajna (pszczoły), przemarza i zostawia mulcz. Do ekoschematu dodaj gatunek zimujący (np. żyto), bo okrywa musi trwać do 15 lutego.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="tw"><table id="t-scmix">
+    <thead><tr><th>Poplon ścierniskowy (przed oziminą, bez dopłaty)</th><th>Wysiew (orientacyjnie)</th><th>Kiedy</th><th>Po co</th></tr></thead>
+    <tbody>
+      <tr><td><b>Gorczyca biała</b></td><td>15–20 kg/ha</td><td>Zaraz po żniwach, lipiec – początek sierpnia; przyorać we wrześniu przed siewem oziminy.</td><td>Najtańsza i najszybsza, szybko zakrywa glebę. Kapustowata: uważaj, jeśli uprawiasz kapustne warzywa.</td></tr>
+      <tr><td><b>Facelia z gryką</b></td><td>facelia 8–10, gryka 30–40 kg/ha</td><td>Zaraz po żniwach.</td><td>Miododajna (pszczoły), poprawia strukturę gleby, nie jest kapustowata. Mało paszy.</td></tr>
+      <tr><td><b>Owies z wyką jarą i grochem</b></td><td>owies 60–80, wyka 30–40, groch 40–60 kg/ha</td><td>Najwcześniej po żniwach (lipiec), 7–8 tygodni wzrostu.</td><td>Zielonka dla krów lub wypas owiec we wrześniu, potem przyoranie. Strączkowe wiążą azot dla oziminy.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small muted">Wymogi praktyki (ARiMR, PODR 2025): min. 2 gatunki, nie same zboża; międzyplon ozimy wysiany do 1 X i utrzymany do 15 II (mulczowanie dopuszczalne po 15 XI); wsiewka bobowatych utrzymana do siewu następnej uprawy lub min. 8 tygodni po zbiorze; bez środków ochrony roślin. W gospodarstwie ekologicznym nasiona eko (lub zgoda na nieekologiczne). Ilości wysiewu orientacyjne: sprawdź u dostawcy nasion. Czy ekoschemat łączy się z płatnością ekologiczną na tej samej działce, potwierdź w ODR przed złożeniem wniosku.</p>
+      <p class="small muted">Mieszanki zbożowo-strączkowe dawały w doświadczeniach IUNG ok. 2,6–4,9 t/ha i 16–19% białka (groch z pszenicą). Udział strączkowych w siewie 40–50%. Ziarno kur warto uzupełnić serwatką z serowarni (białko) i zielonką z wybiegu.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>Pieniądze</h2><p>Od sprzedaży do wyniku na czysto.</p></div>
+      <svg class="chart" id="wf" viewBox="0 0 640 250" role="img" aria-label="Wykres: sprzedaż, dopłaty, koszty, amortyzacja i wynik"></svg>
+      <div class="twocol">
+        <div class="tw"><table id="t-rev"></table></div>
+        <div class="tw"><table id="t-cost"></table></div>
+      </div>
+      <div class="twocol">
+        <div class="tw"><table id="t-dop"></table></div>
+        <div class="tw"><table id="t-home"></table></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>Przepływy gotówki</h2><p>Rok w pełnym działaniu, miesiąc po miesiącu. Bez inwestycji, z wypłatą na dom.</p></div>
+      <svg class="chart" id="cfchart" viewBox="0 0 640 230" role="img" aria-label="Wykres: wynik miesiąca i saldo konta"></svg>
+      <div class="tw"><table id="t-cf"></table></div>
+      <p class="small muted" id="cf-note"></p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>Który kierunek się opłaca</h2><p>Pasza z własnych pól liczona po koszcie uprawy.</p></div>
+      <div class="tw"><table id="t-kier"></table></div>
+      <p class="small muted" id="kier-note"></p>
+      <p class="small muted">Kolory przy zł/ha i zł/h: od czerwonego (najsłabiej) do zielonego (najlepiej). Zielone z hektara warto skalować, gdy brakuje ziemi; zielone za godzinę, gdy brakuje rąk. W innych tabelach przy kosztach i godzinach mocniejszy czerwony znaczy więcej.</p>
+      <p class="small muted">Zł za godzinę to nadwyżka kierunku podzielona przez jego godziny (ze sprzedażą). Kozy i świnie są dla domu, więc ich „zarobek” to wartość mięsa w ostatniej kolumnie tabeli „Dla domu”.</p>
+    </div>
+
+    <div class="panel" id="co-dalej">
+      <div class="panel-h"><h2>Co dalej: co dołożyć</h2><p>Każdy krok przeliczony przy Twoich obecnych ustawieniach.</p></div>
+      <div class="tw"><table id="t-next"></table></div>
+      <p class="small" id="next-note"></p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>Co najbardziej zmienia wynik</h2><p>Każde założenie osobno o 20% w dół i w górę.</p></div>
+      <svg class="chart" id="sens" viewBox="0 0 640 300" role="img" aria-label="Wykres wrażliwości wyniku na założenia"></svg>
+      <p class="small muted" id="sens-note"></p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>Czas pracy w roku</h2><p id="lab-sub">Godziny w miesiącu według zajęć.</p></div>
+      <svg class="chart" id="lab" viewBox="0 0 640 270" role="img" aria-label="Wykres godzin pracy w miesiącach"></svg>
+      <div class="legend" id="lablegend"></div>
+      <div class="tw"><table id="t-lab"></table></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>Co trzeba sprzedać</h2><p>Bez stałych klientów żadna z tych liczb nie zadziała.</p></div>
+      <div class="cards" id="market"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>Inwestycje</h2><p>Rozłożone na lata użytkowania (amortyzacja).</p></div>
+      <div class="tw"><table id="t-inv"></table></div>
+      <p class="small muted">Kwoty są domyślne. Wpisz własną (np. z oferty albo 0, gdy coś już masz) i naciśnij Enter: przeliczę ją na cenę jednostkową i przestawię suwak w grupie „Inwestycje”. Działa też w drugą stronę: suwak zmienia kwotę tutaj.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><h2>Budżet domu</h2><p>Czy wynik gospodarstwa wystarcza na życie.</p></div>
+      <div class="tw"><table id="t-dom"></table></div>
+      <p class="small muted" id="dom-note"></p>
+    </div>
+  </div>
+
+</div>
+
+<section class="wrap full" id="porownanie">
+  <h2>Porównanie wariantów</h2>
+  <p class="intro">Każdy wariant przeliczony przy Twoich pozostałych ustawieniach, raz z założeniami realnymi, raz ostrożnymi (niższe ceny i plony, więcej godzin).</p>
+  <div class="tw"><table id="t-cmp"></table></div>
+</section>
+
+<section class="wrap full" id="kalendarz">
+  <h2>Kalendarz roku</h2>
+  <p class="intro">Wycielenia i wykoty wczesną wiosną, krycie latem, siano w czerwcu, sprzedaż gęsi i serów jesienią i przed świętami. Terminy dla okolic Lwówka (wypas od ok. 20 kwietnia).</p>
+  <div class="tw"><table class="cal" id="t-cal"></table></div>
+  <p class="small muted">Prace pokazuję tylko dla kierunków, które masz w ustawieniach. Kliknij miesiąc, żeby zobaczyć go na planie.</p>
+</section>
+
+<section class="wrap full" id="etapy">
+  <h2>Jak zacząć: trzy lata</h2>
+  <p class="intro">Każdy nowy kierunek dopiero wtedy, gdy poprzedni się sprzedaje. Wynik u góry dotyczy roku 3, kiedy wszystko działa.</p>
+  <div class="years">
+    <div class="yr"><div class="eyebrow">Rok 1</div><h3>Krowy, kury, ogrodzenie</h3><ul>
+      <li>4 krowy, 100 kur w jednym kurniku mobilnym, kilka gęsi.</li>
+      <li>Ogrodzenie elektryczne pastwiska, woda w alei, wiata dla bydła.</li>
+      <li>Mleczarnia w starej oborze; zgłoszenie sprzedaży mleka i jaj w PIW.</li>
+      <li>Umowa z jednostką certyfikującą eko przed wnioskiem o dopłaty.</li>
+      <li>Badanie gleby i siana; pierwszy płodozmian.</li>
+      <li>Zapisuj: litry, jaja, godziny, wydatki.</li></ul></div>
+    <div class="yr"><div class="eyebrow">Rok 2</div><h3>Owce i sery</h3><ul>
+      <li>Kury do 200 (drugi kurnik), jeśli jaja się sprzedają.</li>
+      <li>10–15 owiec, nocna zagroda, pies pasterski.</li>
+      <li>Serownia i wpis do RHD; sery z letniego mleka.</li>
+      <li>Pełny płodozmian trzypolowy, własne ziarno dla kur.</li></ul></div>
+    <div class="yr"><div class="eyebrow">Rok 3</div><h3>Drób mięsny i decyzje</h3><ul>
+      <li>Próbna partia 100 kurczaków pastwiskowych, gdy jest gdzie je legalnie ubić.</li>
+      <li>Kozy na zarośla; świnie dla domu, jeśli pozwala sytuacja z ASF.</li>
+      <li>Piąta krowa lub więcej owiec według tego, co lepiej się sprzedaje i ile zostaje siana.</li>
+      <li>Własne jałówki od najlepszych krów.</li></ul></div>
+  </div>
+</section>
+
+<section class="wrap full" id="prawo">
+  <h2>Prawo i formalności</h2>
+  <p class="intro">Skrót najważniejszych spraw. Przepisy się zmieniają, więc przed każdym startem potwierdź szczegóły w powiatowym inspektoracie weterynarii (PIW) w Lwówku, w ARiMR i w ODR.</p>
+  <div class="notes">
+    <div class="note"><h3>ARiMR i dopłaty</h3><ul><li>Numer producenta i siedziba stada; bydło, owce, kozy i świnie kolczykowane i zgłaszane; stado drobiu też zgłoś.</li><li>Dzierżawa: dopłaty, także ekologiczną, dostaje dzierżawca, który faktycznie użytkuje ziemię. Przy płatności ekologicznej umowa powinna obejmować cały okres zobowiązania. Umowę spisz na piśmie.</li><li>Wniosek o dopłaty co roku. Płatność do owiec liczę od 10 sztuk, do kóz od 5 (sprawdź progi).</li><li>Stawki w planerze: płatności bezpośrednie i do zwierząt za 2025 r., dobrostan za 2024 r., ONW 2026, płatność ekologiczna według szacunków na 2023 r.</li></ul></div>
+    <div class="note"><h3>Rolnictwo ekologiczne</h3><ul><li>Umowa z jednostką certyfikującą i okres konwersji (płatność przysługuje także w konwersji).</li><li>Kury: najwyżej 6 kur na m² kurnika, wybieg, zakaz syntetycznych aminokwasów, do 5% pasz nieekologicznych.</li><li>Kurczaki eko: ubój najwcześniej w 81. dniu życia albo rasy wolno rosnące.</li></ul></div>
+    <div class="note"><h3>Mleko, jaja, sery</h3><ul><li>Mleko surowe i jaja: sprzedaż bezpośrednia; zgłoszenie do powiatowego lekarza weterynarii co najmniej 30 dni przed startem i numer weterynaryjny.</li><li>Jaja na targowisku: zwykle wymagane znakowanie kodem producenta (potwierdź w PIW).</li><li>Jagnięcina: ubój w zatwierdzonej rzeźni (rolniczej lub usługowej, w swoim albo sąsiednim powiecie), mięso ze znakiem weterynaryjnym. Limit RHD dla mięsa czerwonego wynosił 2300 kg rocznie (rozporządzenie z 2016 r.). Czy możesz sprzedawać całe tusze, czy tylko po rozbiorze w swojej kuchni RHD, potwierdź w PIW.</li><li>Sery: rolniczy handel detaliczny (RHD), limity ilościowe ustala decyzja lekarza weterynarii. Przychód z RHD zwolniony z podatku do 100 tys. zł, powyżej 2% ryczałtu.</li><li>Nie reklamuj, że mleko „leczy”: oświadczenia zdrowotne na żywności są w UE ściśle regulowane.</li></ul></div>
+    <div class="note"><h3>Drób mięsny i świnie</h3><ul><li>Drób i króliki ubite w gospodarstwie sprzedajesz w ramach sprzedaży bezpośredniej (zgłoszenie do powiatowego lekarza weterynarii). Żeby z nich robić przetwory, potrzebujesz też wpisu do RHD.</li><li>Mięso owiec, kóz i świń do wyrobów w RHD musi pochodzić z rzeźni; z uboju na własny użytek nie wolno.</li><li>Indyki trzymaj osobno od kur (histomonoza).</li><li>Własny wylęg na potrzeby stada nie wymaga rejestracji wylęgarni; sprzedaż piskląt lub jaj wylęgowych już tak (powiatowy lekarz weterynarii).</li><li>Tunel zimowy przy nakazie zamknięcia drobiu: wszystkie otwory zasłonięte siatką, karma i woda w środku.</li><li>Świnie: sprawdź strefę ASF w PIW. Obowiązuje bioasekuracja, a karmienie resztkami z kuchni jest zabronione.</li><li>Ptasia grypa: w okresach zagrożenia trzeba zamknąć drób, więc kurniki mobilne potrzebują wariantu z siatką lub zamknięciem.</li></ul></div>
+    <div class="note"><h3>Warzywa, pszczoły, zajęcia dla dzieci</h3><ul><li>Warzywa sprzedawane bezpośrednio: zapytaj w powiatowej stacji sanitarno-epidemiologicznej o wpis do rejestru.</li><li>Pasiekę trzeba zarejestrować u powiatowego lekarza weterynarii.</li><li>Grzyby uprawne i soki z własnych owoców: wpis do rejestru w sanepidzie (RHD dla żywności roślinnej).</li><li>Zajęcia dla dzieci (zagroda edukacyjna): regularne płatne zajęcia zwykle wymagają działalności w CEIDG, okazjonalne mogą być nierejestrowe; potrzebne dodatkowe OC.</li></ul></div>
+    <div class="note"><h3>Przetwory i wysyłka (RHD)</h3><ul><li>RHD pozwala sprzedawać konsumentom na odległość, także wysyłkowo, jeśli w transporcie zachowasz bezpieczne warunki, w tym temperaturę. Nie wolno sprzedawać przez pośredników.</li><li>Limity ilościowe RHD dotyczą tylko dostaw do sklepów i restauracji (np. wyroby mięsne 1400 kg rocznie). Sprzedaż konsumentom nie ma limitu ilości.</li><li>Ulga podatkowa: co najmniej 50% składników (bez wody) z własnego gospodarstwa; przychód do 100 tys. zł zwolniony, powyżej 2% ryczałtu.</li><li>Ministerstwo zapowiedziało w 2026 r. zniesienie ograniczeń terytorialnych i wyższe limity; projekt był w konsultacjach. Przed startem sprawdź, co weszło w życie.</li></ul></div>
+    <div class="note"><h3>Wilki, budowy, obornik</h3><ul><li>Szkody od wilków wypłaca Regionalna Dyrekcja Ochrony Środowiska; zgłaszaj od razu, a owce i kozy zamykaj na noc.</li><li>Wiaty: zapytaj w starostwie, czy wystarczy zgłoszenie, czy potrzebne jest pozwolenie na budowę.</li><li>Obornik i głęboka ściółka: przechowywanie według programu azotanowego (zapytaj w ODR).</li></ul></div>
+    <div class="note"><h3>Podatki i ubezpieczenia</h3><ul><li>Sprzedaż nieprzetworzonych produktów (mleko surowe, jaja, żywe zwierzęta) to zwykle działalność rolnicza; przetwory w RHD jak wyżej. Potwierdź z księgowym.</li><li>KRUS, ubezpieczenie budynków i OC rolnika są w kosztach stałych w planerze.</li></ul></div>
+  </div>
+</section>
+
+<section class="wrap full" id="zalozenia">
+  <h2>Założenia i źródła</h2>
+  <div class="notes">
+    <div class="note"><h3>Jak liczę</h3><ul>
+      <li>Krowa jersey zjada ok. 15 kg suchej masy dziennie (5,5 t rocznie), jałówka 3,3 t, owca z jagniętami 0,8 t, koza 0,6 t.</li>
+      <li>Kura: pasza do woli, z czego ok. 90% to własne ziarno i strączkowe, reszta to minerały i muszle (kupowane).</li>
+      <li>Siano: 75% plonu łąki idzie na siano, 25% to odrosty do wypasu; nadwyżka pastwiska w 70% do koszenia.</li>
+      <li>Ziarno i siano z własnych pól liczę po koszcie uprawy, bez czynszu za ziemię. Ziarno skarmione kurom można by sprzedać drożej, więc „zarobek” na jajach zawiera też ten zysk.</li>
+      <li>DJP: przeliczniki orientacyjne (krowa 1, jałówka 0,6, owca i koza 0,1, kura 0,014).</li>
+      <li>„Na czysto” to wynik przed zapłaceniem sobie za pracę, bez kosztów kredytu i podatków.</li>
+      <li>„Wariant pesymistyczny” to Twoje bieżące ustawienia pogorszone o suwaki z tej grupy: ceny, plony, wydajność zwierząt, godziny i koszty. Czynsz zostaje bez zmian.</li>
+      <li>Przetwory przypisuję do gatunku, z którego są (gęsi, kaczki, owce), razem z częścią wędzarni i wysyłki.</li>
+      <li>Normy czasu pracy to moje szacunki dla małego gospodarstwa z dojarką konwiową. Popraw je po pierwszym roku na własnych zapiskach.</li></ul></div>
+    <div class="note src"><h3>Źródła</h3><ul>
+      <li><a href="https://staszow.pl/files/image/2025/Aktualno%C5%9Bci/ARIMR_stawki_p%C5%82atno%C5%9Bci.pdf" target="_blank" rel="noopener">ARiMR: stawki płatności za 2025 r.</a></li>
+      <li><a href="https://wiescirolnicze.pl/rolnictwo-ekologiczne-z-wyzszymi-stawkami-w-2023-roku" target="_blank" rel="noopener">Wieści Rolnicze: stawki płatności ekologicznych (2023)</a></li>
+      <li><a href="https://wiescirolnicze.pl/hodowla/startuja-wyplaty-za-dobrostan-zwierzat-takie-pieniadze-dostana-rolnicy-lista,21487" target="_blank" rel="noopener">Wieści Rolnicze: stawki dobrostanu zwierząt za 2024 r.</a></li>
+      <li><a href="https://www.gov.pl/web/arimr/platnosc-onw---podstawowe-informacje-2026" target="_blank" rel="noopener">ARiMR: płatność ONW 2026</a></li>
+      <li><a href="https://wiescirolnicze.pl/stawki-za-ekoschematy-2024-sa-jednak-wieksze-ostateczne-kwoty" target="_blank" rel="noopener">Wieści Rolnicze: stawki ekoschematów 2024</a></li>
+      <li><a href="https://podr.pl/wp-content/uploads/2025/12/RHD-i-MLO.pdf" target="_blank" rel="noopener">PODR: RHD i MLO (grudzień 2025)</a></li>
+      <li><a href="https://www.kpodr.pl/wp-content/uploads/2024/03/Kiczorowska-B.-Dobre-praktyki-utrzymania-drobiurzeznego-i-kur-niosek.zmieniona.pdf" target="_blank" rel="noopener">KPODR: dobre praktyki w chowie drobiu i kur nieśnych</a></li>
+      <li><a href="https://www.iung.pl/wp-content/uploads/2023/09/Instrukcja-Mieszanki-roslin-straczkowych-ze-zbozami.pdf" target="_blank" rel="noopener">IUNG: mieszanki roślin strączkowych ze zbożami</a></li>
+      <li><a href="https://www.gov.pl/attachment/00bf374e-b258-4c8d-896e-aedf7a17cc2c" target="_blank" rel="noopener">KOWR: rynek zbóż nr 41/2026</a></li>
+      <li><a href="https://www.sodr.pl/pliki/Analiza-cen-2026-06,2096.pdf" target="_blank" rel="noopener">ŚODR: ceny bydła, czerwiec 2026</a></li>
+      <li><a href="https://wiescirolnicze.pl/drob/produkuje-jajka-od-kur-z-wolnego-wybiegu" target="_blank" rel="noopener">Wieści Rolnicze: jaja z wolnego wybiegu (ceny, 2024)</a></li>
+      <li><a href="https://www.gov.pl/attachment/a63161eb-624b-4fb7-b75e-0f54da2b886f" target="_blank" rel="noopener">KOWR: rynek mięsa, lipiec 2026 (ceny mięsa owczego)</a></li>
+      <li><a href="https://bip2.lasy.gov.pl/pl/bip/px_dg~rdlp_wroclaw~nadl_lwowek_slaski~program_ochrony_przyrody_13_15.pdf" target="_blank" rel="noopener">Nadleśnictwo Lwówek Śląski: warunki przyrodnicze</a></li>
+      <li><a href="https://www.uvm.edu/d10-files/documents/2025-11/2024-COP-article-Sep2025.pdf" target="_blank" rel="noopener">University of Vermont: koszty farm mleka z trawy (2024)</a></li>
+      <li><a href="https://www.agproud.com/articles/30227-cheese-production-from-jersey-milk-conserves-resources-and-reduces-environmental-impact" target="_blank" rel="noopener">Wydajność sera z mleka jersey</a></li>
+      <li><a href="https://www.olx.pl/rolnictwo/ryneczek/q-jagni%C4%99cina-tusza/" target="_blank" rel="noopener">OLX: ogłoszenia jagnięciny od rolników (ceny)</a></li>
+      <li><a href="https://owczeklimaty.pl/produkt/tusza-jagnieca/" target="_blank" rel="noopener">Owcze Klimaty: tusza jagnięca, 52 zł/kg</a></li>
+      <li><a href="https://www.iung.pl/wp-content/uploads/2023/10/Zacharzewska_rzeznie-rolnicze-pazdziernik-2023.pdf" target="_blank" rel="noopener">WIW Kraków (IUNG): rzeźnie rolnicze</a></li>
+      <li><a href="https://www.infor.pl/akt-prawny/DZU.2016.252.0002159,rozporzadzenie-ministra-rolnictwa-i-rozwoju-wsi-w-sprawie-maksymalnej-ilosci-zywnosci-zbywanej-w-ramach-rolniczego-handlu-detalicznego-oraz-zakresu-i-sposobu-jej-dokumentowania.html" target="_blank" rel="noopener">Rozporządzenie o limitach RHD (2016)</a></li>
+      <li><a href="https://ksowplus.kpodr.pl/wp-content/uploads/2025/11/Adrianna-Augustyniak-Dobrzynskie-warzywa-prezentacja-dobtych-praktyk.pdf" target="_blank" rel="noopener">KPODR: RWS Dobrzyńskie Warzywa (2025)</a></li>
+      <li><a href="https://modernfarmer.com/2016/10/jm-fortier/" target="_blank" rel="noopener">Modern Farmer: J.M. Fortier i małe gospodarstwa warzywne</a></li>
+      <li><a href="https://www.inhort.pl/wp-content/uploads/2026/01/8.2_streszczenie-2025.pdf" target="_blank" rel="noopener">INHORT: rynek miodu 2025</a></li>
+      <li><a href="https://www.lubianka.pl/plik,25306,dzialalnosc-edukacyjna-w-gospodarstwie.pdf" target="_blank" rel="noopener">DODR: działalność edukacyjna w gospodarstwie</a></li>
+      <li><a href="https://gov.mb.ca/agriculture/livestock/sheep/accelerated-lambing.html" target="_blank" rel="noopener">Manitoba Agriculture: przyspieszone wykoty owiec</a></li>
+      <li><a href="https://www.flockandherd.net.au/sheep/reader/reproductive-performance-dorper.html" target="_blank" rel="noopener">Flock and Herd: rozród owiec dorper</a></li>
+      <li><a href="https://www.piwwyszkow.pl/Dokumenty/aktualnosci/RHD/RHD%20-%20pytania%20i%20odpowiedzi%20do%20regulacji%20prawnych.pdf" target="_blank" rel="noopener">RHD: pytania i odpowiedzi (sprzedaż wysyłkowa, ubój drobiu)</a></li>
+      <li><a href="https://new.podr.pl/wp-content/uploads/2024/01/rhd-zmniejszone-1.pdf" target="_blank" rel="noopener">PODR: RHD po zmianach (2024)</a></li>
+      <li><a href="https://wiescirolnicze.pl/prawo-i-finanse/koniec-z-ograniczenami-dla-rolnikow-szykuja-sie-przelomowe-zmiany-w-sprzedazy-bezposredniej,30495/" target="_blank" rel="noopener">Wieści Rolnicze: zapowiedź zmian w RHD (kwiecień 2026)</a></li>
+      <li><a href="https://manufakturadobra.pl/eko-polgesek-z-gesi-pastwiskowej/" target="_blank" rel="noopener">Manufaktura Dobra: EKO półgęsek, 200 zł/kg</a></li>
+      <li><a href="https://wolnywypas.pl/kaczka/25-tuszka-kaczki-eko.html" target="_blank" rel="noopener">Wolny Wypas: kaczka eko</a> i <a href="https://wolnywypas.pl/perliczka/36-perliczka-tuszka.html" target="_blank" rel="noopener">perliczka eko</a></li>
+      <li><a href="https://lokalnyrolnik.pl/indyk-tuszka-eko-ok-8-kg" target="_blank" rel="noopener">Lokalny Rolnik: indyk eko, 82,50 zł/kg</a></li>
+      <li><a href="http://grzyby.grzybnia.pl/files/amatorska-uprawa-boczniak.pdf" target="_blank" rel="noopener">M. Siwulski: amatorska uprawa boczniaka</a></li>
+      <li><a href="https://okfronline.com/2022/07/histomoniasis-blackhead/" target="_blank" rel="noopener">Histomonoza u indyków i kur</a></li>
+      <li><a href="https://www.motherearthnews.com/homesteading-and-livestock/sustainable-farming/joel-salatin-interview/" target="_blank" rel="noopener">Joel Salatin: wypas i drób za bydłem</a></li></ul></div>
+  </div>
+</section>
+
+<footer class="wrap">Twoje ustawienia zapisują się tylko w tej przeglądarce. Liczby są szacunkiem do planowania, nie biznesplanem do banku.</footer>
+
+<script>
+/* @@SCRIPTS@@ */
+</script>
