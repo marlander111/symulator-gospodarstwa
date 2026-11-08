@@ -2729,6 +2729,7 @@
     "monthActivity": "{month}: {activity}.",
     "pasture": {
       "title": "Pasture · {hectares} ha",
+      "paddocks": "Paddocks: {count} of about {area} m² (herd pasture {hectares} ha).",
       "grazing": "{month}: rotational grazing.",
       "cows": "The cows ({count}) move to a new paddock {interval}.",
       "sucklerCows": "The suckler cows with calves ({count}) go as a separate group.",

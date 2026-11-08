@@ -2724,6 +2724,7 @@
     "monthActivity": "{month}: {activity}.",
     "pasture": {
       "title": "Pastwisko · {hectares} ha",
+      "paddocks": "Kwatery: {count} po ok. {area} m² (pastwisko stada {hectares} ha).",
       "grazing": "{month}: wypas rotacyjny.",
       "cows": "Krowy ({count}) zmieniają kwaterę {interval}.",
       "sucklerCows": "Mamki z cielętami ({count}) idą osobną grupą.",

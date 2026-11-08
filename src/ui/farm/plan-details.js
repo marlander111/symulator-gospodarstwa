@@ -8,6 +8,15 @@ function describePlanSelection(results, area) {
 
   if (area === 'pasture') {
     let html = `<h3>${t('planInfo.pasture.title', { hectares: ha(params.pastureHa) })}</h3>`;
+    const plan = results.grazingPlan;
+    if (plan.paddockCount > 0)
+      html += paragraph(
+        `<b>${t('planInfo.pasture.paddocks', {
+          count: plan.paddockCount,
+          area: formatNumber(Math.round((plan.paddockHa * 10000) / 10) * 10, 0),
+          hectares: ha(results.paddocks.herdHa, 2),
+        })}</b>`
+      );
     if (isGrazingMonth(month)) {
       const parts = [
         t('planInfo.pasture.grazing', { month: monthName }),
