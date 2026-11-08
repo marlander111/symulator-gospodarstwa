@@ -1314,6 +1314,19 @@
       "label": "Kids per doe",
       "unit": "per year"
     },
+    "goatGrazing": {
+      "label": "Goat grazing",
+      "hint": "With the sheep: the goats follow the cattle through the paddocks together with the sheep (a fence of at least 4–5 wires, as goats get through a weak one). Separate: a part of the pasture fenced for the goats alone, best with scrub, field margins and a woodland edge; on the plan it is a strip of its own and the cattle and sheep paddocks are that much smaller.",
+      "options": {
+        "withSheep": "With the sheep",
+        "separate": "Paddock of their own"
+      }
+    },
+    "goatsPerHaOfPaddock": {
+      "label": "Goats per hectare of their own paddock",
+      "unit": "head/ha",
+      "hint": "Used only with a paddock of their own. On a good pasture about 10–15 goats a hectare for the season, fewer on poorer land and scrub. If the paddock is too small, the hay balance covers the missing feed."
+    },
     "goatMilking": {
       "label": "I milk the goats (goat milk and cheese)",
       "hint": "Dairy goats (e.g. Saanen) give about 400–800 l per lactation. Milking twice a day, in their own room or in the cows’ dairy."
@@ -1346,6 +1359,15 @@
       "label": "Pastured fatteners",
       "unit": "per year",
       "hint": "Breeds for outdoor rearing: Złotnicka, Puławska, Mangalica. Paddocks are changed every 1–2 weeks because pigs root; they return to the same paddock after six months to a year or after reseeding. About 10–14 fatteners per hectare of paddock a year."
+    },
+    "pigsOnPasture": {
+      "label": "Pigs on a fenced-off part of the pasture",
+      "hint": "On: the pigs get a separately fenced piece of the pasture (a strip of its own on the plan) that is no longer a cattle and sheep paddock; they eat some of the grass there and the hay balance covers the rest of their roughage. Off: the paddock is off the pasture (orchard, stubble, a field before a crop). African swine fever rules require a double fence."
+    },
+    "pigsPerHaOfPaddock": {
+      "label": "Fatteners per hectare of paddock",
+      "unit": "head/ha",
+      "hint": "Organic rules allow about 14 fatteners per hectare and year (the 170 kg N limit for manure). Moving them every 1–2 weeks and coming back after six months, about 10–12 is better so the sward can recover."
     },
     "pigGrainKg": {
       "label": "Grain per fattener",
@@ -1568,7 +1590,7 @@
     "brownsRanch": {
       "label": "Brown’s Ranch (G. Brown)",
       "note": "Cover crops, cattle, hens",
-      "description": "Modelled on Gabe Brown’s farm in North Dakota: five principles of soil health (no bare soil, as little tillage as possible, plant diversity, living roots all year, animals on the land). A five-field rotation with cover-crop cocktails grazed by the cattle, suckler cows and finishers outside all year (bale grazing in winter), sheep, pigs, hens and broilers following the cattle, and meat and eggs sold directly."
+      "description": "Modelled on Gabe Brown’s farm in North Dakota: five principles of soil health (no bare soil, as little tillage as possible, plant diversity, living roots all year, animals on the land). A five-field rotation with cover-crop cocktails grazed by the cattle, suckler cows and finishers outside all year (bale grazing in winter), sheep, pigs on a fenced-off part of the pasture, hens and broilers following the cattle, and meat and eggs sold directly."
     },
     "gregJudy": {
       "label": "Green Pastures (G. Judy)",
@@ -1635,6 +1657,8 @@
     "soilSharesOver100Pasture": "The soil class shares of the pasture add up to more than 100%. Correct the sliders in the “Land” group.",
     "soilSharesOver100Meadow": "The soil class shares of the meadow add up to more than 100%. Correct the sliders in the “Land” group.",
     "pigPaddocks": "The pigs need about {hectares} ha of paddock a year (about 12 fatteners per hectare). Move them every 1–2 weeks and come back after six months to a year; the orchard, stubble and a field before a crop work well.",
+    "pigPaddocksOnPasture": "The pigs take about {hectares} ha of the pasture, which is no longer a cattle and sheep paddock. They root up the sward, so plan levelling and reseeding after each move.",
+    "ownPaddocksTooBig": "The pig and goat paddocks need about {wanted} ha and the whole pasture has {pasture} ha. The model shrank them to the whole pasture and nothing is left for the cattle and sheep: enlarge the pasture, keep fewer animals or change the stocking per hectare.",
     "ridingIsABusiness": "Horse riding: for agritourism guests it may count as part of the agritourism services; regular paid lessons for people from outside usually need a registered business and liability insurance. Confirm with an accountant.",
     "dogFoodBought": "The dogs need about {kg} kg of food a year beyond the farm’s own meat; this food is bought.",
     "wolvesNoDogs": "Sheep and goats without guardian dogs: there are wolves in many regions. Shut the flock in at night behind a high electric fence or add a dog (the “Abattoir and guardian dogs” group)."
@@ -2618,6 +2642,8 @@
       "sucklerCows": "suckler cows with calves",
       "winterTitle": "Winter: the pasture rests",
       "winterNote": "grazing from about {start} to {end}",
+      "goatPaddock": "goats · {hectares} ha",
+      "pigPaddock": "pigs · {hectares} ha",
       "caption": "Pasture {hectares} ha · {paddocks} paddocks of about {paddockArea}"
     },
     "meadow": {
@@ -2674,9 +2700,11 @@
       "sucklersSeparate": "The suckler cows with calves graze as a separate group, on the paddock before or after the dairy cows.",
       "sheep": "Sheep follow 1–3 days later and clean up the lower grasses and herbs.",
       "goats": "Goats do best on scrub and field edges; on the pasture they follow the cattle with the sheep.",
+      "goatsSeparate": "Goats on a paddock of their own (scrub, field margins, woodland edge), not in the cattle and sheep paddocks.",
       "hens": "The mobile henhouse 3–4 days after the cattle: the hens scratch apart the cowpats, eat the fly larvae and fertilise.",
       "broilers": "Broiler and turkey pens moved daily onto fresh grass, on the paddocks after the cattle.",
       "pigs": "Pigs on their own paddocks (e.g. in the orchard, on stubble, on a field going under a crop): moved every 1–2 weeks, back after six months to a year.",
+      "pigsOnPasture": "Pigs on a fenced-off, double-fenced part of the pasture: moved every 1–2 weeks, then reseeded and rested.",
       "horses": "Horses can follow the cattle on the paddocks; not together with ewes at lambing.",
       "parasites": "Cattle and sheep mostly have different parasites, so this order breaks their life cycle.",
       "none": "No animals on the pasture."
@@ -2692,6 +2720,8 @@
       "sheep": "Sheep a day after the cows.",
       "hens": "Mobile henhouse 3–4 days after the cows.",
       "broilers": "Broiler pens moved every day.",
+      "goatPaddock": "Goats on a paddock of their own ({hectares} ha).",
+      "pigPaddock": "Pigs on a fenced-off part ({hectares} ha), moved every 1–2 weeks.",
       "rest": "Each paddock rests {days} days, longer in a drought.",
       "winter": "{month}: animals in the shelters and around the farmyard, the pasture rests.",
       "liming": "At the end of the month liming or fertilising according to the soil test."
@@ -3696,7 +3726,9 @@
     "weanerWeightKg": "Weights, slaughter and work",
     "lambLiveWeightKg": "Weights, slaughter and flock renewal",
     "kidsPerDoe": "Kids and slaughter",
+    "goatGrazing": "Goat grazing",
     "goatMilking": "Goat milk and cheese",
+    "pigsOnPasture": "Pig paddocks",
     "pigGrainKg": "Feed, weights and slaughter",
     "horseCost": "Costs and work",
     "abattoirDistanceKm": "Abattoir (sheep, goats, pigs, cattle)",
@@ -3738,17 +3770,20 @@
     "riskYieldVolatility": "Random years (the “Risk” panel)"
   },
   "locations": {
-    "boleslawiecJeleniaGora": "Bolesławiec and Jelenia Góra area",
+    "sudetenForeland": "Sudeten Foothills (Lwówek Śląski – Bolesławiec)",
+    "sudetes": "Sudetes and Sudeten basins (400–800 m)",
     "lowerSilesianPlain": "Silesian Lowland (Wrocław, Opole)",
     "lubuskie": "Lubusz Land",
     "wielkopolska": "Greater Poland",
-    "pomeraniaKashubia": "Pomerania and Kashubia",
+    "westPomerania": "West Pomerania",
+    "pomeraniaKashubia": "Gdańsk Pomerania and Kashubia",
     "warmiaMasuria": "Warmia and Masuria",
     "podlasie": "Podlasie",
     "mazovia": "Mazovia",
+    "centralPoland": "Central Poland (Łódź region)",
     "lublinRoztocze": "Lublin region and Roztocze",
     "lesserPolandFoothills": "Lesser Poland and Subcarpathian foothills",
-    "mountains": "Mountains (Beskids, Podhale, 600–900 m)"
+    "mountains": "Carpathians: Beskids and Podhale (600–900 m)"
   },
   "location": {
     "date": "{day} {month}",
@@ -3757,7 +3792,7 @@
     "rainfall": "about {mm} mm of rain/yr",
     "temperature": "average about {low}–{high} °C",
     "grazing": "grazing about {start} – {end} ({days} days)",
-    "yieldEffect": "yields: grass {grass}%, cereals {crops}% of the Bolesławiec area"
+    "yieldEffect": "yields: grass {grass}%, cereals {crops}% of the Sudeten Foothills"
   },
   "seeds": {
     "redClover": "red clover",

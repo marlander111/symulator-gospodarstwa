@@ -304,3 +304,51 @@ test('settings from version 2 move to the merged pig count and per-land-use soil
   assert.equal(untouched.meadowSoilVShare, 0);
   assert.equal(model.migrateChangedDefaults({ ownedHa: 14, layingHens: 200 }, 2).layingHens, 50);
 });
+
+test('pigs and goats on paddocks of their own take a part of the pasture from the herd', () => {
+  const base = {
+    pastureHa: 6,
+    sheep: 10,
+    goats: 12,
+    pigs: 6,
+    goatsPerHaOfPaddock: 12,
+    pigsPerHaOfPaddock: 12,
+  };
+  const together = simulate(base);
+  assert.equal(together.paddocks.herdHa, 6, 'pigs off the pasture and goats with the sheep leave it whole');
+
+  const apart = simulate({ ...base, goatGrazing: 'separate', pigsOnPasture: true });
+  assert.ok(Math.abs(apart.paddocks.goatHa - 1) < 1e-9);
+  assert.ok(Math.abs(apart.paddocks.pigHa - 0.5) < 1e-9);
+  assert.ok(Math.abs(apart.paddocks.herdHa - 4.5) < 1e-9);
+  assert.ok(apart.grazingPlan.paddockHa < together.grazingPlan.paddockHa, 'herd paddocks get smaller');
+  assert.ok(apart.warnings.some(warning => warning.key === 'pigPaddocksOnPasture'));
+
+  const crowded = simulate({
+    ...base,
+    goatGrazing: 'separate',
+    pigsOnPasture: true,
+    pastureHa: 3,
+    goatsPerHaOfPaddock: 4,
+    pigsPerHaOfPaddock: 4,
+  });
+  assert.ok(Math.abs(crowded.paddocks.pigHa + crowded.paddocks.goatHa - 3) < 1e-9, 'shrunk to the pasture');
+  assert.equal(crowded.paddocks.herdHa, 0);
+  assert.ok(crowded.warnings.some(warning => warning.key === 'ownPaddocksTooBig'));
+
+  const smallPaddock = simulate({ ...base, goatGrazing: 'separate', goatsPerHaOfPaddock: 25 });
+  const roomyPaddock = simulate({ ...base, goatGrazing: 'separate', goatsPerHaOfPaddock: 6 });
+  assert.ok(
+    smallPaddock.ownPaddocks.deficit > roomyPaddock.ownPaddocks.deficit,
+    'a cramped paddock needs hay'
+  );
+});
+
+test('the renamed reference location is carried over from saved settings', () => {
+  assert.equal(
+    model.migrateLegacyParameterIds({ location: 'boleslawiecJeleniaGora' }).location,
+    'sudetenForeland'
+  );
+  assert.equal(model.migrateLegacyParameterIds({ location: 'mazovia' }).location, 'mazovia');
+  assert.equal(model.LOCATIONS.length, 14);
+});

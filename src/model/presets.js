@@ -578,6 +578,7 @@ const PRESETS = [
     id: 'brownsRanch',
     group: 'philosophy',
     params: {
+      pigsOnPasture: true,
       sawdustForStraw: true,
       ownedHa: 14,
       dairyCows: 0,
@@ -588,9 +589,9 @@ const PRESETS = [
       finishersSoldAsMeatShare: 100,
       sheep: 4,
       guardDogs: 1,
-      pigs: 10,
-      layingHens: 275,
-      broilers: 300,
+      pigs: 6,
+      layingHens: 300,
+      broilers: 400,
       geese: 0,
       goats: 0,
       ducks: 0,
@@ -616,9 +617,9 @@ const PRESETS = [
       carbonCropDiversity: true,
       grazingMoveIntervalDays: 1,
       pastureRestDays: 60,
-      pastureHa: 3.25,
-      meadowHa: 0.5,
-      cerealShare: 64,
+      pastureHa: 3.5,
+      meadowHa: 0,
+      cerealShare: 62,
     },
   },
   {
@@ -779,6 +780,8 @@ const PRESET_PRACTICE_IDS = [
   'boughtForageShare',
   'boughtConcentrateShare',
   'baleGrazing',
+  'pigsOnPasture',
+  'goatGrazing',
 ];
 
 /**

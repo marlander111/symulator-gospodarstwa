@@ -266,6 +266,9 @@ function migrateLegacyParameterIds(saved) {
   return mergeSplitParameters(migrated);
 }
 
+/** Location ids renamed after version 3 was first published: old id → new id. */
+const RENAMED_LOCATIONS = { boleslawiecJeleniaGora: 'sudetenForeland' };
+
 /**
  * Parameters replaced in version 3: pigs for the household and for sale became one number of
  * pigs, and the soil class shares of the whole farm became shares for each land use.
@@ -279,6 +282,7 @@ function mergeSplitParameters(settings) {
     delete merged.pigsForHome;
     delete merged.pigsForSale;
   }
+  if (merged.location in RENAMED_LOCATIONS) merged.location = RENAMED_LOCATIONS[merged.location];
   const oldSoilShares = { III: 'soilClassIIIShare', V: 'soilClassVShare', VI: 'soilClassVIShare' };
   for (const [soilClass, oldId] of Object.entries(oldSoilShares)) {
     if (!(oldId in merged)) continue;

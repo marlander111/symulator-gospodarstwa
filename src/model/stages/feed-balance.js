@@ -48,17 +48,24 @@ function computeForageBalance(params, results) {
   const forageNeed = sumValues(forageNeedByAnimal);
   // finishers kept in the shed all year eat conserved forage only
   const housedForage = beefSystem.finishersGraze ? 0 : finisherForage;
-  const grazingNeed = ((forageNeed - housedForage) * params.grazingDays) / 365;
-  const winterNeed = forageNeed - grazingNeed + outwinteringHayWaste(params, forageNeedByAnimal, beefSystem);
+  const grazingShare = params.grazingDays / 365;
+  const ownPaddocks = ownPaddockForage(params, results.paddocks, forageNeedByAnimal, grazingShare);
+  const grazingNeed = (forageNeed - housedForage) * grazingShare - ownPaddocks.grazingNeedOutside;
+  const winterNeed =
+    forageNeed -
+    (forageNeed - housedForage) * grazingShare -
+    ownPaddocks.pigNeedOutsideWinter +
+    outwinteringHayWaste(params, forageNeedByAnimal, beefSystem);
 
   // sheep grazing after cattle use the pasture better
   const dairyHerd = params.dairyCows + replacementHeifers + bulls;
   const mixedGrazingFactor =
     params.sheep > 0 && dairyHerd > 0 ? Math.min(1, params.sheep / (1.5 * dairyHerd)) : 0;
+  const herdPastureHa = results.paddocks.herdHa;
   const pastureProduction =
-    params.pastureHa * params.pastureYield * (1 + (params.mixedGrazingBonus / 100) * mixedGrazingFactor);
+    herdPastureHa * params.pastureYield * (1 + (params.mixedGrazingBonus / 100) * mixedGrazingFactor);
   const mixedGrazingGain =
-    ((params.pastureHa * params.pastureYield * params.mixedGrazingBonus) / 100) * mixedGrazingFactor;
+    ((herdPastureHa * params.pastureYield * params.mixedGrazingBonus) / 100) * mixedGrazingFactor;
 
   const meadowHay = params.meadowHa * params.meadowYield * 0.75;
   const meadowGrazing = params.meadowHa * params.meadowYield * 0.25;
@@ -77,7 +84,8 @@ function computeForageBalance(params, results) {
   const hayFromPasture = Math.max(0, grazingSurplus) * 0.7;
   const haySupply = meadowHay + cloverHay + hayFromPasture;
   const grazingDeficit = Math.max(0, -grazingSurplus);
-  const hayNeedTotal = winterNeed + grazingDeficit;
+  // a paddock of their own that grows too little for the pigs or goats is made up with hay
+  const hayNeedTotal = winterNeed + grazingDeficit + ownPaddocks.deficit;
   // roughage bought on purpose covers this part of the need, the rest has to come from the fields
   const boughtForageTonnes = (hayNeedTotal * params.boughtForageShare) / 100;
   const hayNeed = hayNeedTotal - boughtForageTonnes;
@@ -93,6 +101,7 @@ function computeForageBalance(params, results) {
     hayFromPasture,
     haySupply,
     hayNeedTotal,
+    ownPaddocks,
     boughtForageTonnes,
     hayNeed,
     hayBalance: haySupply - hayNeed,
@@ -104,6 +113,35 @@ function computeForageBalance(params, results) {
     undersownHa,
     stubbleCropHa,
     coverCropForage,
+  };
+}
+
+/** Share of the grass eaten on a pig paddock (pigs root and trample) and on a goat paddock. */
+const PIG_PADDOCK_UTILISATION = 0.5;
+const GOAT_PADDOCK_UTILISATION = 0.7;
+
+/**
+ * Forage of the animals that do not graze with the herd: pigs (on their own paddock, or on the
+ * orchard, stubble and fields when they are not on the pasture) and goats kept apart. Their
+ * grazing comes off the herd's need; a paddock of their own that grows too little leaves a
+ * deficit made up with hay.
+ */
+function ownPaddockForage(params, paddocks, forageNeedByAnimal, grazingShare) {
+  // fattening pigs live outside from spring to autumn, so all their forage is grazing
+  const pigNeed = forageNeedByAnimal.pigs;
+  const goatGrazingNeed = params.goatGrazing === 'separate' ? forageNeedByAnimal.goats * grazingShare : 0;
+  const pigSupply = paddocks.pigHa * params.pastureYield * PIG_PADDOCK_UTILISATION;
+  const goatSupply = paddocks.goatHa * params.pastureYield * GOAT_PADDOCK_UTILISATION;
+  const pigDeficit = params.pigsOnPasture ? Math.max(0, pigNeed - pigSupply) : 0;
+  const goatDeficit = Math.max(0, goatGrazingNeed - goatSupply);
+  return {
+    grazingNeedOutside: pigNeed * grazingShare + goatGrazingNeed,
+    pigNeedOutsideWinter: pigNeed * (1 - grazingShare),
+    pigSupply,
+    goatSupply,
+    pigNeed,
+    goatGrazingNeed,
+    deficit: pigDeficit + goatDeficit,
   };
 }
 

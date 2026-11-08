@@ -21,6 +21,12 @@ function describePlanSelection(results, area) {
         params.sheep ? t('planInfo.pasture.sheep') : '',
         params.layingHens ? t('planInfo.pasture.hens') : '',
         params.broilers && month >= 4 && month <= 9 ? t('planInfo.pasture.broilers') : '',
+        results.paddocks.goatHa > 0
+          ? t('planInfo.pasture.goatPaddock', { hectares: ha(results.paddocks.goatHa, 2) })
+          : '',
+        results.paddocks.pigHa > 0
+          ? t('planInfo.pasture.pigPaddock', { hectares: ha(results.paddocks.pigHa, 2) })
+          : '',
       ];
       html += paragraph(parts.filter(Boolean).join(' '));
       html += paragraph(t('planInfo.pasture.rest', { days: params.pastureRestDays }), 'small muted');

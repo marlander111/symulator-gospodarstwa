@@ -1,4 +1,4 @@
-// Kinds of dairy and beef breeds and the beef keeping systems. Choosing a kind in the controls
+// Kinds of dairy and beef breeds, the beef keeping systems and the ways of grazing goats. Choosing a kind in the controls
 // moves the sliders listed under `sliders` to typical values (they can still be adjusted);
 // the other values are used by the model directly. Names: locales → parameters.<id>.options.<kind>.
 
@@ -100,3 +100,6 @@ const BEEF_SYSTEMS = {
 const DAIRY_BREED_IDS = Object.keys(DAIRY_BREEDS);
 const BEEF_BREED_IDS = Object.keys(BEEF_BREEDS);
 const BEEF_SYSTEM_IDS = Object.keys(BEEF_SYSTEMS);
+
+/** Ways of grazing the goats: with the sheep and cattle, or on a paddock of their own. */
+const GOAT_GRAZING_OPTIONS = ['withSheep', 'separate'];

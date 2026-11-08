@@ -33,6 +33,22 @@ const REGROWTH_BY_REST_DAYS = [
   [90, 0.92],
 ];
 
+/**
+ * Parts of the pasture fenced off for the pigs and for goats kept apart; the rest is grazed in
+ * rotation by the cattle and sheep. When the paddocks would take more than the pasture, they
+ * shrink to fit (the stocking per hectare is then higher than set).
+ * @returns {{pigHa: number, goatHa: number, herdHa: number}}
+ */
+function separatePaddocks(params) {
+  const pigWanted = params.pigsOnPasture ? params.pigs / params.pigsPerHaOfPaddock : 0;
+  const goatWanted = params.goatGrazing === 'separate' ? params.goats / params.goatsPerHaOfPaddock : 0;
+  const wanted = pigWanted + goatWanted;
+  const fit = wanted > params.pastureHa && wanted > 0 ? params.pastureHa / wanted : 1;
+  const pigHa = pigWanted * fit;
+  const goatHa = goatWanted * fit;
+  return { pigHa, goatHa, herdHa: Math.max(0, params.pastureHa - pigHa - goatHa), wantedHa: wanted };
+}
+
 /** Moves per day that the hour norms per cow already include. */
 const BASELINE_MOVE_INTERVAL_DAYS = 1;
 
@@ -55,7 +71,7 @@ function computeGrazingPlan(params) {
     moveIntervalDays,
     restDays,
     paddockCount,
-    paddockHa: params.pastureHa / paddockCount,
+    paddockHa: separatePaddocks(params).herdHa / paddockCount,
     cycleDays,
     grazingsPerPaddock: params.grazingDays / cycleDays,
     yieldFactor:

@@ -167,11 +167,23 @@ function addGrazingAndRotationWarnings(params, results, add) {
     });
 }
 
+/** Pig paddocks on or off the pasture, and paddocks of their own that do not fit on it. */
+function addOwnPaddockWarnings(params, paddocks, add) {
+  if (params.pigs > 0 && params.pigsOnPasture)
+    add('info', 'pigPaddocksOnPasture', { hectares: formatNumber(paddocks.pigHa, 2) });
+  else if (params.pigs > 0)
+    add('info', 'pigPaddocks', { hectares: formatNumber(params.pigs / params.pigsPerHaOfPaddock, 1) });
+  if (paddocks.wantedHa > params.pastureHa && paddocks.wantedHa > 0)
+    add('warn', 'ownPaddocksTooBig', {
+      wanted: formatNumber(paddocks.wantedHa, 1),
+      pasture: formatNumber(params.pastureHa, 1),
+    });
+}
+
 /** Disease rules, breeding, guardian dogs and soil class shares. */
 function addOtherWarnings(params, inputParams, results, add) {
   if (params.pigs > 0) add('info', 'africanSwineFever');
-  if (params.pigs > 0)
-    add('info', 'pigPaddocks', { hectares: formatNumber(params.pigs / PIGS_PER_HA_OF_PADDOCK, 1) });
+  addOwnPaddockWarnings(params, results.paddocks, add);
   if (results.sucklerCows > 0 && !params.ownBull) add('info', 'sucklerCowsNeedBull');
   if (params.ridesPerYear > 0 && params.horses > 0) add('info', 'ridingIsABusiness');
   if (params.guardDogs > 0 && results.dogs.boughtKg > 1)
@@ -185,6 +197,3 @@ function addOtherWarnings(params, inputParams, results, add) {
     if (total > 100) add('warn', 'soilSharesOver100' + landUse.charAt(0).toUpperCase() + landUse.slice(1));
   }
 }
-
-/** Fattening pigs per hectare of paddock and year (organic rules: about 14 a hectare for 170 kg N). */
-const PIGS_PER_HA_OF_PADDOCK = 12;

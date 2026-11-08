@@ -42,7 +42,7 @@ test('every text keeps its placeholders, HTML tags and type', () => {
 
 // Polish place and source names that stay as they are in the English texts.
 const PROPER_NAMES =
-  /Lwówek|Śląski|ŚODR|Świętokrzyskie|Siedlęcin|Dobrzyńskie|Dobrzyń|Poznań|Nagórze|Kraków|Wieści|Przedsiębiorcy|Polski|Bolesławiec|Góra|Wrocław|Złotnicka|Puławska/g;
+  /Lwówek|Śląski|ŚODR|Świętokrzyskie|Siedlęcin|Dobrzyńskie|Dobrzyń|Poznań|Nagórze|Kraków|Wieści|Przedsiębiorcy|Polski|Bolesławiec|Góra|Wrocław|Złotnicka|Puławska|Gdańsk|Łódź/g;
 const LINK_ADDRESS = /href="[^"]*"/g;
 const POLISH_LETTER = /[ąćęłńóśźż]/i;
 

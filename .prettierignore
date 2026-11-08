@@ -1,0 +1,4 @@
+# The page template keeps its @@PLACEHOLDERS@@ on lines of their own; build output is generated.
+src/index.html
+index.html
+build/

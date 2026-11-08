@@ -8,6 +8,9 @@ defineParameterGroup('goats', [
   { id: 'kidsPerDoe', min: 0.8, max: 2.5, step: 0.1, defaultValue: 1.5 },
   { id: 'kidCarcassKg', min: 5, max: 20, step: 0.5, defaultValue: 10 },
   { id: 'kidSlaughterCost', min: 50, max: 300, step: 10, defaultValue: 120 },
+  // grazing: in the paddocks with the sheep and cattle, or on a paddock of their own
+  { id: 'goatGrazing', type: 'choice', options: GOAT_GRAZING_OPTIONS, defaultValue: 'withSheep' },
+  { id: 'goatsPerHaOfPaddock', min: 4, max: 25, step: 1, defaultValue: 12 },
   // goat milk and cheese
   { id: 'goatMilking', type: 'boolean', defaultValue: false },
   { id: 'milkPerGoat', min: 200, max: 900, step: 25, defaultValue: 500 },

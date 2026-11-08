@@ -41,7 +41,7 @@ function renderFarmPlan(results) {
 
 function renderPlanMonthButtons() {
   document
-    .querySelectorAll('[data-month]')
+    .querySelectorAll('#plan-months [data-month]')
     .forEach(button => button.classList.toggle('on', +button.dataset.month === planView.month));
 }
 
@@ -231,11 +231,28 @@ function paddockLabel(occupant) {
   return t(`plan.pasture.${occupant}`);
 }
 
-/** Pasture as two columns of paddocks with a lane between them. */
 /** Paddocks smaller than this on the drawing get no text label. */
 const MIN_LABELLED_PADDOCK_HEIGHT = 18;
 
-function drawPasture(box, results) {
+/** Height of the strip of pig and goat paddocks: at least room for a label, at most 70% of the pasture. */
+const OWN_PADDOCK_STRIP = { minHeight: 22, maxShare: 0.7 };
+
+/**
+ * Pasture as two columns of paddocks with a lane between them; the paddocks of their own for pigs
+ * and goats kept apart from the herd make a strip at the bottom, roughly to scale.
+ */
+function drawPasture(fullBox, results) {
+  const { paddocks } = results;
+  const ownShare = params.pastureHa > 0 ? (paddocks.pigHa + paddocks.goatHa) / params.pastureHa : 0;
+  const stripHeight =
+    ownShare > 0
+      ? clamp(
+          fullBox.height * ownShare,
+          OWN_PADDOCK_STRIP.minHeight,
+          fullBox.height * OWN_PADDOCK_STRIP.maxShare
+        )
+      : 0;
+  const box = { ...fullBox, height: fullBox.height - stripHeight };
   const laneWidth = 16;
   const paddockCount = results.grazingPlan.paddockCount;
   const rows = Math.ceil(paddockCount / 2);
@@ -244,7 +261,8 @@ function drawPasture(box, results) {
   const gap = paddockHeight > 8 ? 2 : 0.5;
   const occupants = paddockOccupants(paddockCount, results.grazingPlan);
 
-  let svg = areaBackground(box, 'pasture', 'var(--color-pasture)', '.22');
+  let svg = areaBackground(fullBox, 'pasture', 'var(--color-pasture)', '.22');
+  svg += ownPaddocksSvg(fullBox, box.height, paddocks);
 
   for (let side = 0; side < 2; side++) {
     for (let row = 0; row < rows; row++) {
@@ -301,7 +319,7 @@ function drawPasture(box, results) {
   });
 
   if (!isGrazingMonth(planView.month)) {
-    const centreY = box.y + box.height / 2;
+    const centreY = fullBox.y + fullBox.height / 2;
     svg +=
       labelBackground(box.x + 20, centreY - 24, box.width - 40, 48, '.92') +
       planLabel(centreX, centreY - 3, t('plan.pasture.winterTitle'), 13, true) +
@@ -313,7 +331,44 @@ function drawPasture(box, results) {
     paddocks: paddockCount,
     paddockArea: paddockAreaText(results.grazingPlan.paddockHa),
   });
-  return element('g', { 'data-area': 'pasture' }, svg + areaCaption(box, caption));
+  return element('g', { 'data-area': 'pasture' }, svg + areaCaption(fullBox, caption));
+}
+
+/** Colours of the paddocks of their own (CSS variables). */
+const OWN_PADDOCK_FILLS = { goatHa: 'var(--color-sheep)', pigHa: 'var(--color-roots)' };
+
+/** The pig and goat paddocks side by side under the paddocks of the herd. */
+function ownPaddocksSvg(box, herdHeight, paddocks) {
+  const parts = ['goatHa', 'pigHa'].filter(part => paddocks[part] > 0.005);
+  if (!parts.length) return '';
+  const total = paddocks.goatHa + paddocks.pigHa;
+  const y = box.y + herdHeight;
+  const height = box.height - herdHeight;
+  let x = box.x;
+  return parts
+    .map(part => {
+      const width = (box.width * paddocks[part]) / total;
+      const label = t(`plan.pasture.${part === 'pigHa' ? 'pigPaddock' : 'goatPaddock'}`, {
+        hectares: formatNumber(paddocks[part], 2),
+      });
+      const svg =
+        element('rect', {
+          x: x + 2,
+          y: y + 3,
+          width: Math.max(0.5, width - 4),
+          height: Math.max(0.5, height - 5),
+          fill: OWN_PADDOCK_FILLS[part],
+          opacity: 0.35,
+          stroke: OWN_PADDOCK_FILLS[part],
+          'stroke-width': 1.5,
+        }) +
+        (height >= MIN_LABELLED_PADDOCK_HEIGHT
+          ? planLabel(x + width / 2, y + height / 2 + 4, label, 11)
+          : '');
+      x += width;
+      return svg;
+    })
+    .join('');
 }
 
 function drawMeadow(box) {

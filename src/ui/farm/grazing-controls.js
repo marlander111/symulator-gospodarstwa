@@ -96,10 +96,10 @@ function renderGrazingOrderNote() {
     [params.dairyCows > 0, 'cows'],
     [params.sucklerCows > 0, params.dairyCows > 0 ? 'sucklersSeparate' : 'sucklers'],
     [params.sheep > 0, 'sheep'],
-    [params.goats > 0, 'goats'],
+    [params.goats > 0, params.goatGrazing === 'separate' ? 'goatsSeparate' : 'goats'],
     [params.layingHens > 0, 'hens'],
     [params.broilers + params.turkeys > 0, 'broilers'],
-    [params.pigs > 0, 'pigs'],
+    [params.pigs > 0, params.pigsOnPasture ? 'pigsOnPasture' : 'pigs'],
     [params.horses > 0, 'horses'],
   ].filter(([isKept]) => isKept);
   const ruminants = params.dairyCows + params.sucklerCows + params.sheep + params.goats > 0;

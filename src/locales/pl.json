@@ -1314,6 +1314,19 @@
       "label": "Koźlęta od kozy",
       "unit": "szt./rok"
     },
+    "goatGrazing": {
+      "label": "Wypas kóz",
+      "hint": "Razem z owcami: kozy idą przez kwatery za bydłem razem z owcami (ogrodzenie z co najmniej 4–5 linek, bo kozy przechodzą przez słabe). Osobno: część pastwiska ogrodzona tylko dla kóz, najlepiej z zaroślami, miedzami i skrajem lasu; na planie to osobny pas, a kwatery bydła i owiec są o tyle mniejsze.",
+      "options": {
+        "withSheep": "Razem z owcami",
+        "separate": "Osobny wybieg"
+      }
+    },
+    "goatsPerHaOfPaddock": {
+      "label": "Kozy na hektar osobnego wybiegu",
+      "unit": "szt./ha",
+      "hint": "Liczy się tylko przy osobnym wybiegu. Na dobrym pastwisku ok. 10–15 kóz w sezonie na hektar, na słabszej ziemi i zaroślach mniej. Za mały wybieg: brakującą paszę liczy bilans siana."
+    },
     "goatMilking": {
       "label": "Doję kozy (mleko i sery kozie)",
       "hint": "Kozy mleczne (np. saaneńska, biała uszlachetniona) dają ok. 400–800 l w laktacji. Dojenie dwa razy dziennie, osobne pomieszczenie lub mleczarnia krów."
@@ -1346,6 +1359,15 @@
       "label": "Tuczniki pastwiskowe",
       "unit": "szt./rok",
       "hint": "Rasy do chowu na wybiegu: złotnicka, puławska, mangalica. Kwatery zmienia się co 1–2 tygodnie, bo świnie ryją; na tę samą kwaterę wracają po pół roku do roku albo po podsiewie. Obsada ok. 10–14 tuczników na hektar wybiegu w roku."
+    },
+    "pigsOnPasture": {
+      "label": "Świnie na wydzielonej części pastwiska",
+      "hint": "Włączone: świnie dostają osobno ogrodzony kawałek pastwiska (na planie osobny pas), który przestaje być kwaterą bydła i owiec; zjadają tam część trawy, a resztę paszy objętościowej liczy bilans siana. Wyłączone: wybieg jest poza pastwiskiem (sad, ściernisko, pole przed uprawą). Przy ASF obowiązuje podwójne ogrodzenie."
+    },
+    "pigsPerHaOfPaddock": {
+      "label": "Tuczniki na hektar wybiegu",
+      "unit": "szt./ha",
+      "hint": "Zasady rolnictwa ekologicznego dopuszczają ok. 14 tuczników na hektar w roku (limit 170 kg N z nawozów naturalnych). Przy zmianie kwater co 1–2 tygodnie i powrocie po pół roku lepiej ok. 10–12, żeby darń się odnowiła."
     },
     "pigGrainKg": {
       "label": "Ziarno na tucznika",
@@ -1568,7 +1590,7 @@
     "brownsRanch": {
       "label": "Brown’s Ranch (G. Brown)",
       "note": "Międzyplony, bydło, kury",
-      "description": "Na wzór farmy Gabe’a Browna z Dakoty Północnej: pięć zasad zdrowia gleby (bez gołej ziemi, jak najmniej uprawy, różnorodność roślin, żywe korzenie cały rok, zwierzęta na polu). Płodozmian z pięciu pól z koktajlami międzyplonowymi wypasanymi przez bydło, krowy mamki z opasami cały rok na zewnątrz (zimą na belach), owce, świnie, kury i kurczaki za bydłem, sprzedaż bezpośrednia mięsa i jaj."
+      "description": "Na wzór farmy Gabe’a Browna z Dakoty Północnej: pięć zasad zdrowia gleby (bez gołej ziemi, jak najmniej uprawy, różnorodność roślin, żywe korzenie cały rok, zwierzęta na polu). Płodozmian z pięciu pól z koktajlami międzyplonowymi wypasanymi przez bydło, krowy mamki z opasami cały rok na zewnątrz (zimą na belach), owce, świnie na wydzielonej części pastwiska, kury i kurczaki za bydłem, sprzedaż bezpośrednia mięsa i jaj."
     },
     "gregJudy": {
       "label": "Green Pastures (G. Judy)",
@@ -1635,6 +1657,8 @@
     "soilSharesOver100Pasture": "Udziały klas gleby pastwiska sumują się do ponad 100%. Popraw suwaki w grupie „Ziemia”.",
     "soilSharesOver100Meadow": "Udziały klas gleby łąki sumują się do ponad 100%. Popraw suwaki w grupie „Ziemia”.",
     "pigPaddocks": "Świnie potrzebują ok. {hectares} ha wybiegu w roku (ok. 12 tuczników na hektar). Kwatery zmieniaj co 1–2 tygodnie i wracaj po pół roku do roku; dobrze sprawdzają się w sadzie, na ściernisku i na polu przed uprawą.",
+    "pigPaddocksOnPasture": "Świnie zajmują ok. {hectares} ha pastwiska, które przestaje być kwaterami bydła i owiec. Ryją darń, więc po każdej zmianie kwatery zaplanuj wyrównanie i podsiew trawy.",
+    "ownPaddocksTooBig": "Osobne wybiegi świń i kóz potrzebują ok. {wanted} ha, a całe pastwisko ma {pasture} ha. Model zmniejszył je do całego pastwiska, a dla bydła i owiec nie zostaje nic: zwiększ pastwisko, zmniejsz liczbę zwierząt albo zmień obsadę na hektar.",
     "ridingIsABusiness": "Jazdy konne: dla gości agroturystyki mogą mieścić się w usługach agroturystycznych; regularne płatne lekcje dla osób z zewnątrz zwykle wymagają działalności gospodarczej i ubezpieczenia OC. Potwierdź z księgowym.",
     "dogFoodBought": "Psy potrzebują ok. {kg} kg karmy rocznie ponad mięso z gospodarstwa; ta karma jest kupowana.",
     "wolvesNoDogs": "Owce i kozy bez psów stróżujących: w wielu regionach są wilki. Zamykaj stado na noc w zagrodzie z wysokim ogrodzeniem elektrycznym albo dodaj psa (grupa „Ubojnia i psy”)."
@@ -2613,6 +2637,8 @@
       "sucklerCows": "mamki z cielętami",
       "winterTitle": "Zima: pastwisko odpoczywa",
       "winterNote": "wypas od ok. {start} do {end}",
+      "goatPaddock": "kozy · {hectares} ha",
+      "pigPaddock": "świnie · {hectares} ha",
       "caption": "Pastwisko {hectares} ha · {paddocks} kwater po ok. {paddockArea}"
     },
     "meadow": {
@@ -2669,9 +2695,11 @@
       "sucklersSeparate": "Krowy mamki z cielętami chodzą osobną grupą, na kwaterze przed albo po krowach mlecznych.",
       "sheep": "Owce 1–3 dni później dojadają niższe trawy i zioła.",
       "goats": "Kozy najlepiej na zaroślach i miedzach; na pastwisku za bydłem razem z owcami.",
+      "goatsSeparate": "Kozy na osobnym wybiegu (zarośla, miedze, skraj lasu), nie w kwaterach bydła i owiec.",
       "hens": "Mobilny kurnik 3–4 dni po bydle: kury rozgrzebują placki, zjadają larwy much i nawożą.",
       "broilers": "Zagrody kurczaków i indyków przesuwane codziennie na świeżą trawę, na kwaterach po bydle.",
       "pigs": "Świnie na osobnych kwaterach (np. w sadzie, na ściernisku, na polu pod uprawę): zmiana co 1–2 tygodnie, powrót po pół roku do roku.",
+      "pigsOnPasture": "Świnie na wydzielonej, podwójnie ogrodzonej części pastwiska: kwatery zmieniane co 1–2 tygodnie, potem podsiew i odpoczynek.",
       "horses": "Konie mogą dojadać kwatery po bydle; nie razem z owcami przy jagniętach.",
       "parasites": "Bydło i owce mają w większości różne pasożyty, więc taka kolejność przerywa ich cykl.",
       "none": "Brak zwierząt na pastwisku."
@@ -2687,6 +2715,8 @@
       "sheep": "Owce dzień po krowach.",
       "hens": "Mobilny kurnik 3–4 dni po krowach.",
       "broilers": "Zagrody z kurczakami przesuwane codziennie.",
+      "goatPaddock": "Kozy na osobnym wybiegu ({hectares} ha).",
+      "pigPaddock": "Świnie na wydzielonej części ({hectares} ha), kwatery zmieniane co 1–2 tygodnie.",
       "rest": "Każda kwatera odpoczywa {days} dni, w suszy dłużej.",
       "winter": "{month}: zwierzęta w wiatach i przy obejściu, pastwisko odpoczywa.",
       "liming": "Pod koniec miesiąca wapnowanie lub nawożenie według badania gleby."
@@ -3691,7 +3721,9 @@
     "weanerWeightKg": "Wagi, ubój i praca",
     "lambLiveWeightKg": "Wagi, ubój i remont stada",
     "kidsPerDoe": "Koźlęta i ubój",
+    "goatGrazing": "Wypas kóz",
     "goatMilking": "Mleko kozie i sery",
+    "pigsOnPasture": "Wybieg świń",
     "pigGrainKg": "Pasza, wagi i ubój",
     "horseCost": "Koszty i praca",
     "abattoirDistanceKm": "Ubojnia (owce, kozy, świnie, bydło)",
@@ -3733,17 +3765,20 @@
     "riskYieldVolatility": "Losowe lata (panel „Ryzyko”)"
   },
   "locations": {
-    "boleslawiecJeleniaGora": "Okolice Bolesławca i Jeleniej Góry",
+    "sudetenForeland": "Pogórze Sudeckie (Lwówek Śląski – Bolesławiec)",
+    "sudetes": "Sudety i kotliny sudeckie (400–800 m)",
     "lowerSilesianPlain": "Nizina Śląska (Wrocław, Opole)",
     "lubuskie": "Ziemia Lubuska",
     "wielkopolska": "Wielkopolska",
-    "pomeraniaKashubia": "Pomorze i Kaszuby",
+    "westPomerania": "Pomorze Zachodnie",
+    "pomeraniaKashubia": "Pomorze Gdańskie i Kaszuby",
     "warmiaMasuria": "Warmia i Mazury",
     "podlasie": "Podlasie",
     "mazovia": "Mazowsze",
+    "centralPoland": "Polska centralna (Łódzkie)",
     "lublinRoztocze": "Lubelszczyzna i Roztocze",
     "lesserPolandFoothills": "Pogórze małopolskie i podkarpackie",
-    "mountains": "Góry (Beskidy, Podhale, 600–900 m)"
+    "mountains": "Karpaty: Beskidy i Podhale (600–900 m)"
   },
   "location": {
     "date": "{day} {month}",
@@ -3752,7 +3787,7 @@
     "rainfall": "ok. {mm} mm opadów/rok",
     "temperature": "średnio ok. {low}–{high} °C",
     "grazing": "wypas ok. {start} – {end} ({days} dni)",
-    "yieldEffect": "plony: trawa {grass}%, zboża {crops}% względem okolic Bolesławca"
+    "yieldEffect": "plony: trawa {grass}%, zboża {crops}% względem Pogórza Sudeckiego"
   },
   "seeds": {
     "redClover": "koniczyna czerwona",
