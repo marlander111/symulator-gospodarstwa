@@ -27,7 +27,7 @@ function computeForageBalance(params, results) {
   const beefBreed = BEEF_BREEDS[params.beefBreed] || BEEF_BREEDS.extensive;
   const finisherForage = finishers * beefSystem.foragePerFinisherTonnes * beefBreed.youngStockDryMatterFactor;
   const forageNeedByAnimal = {
-    dairyCows: params.dairyCows * dairyBreed.dryMatterPerCowTonnes,
+    dairyCows: params.dairyCows * (dairyBreed.dryMatterPerCowTonnes - forageReplacedByGrainPerCow(params)),
     replacementHeifers: replacementHeifers * FORAGE_PER_HEAD.replacementHeifer,
     bull: bulls * FORAGE_PER_HEAD.bull,
     sheep: params.sheep * (FORAGE_PER_HEAD.eweBase + EWE_FORAGE_PER_LAMB * lambsPerEwe),

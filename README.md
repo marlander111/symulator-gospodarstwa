@@ -11,7 +11,7 @@ Język: polski (domyślnie) albo angielski, przełącznik na górze strony. Wyb�
 - Dochód na czysto, przychód, koszty, amortyzację i dopłaty (eko, ekoschematy, dobrostan, ONW).
 - Wariant pesymistyczny z własnymi ustawieniami (ceny, plony, wydajność, praca, koszty).
 - Lokalizacja (14 regionów Polski, od Pogórza Sudeckiego po Pomorze i Karpaty): sezon wypasu, opady, temperatura, wysokość; plony zależą od klimatu i klas gleby osobno dla gruntów ornych, pastwisk i łąk.
-- Rasy krów mlecznych i mięsnych, systemy chowu bydła (alkierz, mieszany, cały rok na zewnątrz), nabiał (sery, twaróg, śmietana, masło), mleko kozie, świnie pastwiskowe i kozy na osobnych, wydzielonych częściach pastwiska (widocznych na planie), jazdy konne, psy stróżujące, wędliny i przetwory.
+- Rasy krów mlecznych i mięsnych, systemy chowu bydła (alkierz, mieszany, cały rok na zewnątrz), nabiał (sery, twaróg, śmietana, masło), ziarno dla krów przez całą laktację (więcej mleka za więcej ziarna), mleko kozie, świnie pastwiskowe i kozy na osobnych, wydzielonych częściach pastwiska (widocznych na planie), jazdy konne, psy stróżujące, wędliny i przetwory.
 - Żywność dla domu odejmowana od sprzedaży według liczby osób, pasza kupowana zamiast własnej.
 - Bilans pasz z własnych pól: siano, ziarno, słoma, pastwisko; klasy gleby, płodozmian, międzyplony i poplony.
 - Czas pracy rodziny w miesiącach na tle limitu tygodniowego.

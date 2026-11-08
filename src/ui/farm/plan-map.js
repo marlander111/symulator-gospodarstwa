@@ -36,7 +36,7 @@ function renderFarmPlan(results) {
 
   byId('plan-svg').innerHTML = svg;
   byId('plan-legend').innerHTML = pastureLegendHtml(results.grazingPlan);
-  byId('plan-info').innerHTML = describePlanSelection(results, planView.selectedArea || 'pasture');
+  byId('plan-info').innerHTML = describePlanSelection(results, selectedPlanArea());
 }
 
 function renderPlanMonthButtons() {
@@ -76,11 +76,31 @@ function planAreaWidths(areas) {
   return widths;
 }
 
-/** Thicker outline of the clicked area. */
-const selectionStroke = area => (planView.selectedArea === area ? { 'stroke-width': 3 } : {});
+/** The selected area: the one clicked last, at first the pasture (whose description is shown). */
+const selectedPlanArea = () => planView.selectedArea || 'pasture';
 
-/** Background of a whole plan area, the clickable target of `data-area`. */
-const areaBackground = (box, area, color, opacity) =>
+/** Group of one clickable plan area; the selected one gets an outline on top of its contents. */
+function planAreaGroup(area, box, content) {
+  const isSelected = selectedPlanArea() === area;
+  const outline = isSelected
+    ? element('rect', {
+        x: box.x + 1,
+        y: box.y + 1,
+        width: Math.max(0, box.width - 2),
+        height: Math.max(0, box.height - 2),
+        rx: 4,
+        class: 'plan-selection',
+      })
+    : '';
+  return element(
+    'g',
+    { 'data-area': area, class: isSelected ? 'plan-area selected' : 'plan-area' },
+    content + outline
+  );
+}
+
+/** Background of a whole plan area, so that a click anywhere on it selects the area. */
+const areaBackground = (box, color, opacity) =>
   element('rect', {
     x: box.x,
     y: box.y,
@@ -89,7 +109,6 @@ const areaBackground = (box, area, color, opacity) =>
     fill: color,
     opacity,
     stroke: color,
-    ...selectionStroke(area),
   });
 
 /** Centred label; clicks go through to the area under it. */
@@ -152,7 +171,7 @@ function drawFarmyard(box, results) {
     },
   ].filter(block => block.shown !== false);
 
-  let svg = areaBackground(box, 'farmyard', 'var(--color-farmyard)', '.18');
+  let svg = areaBackground(box, 'var(--color-farmyard)', '.18');
 
   const blockX = box.x + 8;
   const blockWidth = box.width - 16;
@@ -181,7 +200,7 @@ function drawFarmyard(box, results) {
   }
 
   const caption = t('plan.farmyard.caption', { hectares: formatNumber(params.farmyardHa, 1) });
-  return element('g', { 'data-area': 'farmyard' }, svg + areaCaption(box, caption));
+  return planAreaGroup('farmyard', box, svg + areaCaption(box, caption));
 }
 
 const PADDOCK_FILLS = {
@@ -261,7 +280,7 @@ function drawPasture(fullBox, results) {
   const gap = paddockHeight > 8 ? 2 : 0.5;
   const occupants = paddockOccupants(paddockCount, results.grazingPlan);
 
-  let svg = areaBackground(fullBox, 'pasture', 'var(--color-pasture)', '.22');
+  let svg = areaBackground(fullBox, 'var(--color-pasture)', '.22');
   svg += ownPaddocksSvg(fullBox, box.height, paddocks);
 
   for (let side = 0; side < 2; side++) {
@@ -331,7 +350,7 @@ function drawPasture(fullBox, results) {
     paddocks: paddockCount,
     paddockArea: paddockAreaText(results.grazingPlan.paddockHa),
   });
-  return element('g', { 'data-area': 'pasture' }, svg + areaCaption(fullBox, caption));
+  return planAreaGroup('pasture', fullBox, svg + areaCaption(fullBox, caption));
 }
 
 /** Colours of the paddocks of their own (CSS variables). */
@@ -375,7 +394,7 @@ function drawMeadow(box) {
   const month = planView.month;
   const isCuttingMonth = month === 5 || month === 7;
 
-  let svg = areaBackground(box, 'meadow', 'var(--color-meadow)', isCuttingMonth ? 0.55 : 0.3);
+  let svg = areaBackground(box, 'var(--color-meadow)', isCuttingMonth ? 0.55 : 0.3);
   for (let y = box.y + 14; y < box.y + box.height; y += 14) {
     svg += element('line', {
       x1: box.x + 6,
@@ -396,7 +415,7 @@ function drawMeadow(box) {
     planLabel(centreX, centreY + 9, t(`plan.meadow.months.${month}`), 12);
 
   const caption = t('plan.meadow.caption', { hectares: formatNumber(params.meadowHa, 1) });
-  return element('g', { 'data-area': 'meadow' }, svg + areaCaption(box, caption));
+  return planAreaGroup('meadow', box, svg + areaCaption(box, caption));
 }
 
 /** Rotation fields stacked by area, plus the market garden. */
@@ -445,12 +464,15 @@ function drawArable(box, results, rotation) {
       fill: strip.color,
       opacity: index % 2 ? 0.42 : 0.3,
       stroke: strip.color,
-      ...selectionStroke(strip.area),
     });
     const labels =
       planLabel(centreX, y + stripHeight / 2 - 4, strip.title, 12.5, true) +
       planLabel(centreX, y + stripHeight / 2 + 13, strip.subtitle, 11.5);
-    svg += element('g', { 'data-area': strip.area }, background + labels);
+    svg += planAreaGroup(
+      strip.area,
+      { x: box.x, y, width: box.width, height: stripHeight },
+      background + labels
+    );
     y += stripHeight;
   });
 

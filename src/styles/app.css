@@ -379,12 +379,6 @@ summary:focus-visible {
     grid-template-columns: 1fr;
   }
 }
-#plan-svg [data-a] {
-  cursor: pointer;
-}
-#plan-svg [data-a]:hover {
-  stroke-width: 3;
-}
 .sub-h {
   font-size: 20px;
   margin: 22px 0 4px;
@@ -1101,13 +1095,18 @@ footer {
 details > summary,
 .rot th button,
 .cal tbody tr,
-#plan-svg [data-a],
 #labour-chart [data-month],
 .infra label {
   transition:
     box-shadow 0.15s ease,
     border-color 0.15s ease,
-    background-color 0.15s ease;
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+/* buttons grow a little under the pointer, so it is clear they can be pressed */
+.btn:not(:disabled):hover,
+.clickable:hover {
+  transform: scale(1.03);
 }
 .btn:hover,
 .clickable:hover,
@@ -1124,14 +1123,47 @@ details.fold-block > summary:hover {
 .cal tbody tr:hover td {
   background: var(--surface2);
 }
-#plan-svg [data-a]:hover {
+/* Farm plan: an area grows slightly and glows under the pointer; the selected one has an outline */
+#plan-svg [data-area] {
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+#plan-svg [data-area]:hover {
+  transform: scale(1.015);
+  filter: drop-shadow(0 0 6px var(--glow));
+}
+#plan-svg [data-area].selected {
   filter: drop-shadow(0 0 4px var(--glow));
+}
+#plan-svg .plan-selection {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  pointer-events: none;
 }
 #labour-chart [data-month] {
   cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  transition: transform 0.15s ease;
+}
+#labour-chart [data-month]:hover {
+  transform: scaleY(1.03);
 }
 #labour-chart [data-month]:hover rect {
-  filter: drop-shadow(0 0 3px var(--glow));
+  filter: drop-shadow(0 0 4px var(--glow));
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn:not(:disabled):hover,
+  .clickable:hover,
+  #plan-svg [data-area]:hover,
+  #labour-chart [data-month]:hover {
+    transform: none;
+  }
 }
 
 /* Location chosen once for the farm */

@@ -26,6 +26,7 @@ const HIDDEN_PARAMETER_GROUPS = new Set(['infrastructure']);
 const SUBSECTIONS = new Map([
   ['cheeseShare', { advanced: true }],
   ['lactationsPerCow', { advanced: true }],
+  ['dairyGrainAllLactation', { advanced: true }],
   ['flockReplacementYears', { advanced: true }],
   ['broilers', { advanced: false }],
   ['geese', { advanced: false }],

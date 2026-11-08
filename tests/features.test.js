@@ -352,3 +352,22 @@ test('the renamed reference location is carried over from saved settings', () =>
   assert.equal(model.migrateLegacyParameterIds({ location: 'mazovia' }).location, 'mazovia');
   assert.equal(model.LOCATIONS.length, 14);
 });
+
+test('grain through the whole lactation adds milk and grain and saves a little forage', () => {
+  const base = { dairyCows: 4, dairyGrainKgPerDay: 3, milkPerKgGrain: 1 };
+  const grass = simulate(base);
+  const grain = simulate({ ...base, dairyGrainAllLactation: true });
+  const lactationGrainKg = 3 * 305; // kg per cow: 3 kg a day for 305 days of milking
+  assert.ok(Math.abs(grain.milkTotal - grass.milkTotal - 4 * lactationGrainKg) < 1e-6);
+  assert.ok(
+    Math.abs(
+      grain.grainNeedByAnimal.dairyCows - grass.grainNeedByAnimal.dairyCows - (4 * lactationGrainKg) / 1000
+    ) < 1e-9
+  );
+  assert.ok(
+    grain.forageNeedByAnimal.dairyCows < grass.forageNeedByAnimal.dairyCows,
+    'grain replaces some forage'
+  );
+  assert.ok(grain.warnings.some(warning => warning.key === 'lactationGrain'));
+  assert.ok(!grass.warnings.some(warning => warning.key === 'lactationGrain'));
+});

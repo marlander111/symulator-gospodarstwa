@@ -44,6 +44,11 @@ function buildPlanControls() {
     planView.selectedArea = data.area;
     renderFarmPlan(planView.results);
   });
+  // the area under the pointer is drawn last, so that it grows over its neighbours, not under them
+  byId('plan-svg').addEventListener('mouseover', event => {
+    const area = event.target.closest('[data-area]');
+    if (area && area.nextElementSibling) area.parentNode.appendChild(area);
+  });
   onClick('rotation-note', '[data-cereal-share]', data => setParams({ cerealShare: +data.cerealShare }));
   onClick('rotation-controls', '[data-rotation-fields]', data =>
     setParams({ rotationFields: +data.rotationFields })

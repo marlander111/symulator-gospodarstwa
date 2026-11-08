@@ -33,4 +33,8 @@ defineParameterGroup('dairy', [
   { id: 'oatsPerCow', min: 0, max: 1500, step: 10, defaultValue: 90 },
   { id: 'calfPrice', min: 100, max: 2500, step: 50, defaultValue: 500 },
   { id: 'cullCowPrice', min: 1500, max: 8000, step: 100, defaultValue: 3500 },
+  // grain every day of the lactation on top of the usual ration: more milk for more grain
+  { id: 'dairyGrainAllLactation', type: 'boolean', defaultValue: false },
+  { id: 'dairyGrainKgPerDay', min: 1, max: 8, step: 0.5, defaultValue: 3 },
+  { id: 'milkPerKgGrain', min: 0.4, max: 1.5, step: 0.1, defaultValue: 1 },
 ]);

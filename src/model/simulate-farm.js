@@ -13,7 +13,12 @@ function simulateFarm(inputParams) {
   const climate = computeClimateFactors(inputParams);
   const grazingPlan = computeGrazingPlan(inputParams);
   const params = adjustForMilkingRoutine(
-    adjustPastureForGrazingPlan(adjustYieldsForSoilAndClimate(inputParams, soilFactors, climate), grazingPlan)
+    adjustForLactationGrain(
+      adjustPastureForGrazingPlan(
+        adjustYieldsForSoilAndClimate(inputParams, soilFactors, climate),
+        grazingPlan
+      )
+    )
   );
   const results = { soilFactors, climate, grazingPlan };
 
@@ -77,6 +82,34 @@ function adjustForMilkingRoutine(params) {
     milkPerCow: params.milkPerCow * ONCE_A_DAY_MILK_FACTOR,
     hoursPerCow: params.hoursPerCow * ONCE_A_DAY_HOURS_PER_COW_FACTOR,
     dairyFixedHours: params.dairyFixedHours * ONCE_A_DAY_DAIRY_FIXED_HOURS_FACTOR,
+  };
+}
+
+/** Days a cow is milked in a year: about 305; the other 60 or so she is dry before calving. */
+const LACTATION_DAYS = 305;
+// Grain replaces part of the forage a cow eats: about 0.4 kg of forage dry matter for each kg of
+// grain dry matter (substitution rate on pasture and hay, reviews give 0.2–0.6); grain is 87% dry matter.
+const GRAIN_FORAGE_SUBSTITUTION = 0.4;
+const GRAIN_DRY_MATTER_SHARE = 0.87;
+
+/** Grain fed every day of the lactation on top of the usual ration, t per cow and year. */
+function lactationGrainPerCowTonnes(params) {
+  return params.dairyGrainAllLactation ? (params.dairyGrainKgPerDay * LACTATION_DAYS) / 1000 : 0;
+}
+
+/** Forage dry matter the lactation grain replaces, t per cow and year. */
+function forageReplacedByGrainPerCow(params) {
+  return lactationGrainPerCowTonnes(params) * GRAIN_DRY_MATTER_SHARE * GRAIN_FORAGE_SUBSTITUTION;
+}
+
+/** Grain through the whole lactation: the extra grain joins the ration and adds milk per kg fed. */
+function adjustForLactationGrain(params) {
+  const grainKg = lactationGrainPerCowTonnes(params) * 1000;
+  if (!grainKg) return params;
+  return {
+    ...params,
+    oatsPerCow: params.oatsPerCow + grainKg,
+    milkPerCow: params.milkPerCow + grainKg * params.milkPerKgGrain,
   };
 }
 

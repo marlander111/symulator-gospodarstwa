@@ -184,6 +184,14 @@ function addOwnPaddockWarnings(params, paddocks, add) {
 function addOtherWarnings(params, inputParams, results, add) {
   if (params.pigs > 0) add('info', 'africanSwineFever');
   addOwnPaddockWarnings(params, results.paddocks, add);
+  if (params.dairyCows > 0 && params.dairyGrainAllLactation) {
+    const grainTonnes = params.dairyCows * lactationGrainPerCowTonnes(params);
+    const milkFactor = params.onceADayMilking ? ONCE_A_DAY_MILK_FACTOR : 1;
+    add('info', 'lactationGrain', {
+      grain: formatNumber(grainTonnes, 1),
+      milk: formatNumber(grainTonnes * 1000 * params.milkPerKgGrain * milkFactor, 0),
+    });
+  }
   if (results.sucklerCows > 0 && !params.ownBull) add('info', 'sucklerCowsNeedBull');
   if (params.ridesPerYear > 0 && params.horses > 0) add('info', 'ridingIsABusiness');
   if (params.guardDogs > 0 && results.dogs.boughtKg > 1)

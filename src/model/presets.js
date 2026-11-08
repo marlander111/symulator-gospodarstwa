@@ -760,6 +760,7 @@ const PRESET_PRACTICE_IDS = [
   'catchCrops',
   'stubbleCrop',
   'onceADayMilking',
+  'dairyGrainAllLactation',
   'sawdustForStraw',
   // breeds and the values they set, and the other choices that change feed, sales or hours
   'dairyBreed',

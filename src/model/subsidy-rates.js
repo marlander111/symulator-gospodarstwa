@@ -1,5 +1,7 @@
 // Subsidy rates in PLN: 2026 direct payments and eco-schemes as estimated for the advances
-// (MRiRW regulation of 3 September 2026); organic payments as set in 2023.
+// (MRiRW regulation of 3 September 2026, EUR at 4.3135 PLN); organic payments as set in 2023 and
+// unchanged in the 2026 estimates; animal welfare at the last published rates (the 2026 ones come
+// only with the final payments).
 
 const SUBSIDY_RATES = {
   // area payments, per hectare of farmed land
