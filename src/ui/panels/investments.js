@@ -1,5 +1,7 @@
-// Panel "Investments": amounts tied two-way to the unit-price sliders. Typing a total sets the
-// unit price so that quantity × price equals the typed amount.
+// Panel "Investments": what the farm still has to buy for the chosen enterprises (items ticked
+// as owned in "Required infrastructure" are left out), and other investments at the end.
+// Amounts are tied two-way to the unit-price sliders: typing a total sets the unit price so
+// that quantity × price equals the typed amount.
 
 const INVESTMENT_COLUMNS = ['investment', 'cost', 'unitPrice', 'years', 'perYear'];
 
@@ -22,6 +24,10 @@ function renderInvestments(results) {
     )
   );
   byId('investments-table').innerHTML = header + tableBody(rows);
+  const owned = results.infrastructure.filter(item => item.owned).length;
+  byId('investments-owned-note').textContent = owned
+    ? t('investmentsTable.ownedNote', { count: owned, value: formatPln(results.ownedInfrastructureValue) })
+    : '';
 
   document
     .querySelectorAll('[data-investment]')

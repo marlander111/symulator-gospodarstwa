@@ -11,9 +11,12 @@
   <div class="eyebrow" data-i18n="page.header.eyebrow"></div>
   <h1 data-i18n="app.title"></h1>
   <p class="lead" data-i18n="page.header.lead"></p>
-  <div class="loc" data-i18n-html="page.header.locationFacts"></div>
+  <div class="loc-row">
+    <label class="loc-pick"><span data-i18n="page.location.label"></span> <select id="location-select" class="clickable"></select></label>
+    <div class="loc" id="location-facts"></div>
+  </div>
   <div class="top-tools">
-    <div class="seg theme-sw" id="theme-switch" role="group" data-i18n-attr="aria-label:page.theme.groupLabel"><span class="lab" data-i18n="page.theme.label"></span><button class="btn" type="button" data-theme-option="auto" data-i18n="page.theme.auto"></button><button class="btn" type="button" data-theme-option="light" data-i18n="page.theme.light"></button><button class="btn" type="button" data-theme-option="dark" data-i18n="page.theme.dark"></button></div>
+    <div class="seg theme-sw" id="theme-switch" role="group" data-i18n-attr="aria-label:page.theme.groupLabel"><span class="lab" data-i18n="page.theme.label"></span><button class="btn" type="button" data-theme-option="auto" data-i18n="page.theme.auto"></button><button class="btn" type="button" data-theme-option="light" data-i18n="page.theme.light"></button><button class="btn" type="button" data-theme-option="dark" data-i18n="page.theme.dark"></button><button class="btn" type="button" data-theme-option="eco" data-i18n="page.theme.eco"></button></div>
     <div class="seg" id="data-tools" role="group" data-i18n-attr="aria-label:page.dataTools.groupLabel"><button class="btn ghost" type="button" id="clear-all" data-i18n="page.dataTools.clearAll" data-i18n-attr="title:page.dataTools.clearAllTitle"></button><button class="btn ghost" type="button" id="undo-params" disabled data-i18n="page.dataTools.previous" data-i18n-attr="title:page.dataTools.previousTitle"></button></div>
     <div class="seg" id="language-switch" role="group" data-i18n-attr="aria-label:page.language.groupLabel"><span class="lab" data-i18n="page.language.label"></span><button class="btn" type="button" data-language-option="pl" lang="pl" data-i18n="page.language.pl"></button><button class="btn" type="button" data-language-option="en" lang="en" data-i18n="page.language.en"></button></div>
   </div>
@@ -48,6 +51,20 @@
       <div class="warns" id="warnings"></div>
     </div>
 
+    <nav class="jump" aria-labelledby="jump-label">
+      <span class="lab" id="jump-label" data-i18n="page.jump.label"></span>
+      <a class="btn clickable" href="#farm-plan" data-i18n="page.jump.plan"></a>
+      <a class="btn clickable" href="#rotation" data-i18n="page.jump.rotation"></a>
+      <a class="btn clickable" href="#nitrogen" data-i18n="page.jump.nitrogen"></a>
+      <a class="btn clickable" href="#money" data-i18n="page.jump.money"></a>
+      <a class="btn clickable" href="#cashflow" data-i18n="page.jump.cashflow"></a>
+      <a class="btn clickable" href="#labour" data-i18n="page.jump.labour"></a>
+      <a class="btn clickable" href="#market-panel" data-i18n="page.jump.market"></a>
+      <a class="btn clickable" href="#infrastructure" data-i18n="page.jump.infrastructure"></a>
+      <a class="btn clickable" href="#stages" data-i18n="page.jump.startup"></a>
+      <a class="btn clickable" href="#calendar" data-i18n="page.jump.calendar"></a>
+    </nav>
+
     <div class="panel">
       <div class="panel-h"><h2 data-i18n="page.landAndFeed.title"></h2><p data-i18n="page.landAndFeed.intro"></p></div>
       <div class="landbar" id="land-bar"></div>
@@ -66,10 +83,10 @@
         <div class="note" id="plan-info" aria-live="polite"></div>
       </div>
       <div class="notes">
-        <div class="note" data-i18n-html="page.farmPlan.notes.grazingOrder"></div>
-        <div class="note" data-i18n-html="page.farmPlan.notes.buildings"></div>
-        <div class="note" data-i18n-html="page.farmPlan.notes.waterAndFencing"></div>
-        <div class="note" id="grazing-note" aria-live="polite"></div>
+        <details class="note fold"><summary data-i18n="page.farmPlan.notes.grazingOrderTitle"></summary><div id="grazing-order-note"></div></details>
+        <details class="note fold"><summary data-i18n="page.farmPlan.notes.buildingsTitle"></summary><div data-i18n-html="page.farmPlan.notes.buildings"></div></details>
+        <details class="note fold"><summary data-i18n="page.farmPlan.notes.waterAndFencingTitle"></summary><div data-i18n-html="page.farmPlan.notes.waterAndFencing"></div></details>
+        <details class="note fold"><summary data-i18n="plan.grazing.noteTitle"></summary><div id="grazing-note" aria-live="polite"></div></details>
       </div>
     </div>
 
@@ -80,30 +97,46 @@
       <div class="tw"><table class="rot" id="rotation-table"></table></div>
       <p class="small" id="rotation-note"></p>
       <div class="tw"><table id="crops-table"></table></div>
-    
+      <h3 class="sub-h" data-i18n="page.rotation.seedsTitle"></h3>
+      <p class="small muted" data-i18n="page.rotation.seedsIntro"></p>
+      <div class="tw"><table id="seed-table"></table></div>
+
       <h3 class="sub-h" id="catch-crops" data-i18n="page.catchCrops.title"></h3>
       <p class="intro" data-i18n="page.catchCrops.intro"></p>
       <div class="notes">
-        <div class="note" id="catch-crop-summary"></div>
-        <div class="note" id="catch-crop-fields"></div>
+        <details class="note fold" open><summary data-i18n="ecoScheme.title"></summary><div id="catch-crop-summary"></div></details>
+        <details class="note fold"><summary data-i18n="coverCropAdvice.title"></summary><div id="catch-crop-fields"></div></details>
       </div>
-      <div class="tw"><table id="catch-mix-table"></table></div>
-      <div class="tw"><table id="stubble-mix-table"></table></div>
-  <p class="small muted" data-i18n="page.catchCrops.requirements"></p>
-      <p class="small muted" data-i18n="page.catchCrops.grainLegumeMixtures"></p>
+      <details class="fold-block">
+        <summary data-i18n="page.catchCrops.mixesTitle"></summary>
+        <p class="small muted" data-i18n="page.catchCrops.brownNote"></p>
+        <div class="tw"><table id="catch-mix-table"></table></div>
+        <div class="tw"><table id="stubble-mix-table"></table></div>
+        <p class="small muted" data-i18n="page.catchCrops.requirements"></p>
+        <p class="small muted" data-i18n="page.catchCrops.grainLegumeMixtures"></p>
+      </details>
     </div>
 
     <div class="panel" id="nitrogen">
       <div class="panel-h"><h2 data-i18n="page.nitrogen.title"></h2><p data-i18n="page.nitrogen.intro"></p></div>
       <div class="seg" id="nitrogen-controls"></div>
-      <div class="tw"><table id="nitrogen-table"></table></div>
+      <div class="twocol">
+        <div class="tw"><table id="nitrogen-table"></table></div>
+        <div class="tw"><table id="nitrogen-cycle-table"></table></div>
+      </div>
       <div class="notes">
         <div class="note" id="nitrogen-fields"></div>
-        <div class="note" data-i18n-html="page.nitrogen.baleGrazingNote"></div>
+        <div class="note" id="carbon-summary"></div>
+      </div>
+      <div class="tw"><table id="carbon-table"></table></div>
+      <div class="notes">
+        <details class="note fold"><summary data-i18n="page.nitrogen.baleGrazingTitle"></summary><div data-i18n-html="page.nitrogen.baleGrazingNote"></div></details>
+        <details class="note fold"><summary data-i18n="page.nitrogen.soilCareTitle"></summary><div data-i18n-html="page.nitrogen.soilCare"></div></details>
+        <details class="note fold"><summary data-i18n="page.nitrogen.carbonMethodTitle"></summary><div data-i18n-html="page.nitrogen.carbonMethod"></div></details>
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="money">
       <div class="panel-h"><h2 data-i18n="page.money.title"></h2><p data-i18n="page.money.intro"></p></div>
       <svg class="chart" id="waterfall" viewBox="0 0 640 250" role="img" data-i18n-attr="aria-label:page.money.chartLabel"></svg>
       <div class="twocol">
@@ -116,7 +149,7 @@
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="cashflow">
       <div class="panel-h"><h2 data-i18n="page.cashflow.title"></h2><p data-i18n="page.cashflow.intro"></p></div>
       <div class="opening-cash" id="opening-cash"></div>
       <svg class="chart" id="cashflow-chart" viewBox="0 0 640 230" role="img" data-i18n-attr="aria-label:page.cashflow.chartLabel"></svg>
@@ -151,22 +184,30 @@
       <p class="small muted" data-i18n="page.risk.method"></p>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="labour">
       <div class="panel-h"><h2 data-i18n="page.labour.title"></h2><p id="labour-summary" data-i18n="page.labour.intro"></p></div>
       <svg class="chart" id="labour-chart" viewBox="0 0 640 270" role="img" data-i18n-attr="aria-label:page.labour.chartLabel"></svg>
       <div class="legend" id="labour-legend"></div>
+      <div class="day-plan" id="labour-day" aria-live="polite"></div>
       <div class="tw"><table id="labour-table"></table></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="market-panel">
       <div class="panel-h"><h2 data-i18n="page.market.title"></h2><p data-i18n="page.market.intro"></p></div>
-      <div class="cards" id="market"></div>
+      <div class="tw"><table id="market"></table></div>
       <div id="customers"></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="infrastructure">
+      <div class="panel-h"><h2 data-i18n="page.infrastructure.title"></h2><p data-i18n="page.infrastructure.intro"></p></div>
+      <div class="infra" id="infrastructure-list"></div>
+      <p class="small muted" id="infrastructure-note"></p>
+    </div>
+
+    <div class="panel" id="investments">
       <div class="panel-h"><h2 data-i18n="page.investments.title"></h2><p data-i18n="page.investments.intro"></p></div>
       <div class="tw"><table id="investments-table"></table></div>
+      <p class="small" id="investments-owned-note"></p>
       <p class="small muted" data-i18n="page.investments.editNote"></p>
     </div>
 
@@ -195,11 +236,11 @@
 <section class="wrap full" id="stages">
   <h2 data-i18n="page.stages.title"></h2>
   <p class="intro" data-i18n="page.stages.intro"></p>
-  <div class="years">
-    <div class="yr" data-i18n-html="page.stages.year1"></div>
-    <div class="yr" data-i18n-html="page.stages.year2"></div>
-    <div class="yr" data-i18n-html="page.stages.year3"></div>
-  </div>
+  <div class="seg" id="startup-years"></div>
+  <div class="cards" id="startup-kpis"></div>
+  <p class="small" id="startup-summary"></p>
+  <div class="years" id="startup-steps"></div>
+  <p class="small muted" data-i18n="page.stages.method"></p>
 </section>
 
 <section class="wrap full" id="regulations">
@@ -225,7 +266,10 @@
   </div>
 </section>
 
-<footer class="wrap" data-i18n="page.footer"></footer>
+<footer class="wrap">
+  <p data-i18n="page.footer"></p>
+  <p data-i18n-html="page.footerLinks"></p>
+</footer>
 
 <script>
 /* @@SCRIPTS@@ */

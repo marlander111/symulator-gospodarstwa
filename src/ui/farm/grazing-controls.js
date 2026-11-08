@@ -6,7 +6,7 @@
 const MOVE_INTERVAL_OPTIONS = [0.5, 1, 2, 3, 4, 7];
 
 /** Rest periods offered as buttons, up to Salatin's 60 days. */
-const REST_DAYS_OPTIONS = [20, 25, 30, 35, 40, 45, 50, 60];
+const REST_DAYS_OPTIONS = [20, 25, 30, 35, 40, 45, 50, 60, 75, 90];
 
 const SQUARE_METRES_PER_HECTARE = 10000;
 
@@ -88,4 +88,26 @@ function renderGrazingNote(results) {
     title +
     element('p', {}, summary) +
     element('ul', {}, effects.map(effect => element('li', {}, effect)).join(''));
+}
+
+/** The order of the animals on the pasture, only for the ones the plan keeps. */
+function renderGrazingOrderNote() {
+  const steps = [
+    [params.dairyCows > 0, 'cows'],
+    [params.sucklerCows > 0, params.dairyCows > 0 ? 'sucklersSeparate' : 'sucklers'],
+    [params.sheep > 0, 'sheep'],
+    [params.goats > 0, 'goats'],
+    [params.layingHens > 0, 'hens'],
+    [params.broilers + params.turkeys > 0, 'broilers'],
+    [params.pigs > 0, 'pigs'],
+    [params.horses > 0, 'horses'],
+  ].filter(([isKept]) => isKept);
+  const ruminants = params.dairyCows + params.sucklerCows + params.sheep + params.goats > 0;
+  const items = steps.map(([, key]) => element('li', {}, t(`plan.grazingOrder.${key}`)));
+  byId('grazing-order-note').innerHTML = items.length
+    ? element('ul', {}, items.join('')) +
+      (ruminants && params.sheep + params.goats > 0 && params.dairyCows + params.sucklerCows > 0
+        ? element('p', { class: 'small muted' }, t('plan.grazingOrder.parasites'))
+        : '')
+    : element('p', {}, t('plan.grazingOrder.none'));
 }

@@ -10,22 +10,25 @@
  */
 function simulateFarm(inputParams) {
   const soilFactors = computeSoilFactors(inputParams);
+  const climate = computeClimateFactors(inputParams);
   const grazingPlan = computeGrazingPlan(inputParams);
   const params = adjustForMilkingRoutine(
-    adjustPastureForGrazingPlan(adjustYieldsForSoil(inputParams, soilFactors), grazingPlan)
+    adjustPastureForGrazingPlan(adjustYieldsForSoilAndClimate(inputParams, soilFactors, climate), grazingPlan)
   );
-  const results = { soilFactors, grazingPlan };
+  const results = { soilFactors, climate, grazingPlan };
 
   const stages = [
     computeLandUse,
     computeHerdStructure,
-    computeForageBalance,
-    computeMilkAndCheese,
+    computeMilkAndDairyProducts,
+    computeGoatMilk,
     computeFlockRenewal,
+    computeForageBalance,
     computeGrainBalance,
     computeStrawBalance,
     computeLivestockUnits,
     computeNitrogenBalance,
+    computeCarbonBalance,
     computeRevenue,
     computeCosts,
     computeInvestments,
@@ -44,15 +47,16 @@ function simulateFarm(inputParams) {
   return results;
 }
 
-function adjustYieldsForSoil(params, soilFactors) {
+function adjustYieldsForSoilAndClimate(params, soil, climate) {
+  const arable = soil.arable * climate.arable;
   return {
     ...params,
-    cerealYield: params.cerealYield * soilFactors.arable,
-    strawYield: params.strawYield * soilFactors.arable,
-    cloverYield: params.cloverYield * soilFactors.arable,
-    rootCropYield: params.rootCropYield * soilFactors.arable,
-    pastureYield: params.pastureYield * soilFactors.grassland,
-    meadowYield: params.meadowYield * soilFactors.grassland,
+    cerealYield: params.cerealYield * arable,
+    strawYield: params.strawYield * arable,
+    cloverYield: params.cloverYield * arable,
+    rootCropYield: params.rootCropYield * arable,
+    pastureYield: params.pastureYield * soil.pasture * climate.pasture,
+    meadowYield: params.meadowYield * soil.meadow * climate.meadow,
   };
 }
 

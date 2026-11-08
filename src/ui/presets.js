@@ -161,7 +161,9 @@ function renderSavedVariants() {
 
 /** True when every value of the set equals the current one (numbers compared with a tolerance). */
 function matchesCurrentParams(values) {
-  return Object.keys(values).every(id => Math.abs(+params[id] - values[id]) < 1e-9);
+  return Object.entries(values).every(([id, value]) =>
+    typeof value === 'number' ? Math.abs(params[id] - value) < 1e-9 : params[id] === value
+  );
 }
 
 /** True when a saved variant has exactly the current settings. */

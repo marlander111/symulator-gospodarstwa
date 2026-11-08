@@ -93,6 +93,13 @@ function renderFeedBalance(results) {
     );
   if (results.wheyGrainSaved > 0.005)
     notes.push(t('feedBalance.wheyForPigs', { kg: formatNumber(results.wheyGrainSaved * 1000, 0) }));
+  if (results.boughtForageTonnes + results.boughtGrainTonnes > 0.05)
+    notes.push(
+      t('feedBalance.boughtFeed', {
+        forage: formatNumber(results.boughtForageTonnes, 1),
+        grain: formatNumber(results.boughtGrainTonnes, 1),
+      })
+    );
   notes.push(
     t('feedBalance.ownCost', {
       grain: formatNumber(results.grainCostPerTonne, 0),

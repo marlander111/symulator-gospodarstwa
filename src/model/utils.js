@@ -10,6 +10,11 @@ function sumBy(items, select) {
   return items.reduce((sum, item) => sum + select(item), 0);
 }
 
+/** Value limited to the range [low, high]. */
+function clamp(value, low, high) {
+  return Math.min(high, Math.max(low, value));
+}
+
 /** Formats a number for the interface language (Polish: "12 300,5", English: "12,300.5"). */
 function formatNumber(value, decimals = 0) {
   if (!isFinite(value)) return '–';

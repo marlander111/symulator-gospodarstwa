@@ -1,4 +1,4 @@
-// Parameters of the "poultry" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+// Parameters of the "poultry" group. Labels, units and hints: locales → parameters.<id>.
 
 defineParameterGroup('poultry', [
   { id: 'broilers', min: 0, max: 600, step: 10, defaultValue: 0 },

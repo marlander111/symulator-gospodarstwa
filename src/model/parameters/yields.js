@@ -1,7 +1,7 @@
-// Parameters of the "yields" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+// Parameters of the "yields" group. Labels, units and hints: locales → parameters.<id>.
 
 defineParameterGroup('yields', [
-  { id: 'grazingDays', min: 150, max: 230, step: 5, defaultValue: 200 },
+  { id: 'grazingDays', min: 120, max: 240, step: 5, defaultValue: 195 },
   { id: 'mixedGrazingBonus', min: 0, max: 15, step: 1, defaultValue: 10 },
   { id: 'pastureYield', min: 3, max: 8, step: 0.25, defaultValue: 5 },
   { id: 'meadowYield', min: 2.5, max: 7, step: 0.25, defaultValue: 4 },
@@ -10,6 +10,6 @@ defineParameterGroup('yields', [
   { id: 'strawYield', min: 1.5, max: 4.5, step: 0.1, defaultValue: 3 },
   { id: 'rootCropYield', min: 3, max: 10, step: 0.25, defaultValue: 6, advanced: true },
   { id: 'grazingMoveIntervalDays', min: 0.5, max: 7, step: 0.5, defaultValue: 1 },
-  { id: 'pastureRestDays', min: 20, max: 60, step: 5, defaultValue: 35 },
+  { id: 'pastureRestDays', min: 20, max: 90, step: 5, defaultValue: 35 },
   { id: 'baleGrazing', type: 'boolean', defaultValue: false },
 ]);

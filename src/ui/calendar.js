@@ -1,5 +1,5 @@
 // Calendar of the year: tasks of the enterprises the farm actually runs, with the hours
-// and cash of each month. Texts: locales/pl.json → calendar.
+// and cash of each month. Texts: locales → calendar.
 
 /**
  * Rows of the calendar; a row is shown when `isActive` returns true. Each row's texts live
@@ -7,7 +7,12 @@
  */
 const CALENDAR_ROWS = [
   { id: 'dairyCows', isActive: () => params.dairyCows > 0 },
-  { id: 'cheese', isActive: () => params.dairyCows > 0 && params.cheeseShare > 0 },
+  {
+    id: 'cheese',
+    isActive: () =>
+      (params.dairyCows > 0 && params.cheeseShare + params.curdShare > 0) ||
+      (params.goatMilking && params.goats > 0 && params.goatCheeseShare > 0),
+  },
   { id: 'sucklerCows', isActive: () => params.sucklerCows > 0 },
   {
     id: 'layingHens',
@@ -23,8 +28,12 @@ const CALENDAR_ROWS = [
   { id: 'rabbits', isActive: () => params.rabbits > 0 },
   { id: 'sheep', isActive: () => params.sheep > 0 },
   { id: 'goats', isActive: () => params.goats > 0 },
-  { id: 'pigs', isActive: () => params.pigsForHome > 0 },
-  { id: 'fieldsAndMeadows', isActive: () => true },
+  { id: 'pigs', isActive: () => params.pigs > 0 },
+  { id: 'horses', isActive: () => params.horses > 0 },
+  {
+    id: 'fieldsAndMeadows',
+    isActive: () => params.meadowHa > 0 || computeLandUse(params).usableArableHa > 0,
+  },
   { id: 'marketGarden', isActive: () => params.marketGardenHa > 0 },
   { id: 'orchard', isActive: () => params.fruitSoldShare > 0 },
   { id: 'mushrooms', isActive: () => params.mushroomLogs > 0 },

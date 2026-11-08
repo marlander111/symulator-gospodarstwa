@@ -13,6 +13,7 @@ function renderFarmPlan(results) {
   renderPlanMonthButtons();
   renderGrazingControls(rotation);
   renderGrazingNote(results);
+  renderGrazingOrderNote();
 
   const { width, height, pad, top, gap } = PLAN_SIZE;
   const areas = [
@@ -304,7 +305,7 @@ function drawPasture(box, results) {
     svg +=
       labelBackground(box.x + 20, centreY - 24, box.width - 40, 48, '.92') +
       planLabel(centreX, centreY - 3, t('plan.pasture.winterTitle'), 13, true) +
-      planLabel(centreX, centreY + 15, t('plan.pasture.winterNote'), 11.5);
+      planLabel(centreX, centreY + 15, t('plan.pasture.winterNote', grazingSeasonDates()), 11.5);
   }
 
   const caption = t('plan.pasture.caption', {

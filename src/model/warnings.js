@@ -1,5 +1,5 @@
 // Warnings and hints about the current plan. Each warning has a level ("bad", "warn", "info"),
-// a key of its text in locales/pl.json → warnings, and the values for the text's placeholders.
+// a key of its text in locales → warnings, and the values for the text's placeholders.
 
 /**
  * @param {object} params - params after soil adjustment
@@ -119,7 +119,7 @@ function addSalesWarnings(params, results, add) {
       results.lambCarcassKg * params.lambMeatPricePerKg -
       params.lambSlaughterCost -
       results.lambCarcassKg * params.butcheryCostPerKg -
-      (results.abattoirKm * params.trailerCostPerKm) / results.lambsSoldAsMeat;
+      (results.slaughter.kmBySpecies.sheep * params.trailerCostPerKm) / results.lambsSoldAsMeat;
     if (meatIncomePerLamb < params.lambLivePrice)
       add('info', 'lambMeatLessThanLive', {
         meat: number(meatIncomePerLamb, 0),
@@ -154,7 +154,8 @@ function addEcoSchemeWarnings(params, results, add) {
 /** Paddocks resting too short, root crops that do not fit the rotation, too much manure nitrogen. */
 function addGrazingAndRotationWarnings(params, results, add) {
   const { grazingPlan } = results;
-  const grazesPasture = params.pastureHa > 0 && params.dairyCows + params.sucklerCows + params.sheep > 0;
+  const grazesPasture =
+    params.pastureHa > 0 && params.dairyCows + params.sucklerCows + params.sheep + params.goats > 0;
   if (grazesPasture && grazingPlan.restDays < 25)
     add('warn', 'shortPastureRest', { days: grazingPlan.restDays });
   if (params.rootCrops && !results.rotation.rootCropsFit) add('info', 'rootCropsNoRoom');
@@ -166,10 +167,24 @@ function addGrazingAndRotationWarnings(params, results, add) {
     });
 }
 
-/** Disease rules, breeding and soil class shares. */
+/** Disease rules, breeding, guardian dogs and soil class shares. */
 function addOtherWarnings(params, inputParams, results, add) {
-  if (params.pigsForSale > 0) add('info', 'africanSwineFever');
+  if (params.pigs > 0) add('info', 'africanSwineFever');
+  if (params.pigs > 0)
+    add('info', 'pigPaddocks', { hectares: formatNumber(params.pigs / PIGS_PER_HA_OF_PADDOCK, 1) });
   if (results.sucklerCows > 0 && !params.ownBull) add('info', 'sucklerCowsNeedBull');
-  if (inputParams.soilClassIIIShare + inputParams.soilClassVShare + inputParams.soilClassVIShare > 100)
-    add('warn', 'soilSharesOver100');
+  if (params.ridesPerYear > 0 && params.horses > 0) add('info', 'ridingIsABusiness');
+  if (params.guardDogs > 0 && results.dogs.boughtKg > 1)
+    add('info', 'dogFoodBought', { kg: formatNumber(results.dogs.boughtKg, 0) });
+  if (params.sheep + params.goats > 0 && params.guardDogs === 0) add('info', 'wolvesNoDogs');
+  for (const landUse of SOIL_LAND_USES) {
+    const total = sumBy(
+      SOIL_CLASSES_WITH_SHARE,
+      soilClass => inputParams[soilShareId(landUse, soilClass)] || 0
+    );
+    if (total > 100) add('warn', 'soilSharesOver100' + landUse.charAt(0).toUpperCase() + landUse.slice(1));
+  }
 }
+
+/** Fattening pigs per hectare of paddock and year (organic rules: about 14 a hectare for 170 kg N). */
+const PIGS_PER_HA_OF_PADDOCK = 12;

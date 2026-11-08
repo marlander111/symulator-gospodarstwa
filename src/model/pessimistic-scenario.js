@@ -26,6 +26,17 @@ const PRICE_PARAMS = [
   'finisherLivePricePerKg',
   'kidMeatPricePerKg',
   'porkBoxPricePerKg',
+  'curdPrice',
+  'creamPrice',
+  'butterPrice',
+  'buttermilkPrice',
+  'wheyPrice',
+  'goatMilkPrice',
+  'goatCheesePrice',
+  'processedValuePerPorkKg',
+  'processedValuePerBeefKg',
+  'ridePricePerHour',
+  'grainSalePrice',
 ];
 
 const CROP_YIELD_PARAMS = [
@@ -40,7 +51,14 @@ const CROP_YIELD_PARAMS = [
   'mushroomYieldPerLog',
 ];
 
-const ANIMAL_OUTPUT_PARAMS = ['milkPerCow', 'eggsPerHen', 'lambsPerLambing', 'rabbitsRearedPerDoe'];
+const ANIMAL_OUTPUT_PARAMS = [
+  'milkPerCow',
+  'eggsPerHen',
+  'lambsPerLambing',
+  'rabbitsRearedPerDoe',
+  'milkPerGoat',
+  'kidsPerDoe',
+];
 
 const PURCHASE_PRICE_PARAMS = [
   'grainPurchasePrice',

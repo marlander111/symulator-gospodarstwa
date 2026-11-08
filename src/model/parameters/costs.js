@@ -1,4 +1,4 @@
-// Parameters of the "costs" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+// Parameters of the "costs" group. Labels, units and hints: locales → parameters.<id>.
 
 defineParameterGroup('costs', [
   { id: 'arableCostPerHa', min: 800, max: 2500, step: 50, defaultValue: 1600 },
@@ -33,4 +33,7 @@ defineParameterGroup('costs', [
   { id: 'sawdustPerStrawTonne', min: 0.5, max: 1.5, step: 0.05, defaultValue: 1, advanced: true },
   { id: 'strawPurchasePrice', min: 150, max: 600, step: 25, defaultValue: 300 },
   { id: 'rootCropCostPerHa', min: 1000, max: 6000, step: 100, defaultValue: 2500, advanced: true },
+  // feed bought on purpose instead of growing it: shares of the roughage and of the grain need
+  { id: 'boughtForageShare', min: 0, max: 100, step: 5, defaultValue: 0 },
+  { id: 'boughtConcentrateShare', min: 0, max: 100, step: 5, defaultValue: 0 },
 ]);

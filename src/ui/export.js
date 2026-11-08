@@ -1,4 +1,5 @@
-// Saving the settings to a .json file, loading them back, and saving the PDF report.
+// Saving the settings to a .json file, loading them back, saving the financial data as JSON
+// (model/finance-export.js) and saving the PDF report.
 // In claude.ai files are saved through the "downloads" capability; elsewhere (e.g. GitHub
 // Pages) through an ordinary browser download.
 
@@ -130,6 +131,13 @@ function importSettings(file) {
   reader.readAsText(file);
 }
 
+/** Financial results (not the settings) as JSON for a budgeting or finance app. */
+function exportFinance() {
+  const name = currentVariantName();
+  const data = buildFinanceExport(params, name);
+  saveFile(`${t('export.financeFilePrefix')}-${slugify(name)}`, JSON.stringify(data, null, 1), 'json');
+}
+
 function exportPdf() {
   saveFile(`${t('export.reportFilePrefix')}-${slugify(currentVariantName())}`, buildPdfReport(), 'pdf');
 }
@@ -146,6 +154,7 @@ function buildExport() {
     `<button class="btn needs-dl" type="button" id="export-json">${t('export.saveSettings')}</button>
     <label class="btn" for="import-json">${t('export.loadSettings')}</label>
     <input id="import-json" type="file" accept=".json,application/json" hidden>
+    <button class="btn needs-dl" type="button" id="export-finance" title="${t('export.financeTitle')}">${t('export.financeData')}</button>
     <details class="pdf-box needs-dl">
       <summary class="btn">${t('export.pdfReport')}</summary>
       <div class="pdf-pick">
@@ -163,5 +172,6 @@ function buildExport() {
     event.target.value = ''; // allow loading the same file again
   });
   byId('export-pdf').addEventListener('click', exportPdf);
+  byId('export-finance').addEventListener('click', exportFinance);
   initFileSaver();
 }

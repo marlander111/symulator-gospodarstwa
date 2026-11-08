@@ -20,7 +20,12 @@ function groupSummaryTexts(results) {
     land:
       t('summaries.land', { farmed: formatNumber(results.farmedHa, 1) }) +
       (params.leasedHa > 0 ? t('summaries.leased', { leased: formatNumber(params.leasedHa, 1) }) : ''),
-    dairy: params.dairyCows ? t('summaries.head', { count: params.dairyCows }) : none,
+    dairy: params.dairyCows
+      ? t('summaries.dairy', {
+          count: params.dairyCows,
+          breed: t(`summaries.dairyBreeds.${params.dairyBreed}`),
+        })
+      : none,
     layingHens: params.layingHens ? t('summaries.head', { count: params.layingHens }) : none,
     poultry: list([
       count(params.broilers, 'broilers'),
@@ -37,12 +42,25 @@ function groupSummaryTexts(results) {
           finishers: formatNumber(results.finishers, 0),
         })
       : none,
-    smallLivestock: list([
-      count(params.sheep, 'sheep'),
-      count(params.goats, 'goats'),
-      count(params.pigsForHome + params.pigsForSale, 'pigs'),
-      count(params.horses, 'horses'),
-    ]),
+    costs:
+      params.boughtForageShare + params.boughtConcentrateShare > 0
+        ? t('summaries.boughtFeed', {
+            forage: params.boughtForageShare,
+            grain: params.boughtConcentrateShare,
+          })
+        : t('summaries.costs', { fixed: formatPln(params.fixedCosts) }),
+    sheep: params.sheep ? t('summaries.sheep', { count: params.sheep }) : none,
+    goats: params.goats
+      ? t(params.goatMilking ? 'summaries.goatsMilked' : 'summaries.goats', { count: params.goats })
+      : none,
+    pigs: params.pigs ? t('summaries.pigs', { count: params.pigs }) : none,
+    horses: params.horses
+      ? t('summaries.horses', { count: params.horses }) +
+        (params.ridesPerYear > 0 ? t('summaries.rides', { count: params.ridesPerYear }) : '')
+      : none,
+    slaughterAndDogs:
+      t('summaries.abattoir', { km: params.abattoirDistanceKm }) +
+      (params.guardDogs ? t('summaries.dogs', { count: params.guardDogs }) : ''),
     produce: list([
       params.marketGardenHa
         ? t('summaries.vegetables', { hectares: formatNumber(params.marketGardenHa, 2) })
@@ -58,9 +76,11 @@ function groupSummaryTexts(results) {
             parcels: formatNumber(results.parcels, 0),
           })
         : none,
-    household: params.targetFromHouseholdBudget
-      ? t('summaries.householdMinimum', { amount: formatPln(results.householdBudget.required) })
-      : t('summaries.householdSpending', { amount: formatNumber(params.householdMonthlySpending, 0) }),
+    household:
+      (params.targetFromHouseholdBudget
+        ? t('summaries.householdMinimum', { amount: formatPln(results.householdBudget.required) })
+        : t('summaries.householdSpending', { amount: formatNumber(params.householdMonthlySpending, 0) })) +
+      t('summaries.householdPeople', { people: 2 + params.householdChildren }),
     pessimistic: t('summaries.pessimistic', {
       prices: params.pessimisticPriceDrop,
       yields: params.pessimisticYieldDrop,

@@ -15,6 +15,12 @@ function retailFlatTax(retailSalesRevenue) {
   return Math.max(0, retailSalesRevenue - RETAIL_TAX_FREE_LIMIT) * RETAIL_FLAT_TAX_RATE;
 }
 
+/** Packaging and cultures per kg of curd, butter and cream, and per litre of goat milk (PLN). */
+const DAIRY_PRODUCT_PACKAGING_PER_KG = 1.5;
+const GOAT_MILK_COSTS_PER_LITRE = 0.4;
+/** Share of the dairy cost of a cow that a replacement heifer costs. */
+const HEIFER_COST_SHARE = 0.3;
+
 function computeCosts(params, results) {
   const {
     replacementHeifers,
@@ -29,10 +35,13 @@ function computeCosts(params, results) {
   const sellsDirectly =
     results.freshMilkSold > 0 ||
     results.eggsSold > 0 ||
+    results.meatBoxKg > 0 ||
     params.broilers > 0 ||
     params.ducks > 0 ||
     params.guineaFowl > 0 ||
     params.turkeys > 0;
+  const slaughterKm = results.slaughter.kmBySpecies;
+  const finishersAsMeat = (finishers * params.finishersSoldAsMeatShare) / 100;
 
   const costItems = {
     arable: results.usableArableHa * params.arableCostPerHa,
@@ -42,11 +51,13 @@ function computeCosts(params, results) {
     dairyCows:
       params.dairyCows > 0
         ? params.dairyCows * params.costPerCow +
-          replacementHeifers * params.costPerCow * 0.3 +
+          replacementHeifers * params.costPerCow * HEIFER_COST_SHARE +
           (bulls ? params.bullCost : params.dairyCows * params.inseminationCost)
         : 0,
     milkPackaging: results.freshMilkSold * params.milkPackagingCostPerLitre,
-    cheese: results.cheeseKg * params.cheeseCostPerKg,
+    cheese:
+      (results.cheeseKg + results.goatCheeseKg) * params.cheeseCostPerKg +
+      (results.curdKg + results.butterKg + results.creamKg) * DAIRY_PRODUCT_PACKAGING_PER_KG,
     layingHens:
       (params.ownHatching ? chicks * params.hatchingCostPerChick : henReplacements * params.pulletPrice) +
       params.layingHens * params.henExtrasCost +
@@ -59,7 +70,9 @@ function computeCosts(params, results) {
       results.catchCropHa * params.catchCropCostPerHa + results.stubbleCropHa * params.stubbleCropCostPerHa,
     beefCattle:
       (sucklerCows + finishers + beefHeifers) * params.beefCattleCostPerHead +
-      ((finishers * params.finishersSoldAsMeatShare) / 100) * params.finisherSlaughterCost,
+      finishersAsMeat * params.finisherSlaughterCost +
+      results.beefBoxKg * params.butcheryCostPerKg +
+      slaughterKm.beefCattle * params.trailerCostPerKm,
     turkeys: params.turkeys * params.costPerTurkey,
     guineaFowl: params.guineaFowl * params.costPerGuineaFowl,
     processedGoods:
@@ -74,13 +87,19 @@ function computeCosts(params, results) {
     slaughter:
       results.lambsSoldAsMeat * params.lambSlaughterCost +
       results.lambMeatKg * params.butcheryCostPerKg +
-      results.abattoirKm * params.trailerCostPerKm,
-    goats: params.goats * params.costPerGoat + kidsSold * params.kidSlaughterCost,
+      slaughterKm.sheep * params.trailerCostPerKm,
+    goats:
+      params.goats * params.costPerGoat +
+      kidsSold * params.kidSlaughterCost +
+      slaughterKm.goats * params.trailerCostPerKm +
+      results.goatMilkUsed * GOAT_MILK_COSTS_PER_LITRE,
     horses: params.horses * params.horseCost,
+    guardDogs: params.guardDogs * params.costPerDog + results.dogs.boughtKg * params.dogFoodPricePerKg,
     landLease: params.leasedHa * params.leaseRentPerHa,
     pigs:
-      (params.pigsForHome + params.pigsForSale) * params.costPerPig +
-      params.pigsForSale * params.pigSlaughterCost,
+      params.pigs * (params.costPerPig + params.pigSlaughterCost) +
+      results.porkSoldKg * params.butcheryCostPerKg +
+      slaughterKm.pigs * params.trailerCostPerKm,
     fixed: params.fixedCosts,
     retailTax: retailFlatTax(results.retailSalesRevenue),
     sales: sellsDirectly ? params.salesCosts : 0,
@@ -92,8 +111,8 @@ function computeCosts(params, results) {
   for (const item in costItems) if (!FIXED_PRICE_COST_ITEMS.includes(item)) costItems[item] *= costMultiplier;
 
   const purchases = {
-    grain: Math.max(0, -results.grainBalance) * params.grainPurchasePrice,
-    hay: Math.max(0, -results.hayBalance) * params.hayPurchasePrice,
+    grain: (Math.max(0, -results.grainBalance) + results.boughtGrainTonnes) * params.grainPurchasePrice,
+    hay: (Math.max(0, -results.hayBalance) + results.boughtForageTonnes) * params.hayPurchasePrice,
     straw: Math.max(0, -results.strawBalance) * params.strawPurchasePrice,
     sawdust: results.sawdustTonnes * params.sawdustPrice,
   };

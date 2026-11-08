@@ -2,7 +2,9 @@
 // paddock is grazed again. Together they set the number of paddocks, and they change how much
 // of the grass the animals actually eat and how many hours moving the fences takes.
 //
-// The pasture yield and the work norms assume a move once a day and a 30–45 day rest.
+// The pasture yield and the work norms assume a move once a day and a 35–50 day rest. The share of
+// the grass eaten follows the usual figures: about 70% with a move once a day, about 60% with a
+// move once a week and 30–40% with set stocking.
 
 /** Share of the grass eaten, relative to one move a day, by days spent in one paddock. */
 const UTILISATION_BY_MOVE_INTERVAL = [
@@ -14,14 +16,21 @@ const UTILISATION_BY_MOVE_INTERVAL = [
   [7, 0.84],
 ];
 
-/** Regrowth relative to a 30–45 day rest: shorter rests weaken the grass, longer ones age it. */
+/**
+ * Regrowth relative to a 35–50 day rest: shorter rests weaken the roots, much longer ones leave old,
+ * trampled grass. Over a whole season (fast spring, slow summer) 35–60 days is close to the optimum
+ * of rational grazing (Voisin); the longest rests of adaptive grazing pay off in soil and drought
+ * resilience more than in tonnes of grass in one year.
+ */
 const REGROWTH_BY_REST_DAYS = [
-  [20, 0.9],
-  [25, 0.95],
-  [30, 0.99],
+  [20, 0.88],
+  [25, 0.94],
+  [30, 0.98],
   [35, 1],
-  [45, 1],
-  [60, 0.97],
+  [50, 1],
+  [60, 0.99],
+  [75, 0.96],
+  [90, 0.92],
 ];
 
 /** Moves per day that the hour norms per cow already include. */
@@ -40,7 +49,7 @@ function computeGrazingPlan(params) {
 
   const movesPerSeason = params.grazingDays / moveIntervalDays;
   const baselineMoves = params.grazingDays / BASELINE_MOVE_INTERVAL_DAYS;
-  const hasGrazingHerd = params.dairyCows + params.sucklerCows + params.sheep > 0;
+  const hasGrazingHerd = params.dairyCows + params.sucklerCows + params.sheep + params.goats > 0;
 
   return {
     moveIntervalDays,

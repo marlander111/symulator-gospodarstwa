@@ -1,4 +1,4 @@
-// Parameters of the "produce" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+// Parameters of the "produce" group. Labels, units and hints: locales → parameters.<id>.
 
 defineParameterGroup('produce', [
   { id: 'marketGardenHa', min: 0, max: 1.5, step: 0.05, defaultValue: 0 },

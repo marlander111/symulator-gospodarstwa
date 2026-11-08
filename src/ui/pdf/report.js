@@ -27,7 +27,7 @@ const PDF_ANIMAL_COUNTS = [
   ['guineaFowl', params => params.guineaFowl],
   ['sheep', params => params.sheep],
   ['goats', params => params.goats],
-  ['pigs', params => params.pigsForHome + params.pigsForSale],
+  ['pigs', params => params.pigs],
   ['horses', params => params.horses],
   ['rabbits', params => params.rabbits],
   ['beehives', params => params.beehives],
@@ -154,10 +154,7 @@ function drawLabourSection(doc, results) {
 }
 
 function drawMarketSection(doc) {
-  const cards = [...document.querySelectorAll('#market .card')];
-  doc.keyValueRows(
-    cards.map(card => [card.querySelector('.k').textContent, card.querySelector('.v').textContent])
-  );
+  doc.table(readTable('market'), { firstColumnWidth: 200, leftAlignedColumns: [2, 3] });
 }
 
 function drawRotationSection(doc) {

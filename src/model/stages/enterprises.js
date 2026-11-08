@@ -3,10 +3,6 @@
 
 // ---------- Result per enterprise ----------
 
-/** Share of the cattle shed taken by one finisher and one beef heifer, relative to a cow. */
-const SHED_PLACES_PER_FINISHER = 0.7;
-const SHED_PLACES_PER_BEEF_HEIFER = 0.6;
-
 /** Share of the energy bill attributed to the dairy and to the laying hens. */
 const DAIRY_ENERGY_SHARE = 0.6;
 const LAYING_HENS_ENERGY_SHARE = 0.1;
@@ -63,36 +59,28 @@ function depreciationOf(results, investmentId) {
  * split by the value of its products.
  */
 function processingShare(results, species) {
-  const { processedValue, processedValueBySpecies, costItems, hoursByActivity } = results;
-  const share = processedValue > 0 ? processedValueBySpecies[species] / processedValue : 0;
+  const { processedValue, processedMeatValue, processedValueBySpecies, costItems, hoursByActivity } = results;
+  const value = processedValueBySpecies[species] || 0;
+  const share = processedValue > 0 ? value / processedValue : 0;
+  // the smokehouse and cold room serve the meat products; preserves have their own kitchen
+  const meatShare = species !== 'preserves' && processedMeatValue > 0 ? value / processedMeatValue : 0;
   return {
-    revenue: processedValueBySpecies[species] || 0,
+    revenue: value,
     cost: costItems.processedGoods * share,
-    depreciation: depreciationOf(results, 'processing') * share,
+    depreciation: depreciationOf(results, 'processing') * meatShare,
     hours: hoursByActivity.processedGoods * share,
   };
 }
 
 /** Places each species takes in the buildings it shares with others. */
 function sharedBuildingPlaces(params, results) {
-  const { replacementHeifers, bulls, sucklerCows, finishers, beefHeifers } = results;
-  const beefShed =
-    sucklerCows + finishers * SHED_PLACES_PER_FINISHER + beefHeifers * SHED_PLACES_PER_BEEF_HEIFER;
   return {
     ducks: params.ducks / 2,
     turkeys: params.turkeys * 3,
     guineaFowl: params.guineaFowl,
     otherPoultry: Math.max(1, params.ducks / 2 + params.turkeys * 3 + params.guineaFowl),
-    beefShed,
-    cattleShed: Math.max(
-      1,
-      params.dairyCows +
-        replacementHeifers +
-        bulls +
-        sucklerCows +
-        finishers * SHED_PLACES_PER_FINISHER +
-        beefHeifers * SHED_PLACES_PER_BEEF_HEIFER
-    ),
+    beefShed: results.beefShedPlaces,
+    cattleShed: Math.max(1, results.cattleShedPlaces),
     sheepAndGoats: Math.max(1, params.sheep + params.goats),
   };
 }
@@ -133,23 +121,44 @@ function listEnterprises(params, results, feed) {
   const geeseProcessing = processingShare(results, 'geese');
   const duckProcessing = processingShare(results, 'ducks');
   const lambProcessing = processingShare(results, 'sheep');
+  const porkProcessing = processingShare(results, 'pigs');
+  const beefProcessing = processingShare(results, 'beefCattle');
+  const preserves = processingShare(results, 'preserves');
   const milkSalesHours = (results.freshMilkSold / 100) * params.milkSalesHoursPer100Litres;
+  const goatMilkSalesHours = (results.goatMilkSold / 100) * params.milkSalesHoursPer100Litres;
   const eggSalesHours = (results.eggsSold / 100) * params.eggSalesHoursPer100;
+  const goatShareOfCheeseWork =
+    results.milkForCheese + results.goatMilkForCheese > 0
+      ? results.goatMilkForCheese / (results.milkForCheese + results.goatMilkForCheese + results.milkForCurd)
+      : 0;
+  const sheepAndGoatShed = depreciation('sheepShed') / places.sheepAndGoats;
 
   return [
     {
       id: 'milk',
       active: params.dairyCows > 0,
-      revenue: revenue.milk + revenue.cheese + revenue.calves,
+      revenue:
+        revenue.milk +
+        revenue.cheese +
+        revenue.curd +
+        revenue.cream +
+        revenue.butter +
+        revenue.dairyByproducts +
+        revenue.calves,
       cost:
         cost.dairyCows +
         cost.milkPackaging +
-        cost.cheese +
+        cost.cheese * (1 - goatShareOfCheeseWork) +
         params.energyCosts * DAIRY_ENERGY_SHARE +
         feedCost(grain.dairyCows, forage.dairyCows + forage.replacementHeifers + forage.bull),
-      depreciation: depreciation('cattleShed') + depreciation('dairy') + depreciation('cheeseRoom'),
-      subsidy: subsidy.dairyCows + subsidy.beefCattle,
-      hours: hours.dairyCows + hours.cheese + milkSalesHours,
+      depreciation:
+        (depreciation('cattleShed') * results.dairyShedPlaces) / places.cattleShed +
+        depreciation('dairy') +
+        depreciation('cheeseRoom') * (1 - goatShareOfCheeseWork),
+      subsidy:
+        subsidy.dairyCows * (params.dairyCows / Math.max(1, params.dairyCows + sucklerCows)) +
+        subsidy.beefCattle,
+      hours: hours.dairyCows + hours.cheese * (1 - goatShareOfCheeseWork) + milkSalesHours,
     },
     {
       id: 'eggs',
@@ -190,14 +199,16 @@ function listEnterprises(params, results, feed) {
     },
     {
       id: 'beefCattle',
+      labelKey: params.beefProcessedShare > 0 ? 'beefCattleWithProcessing' : 'beefCattle',
       active: sucklerCows > 0,
-      revenue: revenue.beefCattle,
-      cost: cost.beefCattle + feedCost(0, forage.beefCattle),
-      depreciation: (depreciation('cattleShed') * places.beefShed) / places.cattleShed,
+      revenue: revenue.beefCattle + beefProcessing.revenue,
+      cost: cost.beefCattle + beefProcessing.cost + feedCost(grain.beefCattle, forage.beefCattle),
+      depreciation:
+        (depreciation('cattleShed') * places.beefShed) / places.cattleShed + beefProcessing.depreciation,
       subsidy:
         SUBSIDY_RATES.dairyCows * sucklerCows +
         SUBSIDY_RATES.beefCattle * Math.floor(finishers + beefHeifers),
-      hours: hours.beefCattle,
+      hours: hours.beefCattle + beefProcessing.hours,
     },
     {
       id: 'turkeys',
@@ -229,38 +240,49 @@ function listEnterprises(params, results, feed) {
       active: params.sheep > 0,
       revenue: revenue.sheep + revenue.lambMeat + lambProcessing.revenue,
       cost: cost.sheep + cost.slaughter + lambProcessing.cost + feedCost(grain.sheep, forage.sheep),
-      depreciation:
-        depreciation('sheepShed') * (params.sheep / places.sheepAndGoats) + lambProcessing.depreciation,
+      depreciation: sheepAndGoatShed * params.sheep + lambProcessing.depreciation,
       subsidy: subsidy.sheep,
       hours: hours.sheep + lambProcessing.hours,
     },
     {
       id: 'goats',
-      labelKey: params.kidsSoldShare > 0 ? 'goatsWithMeat' : 'goats',
+      labelKey: params.goatMilking ? 'goatsWithMilk' : 'goats',
       active: params.goats > 0,
-      revenue: revenue.goats,
-      cost: cost.goats + feedCost(0, forage.goats),
-      depreciation: depreciation('sheepShed') * (params.goats / places.sheepAndGoats),
+      revenue: revenue.goats + revenue.goatMilk + revenue.goatCheese,
+      cost: cost.goats + cost.cheese * goatShareOfCheeseWork + feedCost(grain.goats, forage.goats),
+      depreciation:
+        sheepAndGoatShed * params.goats +
+        depreciation('goatDairy') +
+        depreciation('cheeseRoom') * goatShareOfCheeseWork,
       subsidy: subsidy.goats,
-      hours: hours.goats,
-      homeValue: homeUse.dogFood,
+      hours: hours.goats + hours.cheese * goatShareOfCheeseWork + goatMilkSalesHours,
     },
     {
       id: 'pigs',
-      labelKey: params.pigsForSale > 0 ? 'pigsForSale' : 'pigs',
-      active: params.pigsForHome + params.pigsForSale > 0,
-      revenue: revenue.pigs,
-      cost: cost.pigs + feedCost(grain.pigs, 0),
-      hours: hours.pigs,
-      homeValue: homeUse.pigs,
+      labelKey: params.porkProcessedShare > 0 ? 'pigsWithProcessing' : 'pigs',
+      active: params.pigs > 0,
+      revenue: revenue.pigs + porkProcessing.revenue,
+      cost: cost.pigs + porkProcessing.cost + feedCost(grain.pigs, forage.pigs),
+      depreciation: depreciation('pigShelters') + porkProcessing.depreciation,
+      hours: hours.pigs + porkProcessing.hours,
+      homeValue: homeUse.pork,
     },
     {
       id: 'horses',
+      labelKey: params.ridesPerYear > 0 ? 'horsesWithRiding' : 'horses',
       active: params.horses > 0,
-      revenue: 0,
+      revenue: revenue.horseRiding,
       cost: cost.horses + feedCost(grain.horses, forage.horses),
-      depreciation: depreciation('horses'),
+      depreciation: depreciation('horses') + depreciation('ridingEquipment'),
       hours: hours.horses,
+    },
+    {
+      id: 'guardDogs',
+      active: params.guardDogs > 0,
+      revenue: 0,
+      cost: cost.guardDogs,
+      hours: hours.guardDogs,
+      homeValue: homeUse.dogFood,
     },
     {
       id: 'vegetables',
@@ -276,6 +298,14 @@ function listEnterprises(params, results, feed) {
       revenue: revenue.fruit,
       cost: cost.fruit,
       hours: hours.fruit,
+    },
+    {
+      id: 'preserves',
+      active: preserves.revenue > 0,
+      revenue: preserves.revenue,
+      cost: preserves.cost,
+      depreciation: preserves.depreciation + depreciation('preservesKitchen'),
+      hours: preserves.hours,
     },
     {
       id: 'mushrooms',
@@ -317,12 +347,14 @@ function landUsedByEnterprise(params, results) {
     geese: forageHa(forage.geese) + grainHa(grain.geese),
     rabbits: forageHa(forage.rabbits) + grainHa(grain.rabbits),
     sheep: forageHa(forage.sheep) + grainHa(grain.sheep),
-    goats: forageHa(forage.goats),
-    pigs: grainHa(grain.pigs),
+    goats: forageHa(forage.goats) + grainHa(grain.goats),
+    pigs: forageHa(forage.pigs) + grainHa(grain.pigs),
+    guardDogs: 0,
+    preserves: 0,
     horses: forageHa(forage.horses) + grainHa(grain.horses),
     vegetables: params.marketGardenHa,
     beehives: 0,
-    beefCattle: forageHa(forage.beefCattle),
+    beefCattle: forageHa(forage.beefCattle) + grainHa(grain.beefCattle),
     ducks: forageHa(forage.ducks) + grainHa(grain.ducks),
     turkeys: forageHa(forage.turkeys) + grainHa(grain.turkeys),
     guineaFowl: forageHa(forage.guineaFowl) + grainHa(grain.guineaFowl),

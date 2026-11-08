@@ -64,8 +64,8 @@ const ANIMAL_PARAMETER_IDS = [
   'rabbits',
   'sheep',
   'goats',
-  'pigsForHome',
-  'pigsForSale',
+  'pigs',
+  'guardDogs',
   'horses',
   'beehives',
 ];

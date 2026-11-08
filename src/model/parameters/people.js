@@ -1,4 +1,4 @@
-// Parameters of the "people" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+// Parameters of the "people" group. Labels, units and hints: locales → parameters.<id>.
 
 defineParameterGroup('people', [
   { id: 'fullTimeWorkers', min: 0, max: 6, step: 1, defaultValue: 1 },

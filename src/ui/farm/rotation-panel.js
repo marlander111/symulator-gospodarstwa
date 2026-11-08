@@ -11,6 +11,67 @@ function renderRotation(results) {
   byId('catch-crop-summary').innerHTML = ecoSchemeSummaryHtml(results);
   byId('catch-crop-fields').innerHTML = coverCropAdviceHtml(rotation);
   byId('crops-table').innerHTML = cropsTableHtml(rotation);
+  byId('seed-table').innerHTML = seedTableHtml(rotation, fieldHa);
+}
+
+/**
+ * Seed to buy for the fields in the rotation year shown: each field's crop at its seed rate,
+ * clover undersown in the oats, and the cover crops sown after harvest.
+ */
+function seedTableHtml(rotation, fieldHa) {
+  const year = planView.rotationYear;
+  const rows = [];
+  const seedRow = (field, cropText, seed, kgPerHa) =>
+    tableRow([
+      cell(t('rotation.field', { field })),
+      cell(escapeHtml(cropText)),
+      cell(escapeHtml(t(`seeds.${seed}`))),
+      numberCell(t('units.kilograms', { value: formatNumber(kgPerHa, 0) })),
+      numberCell(t('units.kilograms', { value: formatNumber(kgPerHa * fieldHa, 0) })),
+    ]);
+  const totals = {};
+  const addSeed = (field, cropText, seed, kgPerHa) => {
+    rows.push(seedRow(field, cropText, seed, kgPerHa));
+    totals[seed] = (totals[seed] || 0) + kgPerHa * fieldHa;
+  };
+  for (let field = 1; field <= rotation.fieldCount; field++) {
+    const crop = fieldCrop(rotation, field, year);
+    const next = fieldCrop(rotation, field, year + 1);
+    // clover sown the year before under the oats needs no seed in its own years
+    if (crop.id !== 'clover')
+      for (const { seed, kgPerHa } of CROP_SEED_RATES[crop.id])
+        addSeed(field, cropName(crop.id), seed, kgPerHa);
+    if (crop.id === 'oats')
+      for (const { seed, kgPerHa } of UNDERSOWN_CLOVER_SEED)
+        addSeed(field, t('rotation.undersownClover'), seed, kgPerHa);
+    if (params.catchCrops && isCerealBeforeCatchCrop(crop.id, next.id)) {
+      const mix = currentCatchMix();
+      addSeed(field, t(`catchCropMixes.${mix.id}`), 'coverMix', mix.seedKgPerHa);
+    }
+    if (params.stubbleCrop && isCerealBeforeWinterCereal(crop.id, next.id)) {
+      const mix = STUBBLE_CROP_MIXES[params.stubbleCropMix || 0];
+      addSeed(field, t(`stubbleCropMixes.${mix.id}`), 'coverMix', mix.seedKgPerHa);
+    }
+  }
+  if (!rows.length) return '';
+  const totalText = Object.entries(totals)
+    .map(([seed, kg]) => `${t(`seeds.${seed}`)} ${t('units.kilograms', { value: formatNumber(kg, 0) })}`)
+    .join(' · ');
+  rows.push(
+    tableRow(
+      [
+        cell(element('b', {}, t('rotation.seedTotal', { year }))),
+        cell(escapeHtml(totalText), { colspan: 4 }),
+      ],
+      { class: 'tot' }
+    )
+  );
+  const columns = ['field', 'crop', 'seed', 'perHa', 'perField'];
+  const header = tableHeader(
+    columns.map(column => t(`rotation.seedColumns.${column}`)),
+    index => index >= 3
+  );
+  return header + tableBody(rows);
 }
 
 const ROTATION_FIELD_OPTIONS = [3, 4, 5, 6, 7, 8];

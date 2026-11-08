@@ -1,4 +1,4 @@
-// Parameters of the "pessimistic" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+// Parameters of the "pessimistic" group. Labels, units and hints: locales → parameters.<id>.
 
 defineParameterGroup('pessimistic', [
   { id: 'pessimisticPriceDrop', min: 0, max: 40, step: 1, defaultValue: 15 },

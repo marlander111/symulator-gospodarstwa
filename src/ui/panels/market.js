@@ -1,56 +1,110 @@
-// Panel "What has to be sold": quantities the farm must find buyers for.
+// Panel "What has to be sold": quantities the farm must find buyers for, how often (a day, a
+// week, a year) and in which months. Texts: locales → market.
+
+const MARKET_COLUMNS = ['product', 'amount', 'per', 'when'];
 
 function renderMarket(results) {
   const { market } = results;
-  const cards = [];
-  const add = (condition, amount, unitKey, textKey, values) => {
-    if (condition)
-      cards.push([t(`market.units.${unitKey}`, { value: amount }), t(`market.items.${textKey}`, values)]);
-  };
+  const rows = [];
   const n = formatNumber;
+  const add = (condition, id, amount, unit, per, values = {}) => {
+    if (!condition) return;
+    rows.push(
+      tableRow([
+        cell(escapeHtml(t(`market.products.${id}`, values))),
+        numberCell(t(`market.units.${unit}`, { value: amount })),
+        cell(t(`market.per.${per}`), { class: 'small' }),
+        cell(t(`market.seasons.${id}`), { class: 'small muted' }),
+      ])
+    );
+  };
+  const trips = results.slaughter.trips;
 
-  add(results.freshMilkSold > 0, n(market.milkPerDay, 0), 'litres', 'milk');
-  add(results.cheeseSold > 0, n(market.cheesePerWeek, 1), 'kg', 'cheese');
-  add(results.eggsSold > 0, n(market.eggsPerWeek / 10, 0), 'boxes', 'eggs');
-  add(results.lambsSoldLive > 0.05, n(results.lambsSoldLive, 0), 'pieces', 'lambsLive');
-  add(
-    results.lambMeatKg > 0,
-    n(results.lambMeatKg, 0),
-    'kg',
-    results.abattoirTrips === 1 ? 'lambMeatOneTrip' : 'lambMeat',
-    {
-      lambs: n(results.lambsSoldAsMeat, 0),
-      trips: results.abattoirTrips,
-    }
-  );
-  add(results.cockerels > 0, n(results.cockerels, 0), 'pieces', 'cockerels');
-  add(params.layingHens > 0, n(results.henReplacements, 0), 'pieces', 'oldHens');
-  add(results.calvesSold > 0, n(results.calvesSold, 0), 'pieces', 'calves');
-  add(params.broilers > 0, n(params.broilers * 0.95, 0), 'pieces', 'broilers');
-  add(params.geese > 0, n(params.geese * 0.9, 0), 'pieces', 'geese');
-  add(params.rabbits > 0, n(params.rabbits * params.rabbitsRearedPerDoe * 0.9, 0), 'pieces', 'rabbits');
-  add(params.pigsForSale > 0, n(params.pigsForSale * params.pigCarcassKg, 0), 'kg', 'pork', {
-    pigs: params.pigsForSale,
+  add(results.freshMilkSold > 0, 'milk', n(market.milkPerDay, 0), 'litres', 'day');
+  add(results.goatMilkSold > 0, 'goatMilk', n(market.goatMilkPerDay, 1), 'litres', 'day');
+  add(results.cheeseSold > 0, 'cheese', n(market.cheesePerWeek, 1), 'kg', 'week');
+  add(results.goatCheeseSold > 0, 'goatCheese', n(results.goatCheeseSold / 52, 1), 'kg', 'week');
+  add(results.curdSold > 0, 'curd', n(market.curdPerWeek, 1), 'kg', 'week');
+  add(results.creamSold > 0, 'cream', n(market.creamPerWeek, 1), 'kg', 'week');
+  add(results.butterSold > 0, 'butter', n(market.butterPerWeek, 1), 'kg', 'week');
+  add(results.eggsSold > 0, 'eggs', n(market.eggsPerWeek / 10, 0), 'boxes', 'week');
+  add(results.lambsSoldLive > 0.05, 'lambsLive', n(results.lambsSoldLive, 0), 'pieces', 'year');
+  add(results.lambMeatSoldKg > 0, 'lambMeat', n(results.lambMeatSoldKg, 0), 'kg', 'year', {
+    lambs: n(results.lambsSoldAsMeat, 0),
+    trips: trips.sheep,
   });
-  add(params.kidsSoldShare > 0, n(results.kidsSold, 0), 'pieces', 'kids');
-  add(params.sucklerCows > 0, n(results.weanersSold + results.finishers, 0), 'pieces', 'beefCattle');
-  add(params.ducks > 0, n(params.ducks * 0.93, 0), 'pieces', 'ducks');
-  add(params.turkeys > 0, n(params.turkeys * 0.9, 0), 'pieces', 'turkeys');
-  add(params.guineaFowl > 0, n(params.guineaFowl * 0.9, 0), 'pieces', 'guineaFowl');
-  add(results.processedValue > 0, n(results.processedKg, 0), 'kg', 'processedGoods', {
+  add(results.cockerels > 0, 'cockerels', n(results.cockerels, 0), 'pieces', 'year');
+  add(params.layingHens > 0, 'oldHens', n(results.henReplacements, 0), 'pieces', 'year');
+  add(results.calvesSold > 0, 'calves', n(results.calvesSold, 0), 'pieces', 'year');
+  add(
+    params.broilers > 0,
+    'broilers',
+    n(results.revenueItems.broilers / (params.broilerCarcassKg * params.broilerPricePerKg), 0),
+    'pieces',
+    'year'
+  );
+  add(params.geese > 0, 'geese', n(results.geeseRaised, 0), 'pieces', 'year');
+  add(params.ducks > 0, 'ducks', n(results.ducksRaised, 0), 'pieces', 'year');
+  add(
+    params.turkeys > 0,
+    'turkeys',
+    n(results.revenueItems.turkeys / (params.turkeyCarcassKg * params.turkeyPricePerKg), 0),
+    'pieces',
+    'year'
+  );
+  add(
+    params.guineaFowl > 0,
+    'guineaFowl',
+    n(results.revenueItems.guineaFowl / (params.guineaFowlCarcassKg * params.guineaFowlPricePerKg), 0),
+    'pieces',
+    'year'
+  );
+  add(
+    params.rabbits > 0,
+    'rabbits',
+    n(results.revenueItems.rabbits / params.rabbitPrice, 0),
+    'pieces',
+    'year'
+  );
+  add(results.porkSoldKg > 0, 'pork', n(results.porkSoldKg, 0), 'kg', 'year', {
+    pigs: params.pigs,
+    trips: trips.pigs,
+  });
+  add(results.kidsSold > 0, 'kids', n(results.kidsSold, 0), 'pieces', 'year');
+  add(results.weanersSold > 0.05, 'weaners', n(results.weanersSold, 0), 'pieces', 'year');
+  add(results.beefBoxKg > 0, 'beefBoxes', n(results.beefBoxKg, 0), 'kg', 'year', { trips: trips.beefCattle });
+  add(results.processedValue > 0, 'processedGoods', n(results.processedKg, 0), 'kg', 'year', {
     parcels: n(results.parcels, 0),
   });
-  add(results.revenueItems.fruit > 0, n(results.fruitSoldTonnes, 1), 'tonnes', 'fruit');
-  add(params.mushroomLogs > 0, n(results.mushroomsKg * 0.9, 0), 'kg', 'mushrooms');
-  add(results.revenueItems.vegetables > 0, n(market.csaShares, 0), 'families', 'vegetables');
-  add(results.revenueItems.honey > 0, n(market.honeyKg, 0), 'kg', 'honey');
-  cards.push([formatPln(market.directSalesRevenue), t('market.items.directSales')]);
-
-  byId('market').innerHTML = cards
-    .map(
-      ([amount, text]) => `<div class="card"><div class="v">${amount}</div><div class="k">${text}</div></div>`
+  add(results.revenueItems.fruit > 0, 'fruit', n(results.fruitSoldTonnes, 1), 'tonnes', 'year');
+  add(
+    results.revenueItems.mushrooms > 0,
+    'mushrooms',
+    n(results.revenueItems.mushrooms / params.mushroomPrice, 0),
+    'kg',
+    'year'
+  );
+  add(results.revenueItems.vegetables > 0, 'vegetables', n(market.csaShares, 0), 'families', 'season');
+  add(results.revenueItems.honey > 0, 'honey', n(market.honeyKg, 0), 'kg', 'year');
+  add(results.revenueItems.horseRiding > 0, 'horseRiding', n(params.ridesPerYear, 0), 'hours', 'year');
+  add(results.revenueItems.grainSales > 0, 'grain', n(results.grainSoldTonnes, 1), 'tonnes', 'year');
+  rows.push(
+    tableRow(
+      [
+        cell(t('market.products.directSales')),
+        numberCell(formatPln(market.directSalesRevenue)),
+        cell(t('market.per.year'), { class: 'small' }),
+        cell(''),
+      ],
+      { class: 'tot' }
     )
-    .join('');
+  );
+
+  const header = tableHeader(
+    MARKET_COLUMNS.map(column => t(`market.columns.${column}`)),
+    index => index === 1
+  );
+  byId('market').innerHTML = header + tableBody(rows);
   renderCustomers(market);
 }
 

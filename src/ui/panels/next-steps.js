@@ -1,5 +1,5 @@
 // Panel "What next": simulates small steps (one more cow, 30 more hens, ...) and shows what each
-// adds and which limits it hits. Step labels: locales/pl.json → nextSteps.steps.
+// adds and which limits it hits. Step labels: locales → nextSteps.steps.
 
 const NEXT_STEPS = [
   { key: 'addDairyCow', id: 'dairyCows', change: 1 },
@@ -11,7 +11,8 @@ const NEXT_STEPS = [
   { key: 'addGuineaFowl', id: 'guineaFowl', change: 20 },
   { key: 'addRabbitDoe', id: 'rabbits', change: 1 },
   { key: 'addEwes', id: 'sheep', change: 2 },
-  { key: 'addPigsForSale', id: 'pigsForSale', change: 2 },
+  { key: 'addPigs', id: 'pigs', change: 2 },
+  { key: 'addGoats', id: 'goats', change: 2 },
   { key: 'addSucklerCow', id: 'sucklerCows', change: 1 },
   { key: 'addBeehives', id: 'beehives', change: 2 },
   { key: 'addVegetables', id: 'marketGardenHa', change: 0.1 },

@@ -26,21 +26,37 @@ function computeLandUse(params) {
 
 // ---------- Animals ----------
 
+/** Share of suckler cows that rear a calf each year, and of the cows replaced each year. */
+const SUCKLER_CALVING_RATE = 0.9;
+const SUCKLER_REPLACEMENT_RATE = 0.15;
+/** Beef heifers being reared at any time per replacement needed (they calve at about two years). */
+const BEEF_HEIFERS_PER_REPLACEMENT = 2;
+/** Shed places of one finisher and one beef heifer, relative to a cow. */
+const SHED_PLACES_PER_FINISHER = 0.7;
+const SHED_PLACES_PER_BEEF_HEIFER = 0.6;
+/** Days of winter housing that the straw norms per head assume. */
+const REFERENCE_WINTER_DAYS = 165;
+
 function computeHerdStructure(params) {
   const replacementHeifers = params.dairyCows > 0 ? (2 * params.dairyCows) / params.lactationsPerCow : 0;
   const bulls = params.ownBull && params.dairyCows > 0 ? 1 : 0;
-  const kids = params.goats * 1.5;
+  const kids = params.goats * params.kidsPerDoe;
   const kidsSold = (kids * params.kidsSoldShare) / 100;
   const sucklerCows = params.sucklerCows;
-  const beefCalves = sucklerCows * 0.9;
-  const beefReplacements = sucklerCows * 0.15;
+  const beefCalves = sucklerCows * SUCKLER_CALVING_RATE;
+  const beefReplacements = sucklerCows * SUCKLER_REPLACEMENT_RATE;
   const beefCalvesKept = Math.max(0, beefCalves - beefReplacements);
   const weanersSold = (beefCalvesKept * params.weanersSoldShare) / 100;
   const finishers = beefCalvesKept - weanersSold;
-  const beefHeifers = beefReplacements * 2;
+  const beefHeifers = beefReplacements * BEEF_HEIFERS_PER_REPLACEMENT;
   const lambsPerEwe = params.lambsPerLambing * params.lambingsPerEwe;
-  // straw for bedding scales with the length of winter housing (165 days = 1)
-  const winterFactor = (365 - params.grazingDays) / 165;
+  // straw for bedding scales with the length of winter housing
+  const winterFactor = (365 - params.grazingDays) / REFERENCE_WINTER_DAYS;
+  const beefSystem = BEEF_SYSTEMS[params.beefSystem] || BEEF_SYSTEMS.mixed;
+  const beefShedPlaces =
+    (sucklerCows + finishers * SHED_PLACES_PER_FINISHER + beefHeifers * SHED_PLACES_PER_BEEF_HEIFER) *
+    beefSystem.shedPlacesFactor;
+  const dairyShedPlaces = params.dairyCows + replacementHeifers + bulls;
   return {
     replacementHeifers,
     bulls,
@@ -53,6 +69,10 @@ function computeHerdStructure(params) {
     beefHeifers,
     lambsPerEwe,
     winterFactor,
+    beefSystem,
+    beefShedPlaces,
+    dairyShedPlaces,
+    cattleShedPlaces: dairyShedPlaces + beefShedPlaces,
   };
 }
 
@@ -74,7 +94,7 @@ function computeLivestockUnits(params, results) {
     ducks: (params.ducks / 2) * 0.004,
     turkeys: params.turkeys * 0.6 * 0.03,
     guineaFowl: params.guineaFowl * 0.5 * 0.004,
-    pigs: (params.pigsForHome + params.pigsForSale) * 0.3 * 0.6,
+    pigs: params.pigs * 0.3 * 0.6, // fatteners live about seven months of the year
     rabbits: params.rabbits * 0.02,
   };
   const units = livestockUnitsByAnimal;

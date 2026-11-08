@@ -263,7 +263,31 @@ const LEGACY_PARAMETER_IDS = {
 function migrateLegacyParameterIds(saved) {
   const migrated = {};
   for (const [key, value] of Object.entries(saved || {})) migrated[LEGACY_PARAMETER_IDS[key] || key] = value;
-  return migrated;
+  return mergeSplitParameters(migrated);
+}
+
+/**
+ * Parameters replaced in version 3: pigs for the household and for sale became one number of
+ * pigs, and the soil class shares of the whole farm became shares for each land use.
+ */
+function mergeSplitParameters(settings) {
+  const merged = { ...settings };
+  if ('pigsForHome' in merged || 'pigsForSale' in merged) {
+    // the old default of two pigs for the household is not a choice the user made
+    const pigsForHome = merged.pigsForHome === 2 ? 0 : merged.pigsForHome || 0;
+    merged.pigs = pigsForHome + (merged.pigsForSale || 0);
+    delete merged.pigsForHome;
+    delete merged.pigsForSale;
+  }
+  const oldSoilShares = { III: 'soilClassIIIShare', V: 'soilClassVShare', VI: 'soilClassVIShare' };
+  for (const [soilClass, oldId] of Object.entries(oldSoilShares)) {
+    if (!(oldId in merged)) continue;
+    // the old default of 20% class V soil is not a choice the user made
+    const share = oldId === 'soilClassVShare' && merged[oldId] === 20 ? 0 : merged[oldId];
+    for (const landUse of SOIL_LAND_USES) merged[soilShareId(landUse, soilClass)] = share;
+    delete merged[oldId];
+  }
+  return merged;
 }
 
 /**
@@ -279,19 +303,32 @@ function readSettingsFile(contents) {
 }
 
 /** Version of the default values; settings saved before it are moved to the new defaults below. */
-const DEFAULTS_VERSION = 2;
+const DEFAULTS_VERSION = 3;
 
-/** Defaults changed in version 2: id → [old default, new default]. */
-const CHANGED_DEFAULTS = {
-  fullTimeWorkers: [2, 1],
-  halfTimeWorkers: [2, 1],
-  quarterTimeWorkers: [3, 0],
-  householdMonthlySpending: [5100, 5000],
-  pessimisticYieldDrop: [17, 20],
-  minimumNetIncome: [120000, 60000],
-  energyCosts: [2500, 3500],
-  vegetableHoursPerHa: [3000, 4000],
-  ecoSchemePointValue: [100, 93],
+/** Defaults changed in each version: id → [old default, new default]. */
+const CHANGED_DEFAULTS_BY_VERSION = {
+  2: {
+    fullTimeWorkers: [2, 1],
+    halfTimeWorkers: [2, 1],
+    quarterTimeWorkers: [3, 0],
+    householdMonthlySpending: [5100, 5000],
+    pessimisticYieldDrop: [17, 20],
+    minimumNetIncome: [120000, 60000],
+    energyCosts: [2500, 3500],
+    vegetableHoursPerHa: [3000, 4000],
+    ecoSchemePointValue: [100, 93],
+  },
+  3: {
+    ownedHa: [14, 12],
+    layingHens: [200, 50],
+    sheep: [12, 0],
+    goats: [3, 0],
+    grazingDays: [200, 195],
+    milkUsedShare: [85, 88],
+    eggsSoldShare: [90, 96],
+    porkBoxPricePerKg: [22, 26],
+    kidsSoldShare: [0, 80],
+  },
 };
 
 /**
@@ -301,9 +338,11 @@ const CHANGED_DEFAULTS = {
  * @param {number} savedVersion - DEFAULTS_VERSION the settings were saved with (1 if unknown)
  */
 function migrateChangedDefaults(saved, savedVersion) {
-  if (savedVersion >= DEFAULTS_VERSION) return saved;
   const migrated = { ...saved };
-  for (const [id, [oldDefault, newDefault]] of Object.entries(CHANGED_DEFAULTS))
-    if (migrated[id] === oldDefault) migrated[id] = newDefault;
+  for (const [version, changes] of Object.entries(CHANGED_DEFAULTS_BY_VERSION)) {
+    if (savedVersion >= +version) continue;
+    for (const [id, [oldDefault, newDefault]] of Object.entries(changes))
+      if (migrated[id] === oldDefault) migrated[id] = newDefault;
+  }
   return migrated;
 }

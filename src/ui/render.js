@@ -22,7 +22,9 @@ function render() {
   markActivePresets();
 
   renderKpis(results, pessimistic);
+  renderLocation(results);
   renderGroupSummaries(results);
+  syncDerivedFields();
   renderWarnings(results, pessimistic);
   renderLandUse(results);
   renderFeedBalance(results);
@@ -37,11 +39,13 @@ function render() {
     renderNextSteps();
     renderSensitivity();
     renderRisk();
+    renderStartup();
     tintTables();
   }, 220);
 
   renderLabour(results);
   renderMarket(results);
+  renderInfrastructure(results);
   renderInvestments(results);
   renderComparison();
   renderFarmPlan(results);

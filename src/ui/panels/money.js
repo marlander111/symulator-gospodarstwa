@@ -113,26 +113,43 @@ function renderRevenueTable(results) {
   const n = formatNumber;
   const details = {
     milk: { litres: n(results.freshMilkSold, 0), price: n(params.milkPrice, 2) },
+    goatMilk: { litres: n(results.goatMilkSold, 0), price: n(params.goatMilkPrice, 2) },
     grainSales: { tonnes: n(results.grainSoldTonnes, 1), price: n(params.grainSalePrice, 0) },
     cheese: { kg: n(results.cheeseSold, 0), price: n(params.cheesePrice, 0) },
+    goatCheese: { kg: n(results.goatCheeseSold, 0), price: n(params.goatCheesePrice, 0) },
+    curd: { kg: n(results.curdSold, 0), price: n(params.curdPrice, 0) },
+    cream: { kg: n(results.creamSold, 0), price: n(params.creamPrice, 0) },
+    butter: { kg: n(results.butterSold, 0), price: n(params.butterPrice, 0) },
+    dairyByproducts: {
+      buttermilk: n(results.buttermilkSoldLitres, 0),
+      whey: n(results.wheySoldLitres, 0),
+    },
     calves: { calves: n(results.calvesSold, 1), cows: n(results.cowReplacements, 1) },
     eggs: { eggs: n(results.eggsSold, 0), price: n(params.eggPrice, 2) },
-    broilers: { count: n(params.broilers * 0.95, 0), kg: n(params.broilerCarcassKg, 1) },
-    geese: { count: n(params.geese * 0.9, 0) },
-    rabbits: { count: n(params.rabbits * params.rabbitsRearedPerDoe * 0.9, 0) },
+    broilers: {
+      count: n(results.revenueItems.broilers / (params.broilerCarcassKg * params.broilerPricePerKg), 0),
+      kg: n(params.broilerCarcassKg, 1),
+    },
+    geese: { count: n(results.geeseRaised - results.geeseProcessed, 0) },
+    rabbits: { count: n(results.revenueItems.rabbits / params.rabbitPrice, 0) },
     sheep: { lambs: n(results.lambsSoldLive, 1), price: n(params.lambLivePrice, 0) },
     lambMeat: {
       lambs: n(results.lambsSoldAsMeat, 1),
-      kg: n(results.lambMeatKg, 0),
+      kg: n(results.lambMeatSoldKg - results.lambMeatProcessedKg, 0),
       price: n(params.lambMeatPricePerKg, 0),
     },
+    pigs: { kg: n(results.porkSoldKg - results.porkProcessedKg, 0), price: n(params.porkBoxPricePerKg, 0) },
     vegetables: { hectares: n(params.marketGardenHa, 2), price: n(params.vegetableSalesPerHa, 0) },
     honey: { kg: n(results.market.honeyKg, 0), price: n(params.honeyPrice, 0) },
+    horseRiding: { hours: n(params.ridesPerYear, 0), price: n(params.ridePricePerHour, 0) },
   };
+  const items = Object.fromEntries(
+    Object.entries(results.revenueItems).filter(([, value]) => Math.abs(value) > 0.5)
+  );
   byId('revenue-table').innerHTML = itemsTableHtml({
     header: t('money.revenueHeader'),
     valueHeader: t('money.perYear'),
-    items: results.revenueItems,
+    items,
     label: item => t(`revenueItems.${item}.label`),
     detail: item => (details[item] ? t(`revenueItems.${item}.detail`, details[item]) : ''),
     totalLabel: t('money.revenueTotal'),
@@ -190,14 +207,30 @@ function renderSubsidiesTable(results) {
 }
 
 function renderHomeUseTable(results) {
+  const taken = results.homeFoodTaken;
+  const amount = (value, unit) => t(`units.${unit}`, { value: formatNumber(value, 0) });
   const values = {
-    pigs: { kg: formatNumber(params.pigsForHome * 85, 0) },
-    dogFood: { kg: formatNumber(results.dogFoodKg, 0) },
+    eggs: { amount: formatNumber(taken.eggs, 0) },
+    milk: { amount: amount(taken.milk, 'litres') },
+    cheese: { amount: amount(taken.cheese, 'kilograms') },
+    curd: { amount: amount(taken.curd, 'kilograms') },
+    butter: { amount: amount(taken.butter, 'kilograms') },
+    cream: { amount: amount(taken.cream, 'kilograms') },
+    poultry: { amount: amount(taken.poultryKg, 'kilograms') },
+    pork: { amount: amount(taken.pork, 'kilograms') },
+    beef: { amount: amount(taken.beef, 'kilograms') },
+    lamb: { amount: amount(taken.lamb, 'kilograms') },
+    rabbits: { amount: formatNumber(taken.rabbits, 0) },
+    fruit: { amount: amount(taken.fruit, 'kilograms') },
+    mushrooms: { amount: amount(taken.mushrooms, 'kilograms') },
+    honey: { amount: amount(taken.honey, 'kilograms') },
+    dogFood: { amount: amount(results.dogs.ownMeatKg, 'kilograms') },
   };
+  const items = Object.fromEntries(Object.entries(results.homeUse).filter(([, value]) => value > 0.5));
   byId('home-use-table').innerHTML = itemsTableHtml({
     header: t('money.homeUseHeader'),
     valueHeader: t('money.value'),
-    items: results.homeUse,
+    items,
     label: item => t(`homeUse.${item}`, values[item]),
     totalLabel: t('money.total'),
     total: results.homeUseTotal,

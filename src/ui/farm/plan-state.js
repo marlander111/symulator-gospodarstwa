@@ -11,4 +11,9 @@ const planView = {
   results: null,
 };
 
-const isGrazingMonth = month => month >= 3 && month <= 9;
+/** True when the animals graze for most of the month (0–11) at the chosen location. */
+function isGrazingMonth(month) {
+  const location = locationById(params.location);
+  const middleOfMonth = dayOfYear([month + 1, 15]);
+  return middleOfMonth >= dayOfYear(location.grazingStart) && middleOfMonth <= dayOfYear(location.grazingEnd);
+}

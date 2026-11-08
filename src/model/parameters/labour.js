@@ -1,4 +1,4 @@
-// Parameters of the "labour" group. Labels, units and hints: locales/pl.json → parameters.<id>.
+// Parameters of the "labour" group. Labels, units and hints: locales → parameters.<id>.
 
 defineParameterGroup('labour', [
   { id: 'dairyFixedHours', min: 0, max: 800, step: 10, defaultValue: 400 },
@@ -16,7 +16,6 @@ defineParameterGroup('labour', [
   { id: 'hoursPerGuineaFowl', min: 0.3, max: 2, step: 0.05, defaultValue: 0.7 },
   { id: 'hoursPerRabbitDoe', min: 5, max: 50, step: 1, defaultValue: 20 },
   { id: 'hoursPerEwe', min: 2, max: 15, step: 0.5, defaultValue: 6 },
-  { id: 'abattoirTripHours', min: 0.5, max: 5, step: 0.25, defaultValue: 1.5 },
   { id: 'lambSalesHoursPerLamb', min: 0, max: 3, step: 0.1, defaultValue: 0.75 },
   { id: 'hoursPerGoat', min: 2, max: 15, step: 0.5, defaultValue: 6 },
   { id: 'hoursPerPig', min: 10, max: 50, step: 1, defaultValue: 25 },

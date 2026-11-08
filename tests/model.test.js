@@ -14,7 +14,12 @@ test('every parameter has a unique id, a known group and texts', () => {
     assert.ok(!seenIds.has(parameter.id), `duplicate parameter id: ${parameter.id}`);
     seenIds.add(parameter.id);
     assert.ok(model.PARAMETER_GROUP_IDS.includes(parameter.group), `unknown group of ${parameter.id}`);
-    assert.notEqual(model.t(`parameters.${parameter.id}.label`), `parameters.${parameter.id}.label`);
+    // the "already owned" switches of the infrastructure are labelled with the item's name
+    const labelKey =
+      parameter.group === 'infrastructure'
+        ? `investments.${parameter.id.replace(/^owns(.)/, (prefix, first) => first.toLowerCase())}`
+        : `parameters.${parameter.id}.label`;
+    assert.notEqual(model.t(labelKey), labelKey);
   }
 });
 
@@ -47,7 +52,7 @@ test('settings files of version 1 (Polish field names) are read', () => {
 });
 
 test('a farm without animals sells its grain and does not run at a loss', () => {
-  const animals = ['dairyCows', 'layingHens', 'sheep', 'goats', 'geese', 'pigsForHome'];
+  const animals = ['dairyCows', 'layingHens', 'sheep', 'goats', 'geese', 'pigs'];
   const params = { ...model.defaultParams(), pastureHa: 0, meadowHa: 0, cerealShare: 100 };
   for (const id of animals) params[id] = 0;
   const results = model.simulateFarm(params);
@@ -62,4 +67,10 @@ test('every preset keeps every feed without a shortage', () => {
       assert.ok(results[balance] >= -0.05, `${preset.id}: ${balance} ${results[balance].toFixed(2)}`);
     assert.ok(results.grazingSupply >= results.grazingNeed, `${preset.id}: pasture shortage`);
   }
+});
+
+test('the realistic assumption set equals the default values', () => {
+  const defaults = model.defaultParams();
+  const realistic = model.ASSUMPTION_SETS.find(set => set.id === 'realistic');
+  for (const [id, value] of Object.entries(realistic.params)) assert.equal(value, defaults[id], id);
 });
