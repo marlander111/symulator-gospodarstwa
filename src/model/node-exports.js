@@ -10,6 +10,7 @@ if (typeof module !== 'undefined')
     defaultParams,
     simulateFarm,
     simulateRisk,
+    parasiteCycleBreak,
     computeGrazingPlan,
     simulateStartupYears,
     buildFinanceExport,

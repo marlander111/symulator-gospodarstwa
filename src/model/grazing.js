@@ -96,3 +96,40 @@ function interpolate(points, x) {
   }
   return points[points.length - 1][1];
 }
+
+// ---------- Parasites ----------
+// Rotational grazing breaks the life cycle of the stomach and gut worms of ruminants: eggs in the
+// dung become infective larvae (L3) in about 5–7 days in summer, so the herd leaves before then,
+// and the larvae on the grass die off while the paddock rests. Orientation values for planning.
+
+/** Half-life of infective larvae on pasture in the grazing season (warm weather; longer in the cold). */
+const LARVAE_HALF_LIFE_DAYS = 20;
+/** Days in a paddock before eggs passed there become infective larvae. */
+const SAFE_GRAZING_DAYS = 4;
+/** Cattle and sheep share few worm species and eat each other's larvae: share of the pressure left. */
+const MIXED_GRAZING_LARVAE_FACTOR = 0.6;
+/** Larvae passed and picked up again in the same paddock when the herd stays too long. */
+const REINFECTION_FACTOR = 1.5;
+
+/** How far the grazing breaks the worm cycle: share of larvae left after the rest, and why. */
+function parasiteCycleBreak(params) {
+  const cattle = params.dairyCows + params.sucklerCows > 0;
+  const sheep = params.sheep > 0;
+  const mixed = cattle && sheep;
+  const reinfection = params.grazingMoveIntervalDays > SAFE_GRAZING_DAYS;
+  const afterRest = 0.5 ** (params.pastureRestDays / LARVAE_HALF_LIFE_DAYS);
+  const larvaeLeft = Math.min(
+    1,
+    afterRest * (mixed ? MIXED_GRAZING_LARVAE_FACTOR : 1) * (reinfection ? REINFECTION_FACTOR : 1)
+  );
+  return {
+    ruminants: cattle || sheep || params.goats > 0,
+    larvaeLeft,
+    cycleBroken: 1 - larvaeLeft,
+    mixed,
+    reinfection,
+    goatsWithSheep: params.goats > 0 && sheep && params.goatGrazing !== 'separate',
+    poultry: params.layingHens + params.broilers > 0,
+    poultryAfterCattle: params.layingHens > 0 && cattle,
+  };
+}

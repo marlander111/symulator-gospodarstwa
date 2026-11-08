@@ -404,3 +404,13 @@ test('livestock units follow the organic payment rules', () => {
   const goats = simulate({ goats: 10 });
   assert.ok(Math.abs(goats.livestockUnitsByAnimal.goats - 1.5) < 1e-9);
 });
+
+test('rest, moves and mixed grazing break the worm cycle', () => {
+  const parasites = extra =>
+    model.parasiteCycleBreak({ ...model.defaultParams(), dairyCows: 4, sheep: 10, ...extra });
+  const short = parasites({ pastureRestDays: 21, grazingMoveIntervalDays: 1 });
+  const long = parasites({ pastureRestDays: 60, grazingMoveIntervalDays: 1 });
+  assert.ok(long.cycleBroken > short.cycleBroken && long.cycleBroken > 0.85);
+  assert.ok(parasites({ grazingMoveIntervalDays: 7 }).reinfection);
+  assert.ok(parasites({}).mixed && !parasites({ sheep: 0 }).mixed);
+});

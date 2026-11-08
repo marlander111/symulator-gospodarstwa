@@ -2736,6 +2736,17 @@
       "winter": "{month}: zwierzęta w wiatach i przy obejściu, pastwisko odpoczywa.",
       "liming": "Pod koniec miesiąca wapnowanie lub nawożenie według badania gleby."
     },
+    "parasites": {
+      "title": "Przerywanie cyklu pasożytów.",
+      "rest": "Przy odpoczynku {days} dni na kwaterze zostaje ok. {left}% zakaźnych larw robaków żołądkowo-jelitowych z poprzedniego wypasu, czyli cykl jest przerwany w ok. {broken}% (latem; w chłodzie larwy żyją dłużej). Dobry cel to co najmniej 85–90%, czyli ok. 60 dni odpoczynku latem.",
+      "moveOk": "Zmiana kwatery {interval}: zwierzęta schodzą, zanim z jaj w odchodach wylęgną się zakaźne larwy (ok. 5–7 dni latem).",
+      "moveTooSlow": "Zmiana kwatery {interval} to za rzadko: po 4–5 dniach z jaj w odchodach wylęgają się zakaźne larwy i stado zaraża się na tej samej kwaterze.",
+      "mixed": "Bydło i owce mają niewiele wspólnych gatunków robaków i zjadają nawzajem swoje larwy, co obniża presję o ok. 40%.",
+      "goatsWithSheep": "Kozy i owce mają te same pasożyty, więc ich wspólny wypas presji nie obniża.",
+      "spring": "Wiosną zacznij od kwater skoszonych rok wcześniej na siano albo wypasanych przez inny gatunek; jagnięta i cielęta w pierwszym sezonie są najbardziej podatne, więc kontroluj kał (FAMACHA u owiec) zamiast odrobaczać wszystkich.",
+      "hensAfterCattle": "Kury 3–4 dni po bydle rozgrzebują placki i zjadają larwy much i robaków.",
+      "poultry": "Jaja pasożytów drobiu (glisty, robaki kątnicowe) przeżywają w glebie wiele miesięcy: kurnik przesuwaj co 3–7 dni i nie wracaj w to samo miejsce w tym samym sezonie."
+    },
     "meadow": {
       "title": "Łąka kośna · {hectares} ha",
       "months": [

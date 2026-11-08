@@ -30,6 +30,7 @@ function describePlanSelection(results, area) {
       ];
       html += paragraph(parts.filter(Boolean).join(' '));
       html += paragraph(t('planInfo.pasture.rest', { days: params.pastureRestDays }), 'small muted');
+      html += parasiteParagraph(paragraph);
     } else {
       const liming = month === 2 ? ' ' + t('planInfo.pasture.liming') : '';
       html += paragraph(t('planInfo.pasture.winter', { month: monthName }) + liming);
@@ -96,4 +97,32 @@ function describePlanSelection(results, area) {
       'small muted'
     )
   );
+}
+
+/** Breaking the worm cycle on the pasture: rest, moves, mixed grazing and poultry. */
+function parasiteParagraph(paragraph) {
+  const parasites = parasiteCycleBreak(params);
+  if (!parasites.ruminants && !parasites.poultry) return '';
+  const percent = value => formatNumber(value * 100, 0);
+  const parts = [];
+  if (parasites.ruminants) {
+    parts.push(
+      t('planInfo.parasites.rest', {
+        days: params.pastureRestDays,
+        left: percent(parasites.larvaeLeft),
+        broken: percent(parasites.cycleBroken),
+      })
+    );
+    parts.push(
+      t(parasites.reinfection ? 'planInfo.parasites.moveTooSlow' : 'planInfo.parasites.moveOk', {
+        interval: moveIntervalPhrase(params.grazingMoveIntervalDays),
+      })
+    );
+    if (parasites.mixed) parts.push(t('planInfo.parasites.mixed'));
+    if (parasites.goatsWithSheep) parts.push(t('planInfo.parasites.goatsWithSheep'));
+    parts.push(t('planInfo.parasites.spring'));
+  }
+  if (parasites.poultryAfterCattle) parts.push(t('planInfo.parasites.hensAfterCattle'));
+  if (parasites.poultry) parts.push(t('planInfo.parasites.poultry'));
+  return paragraph(`<b>${t('planInfo.parasites.title')}</b> ` + parts.join(' '), 'small');
 }
