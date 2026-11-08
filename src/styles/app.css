@@ -1502,3 +1502,15 @@ footer p {
   left: 8px;
   max-width: min(100%, calc(100vw - 72px));
 }
+/* Parasite cycle fold in the plan description */
+#plan-info details.parasites {
+  margin-top: 8px;
+}
+#plan-info details.parasites summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+#plan-info details.parasites p {
+  margin: 6px 0 0;
+}

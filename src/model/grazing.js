@@ -102,8 +102,10 @@ function interpolate(points, x) {
 // dung become infective larvae (L3) in about 5–7 days in summer, so the herd leaves before then,
 // and the larvae on the grass die off while the paddock rests. Orientation values for planning.
 
-/** Half-life of infective larvae on pasture in the grazing season (warm weather; longer in the cold). */
-const LARVAE_HALF_LIFE_DAYS = 20;
+/** Half-life of infective larvae on pasture in warm, sunny weather (much longer in the cold). */
+const LARVAE_HALF_LIFE_DAYS = 18;
+/** Rest after which regenerative graziers count the cycle as broken in warm weather (about 90% of larvae gone). */
+const REST_DAYS_BREAKING_CYCLE = 60;
 /** Days in a paddock before eggs passed there become infective larvae. */
 const SAFE_GRAZING_DAYS = 4;
 /** Cattle and sheep share few worm species and eat each other's larvae: share of the pressure left. */

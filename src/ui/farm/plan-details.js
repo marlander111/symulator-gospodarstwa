@@ -39,7 +39,7 @@ function describePlanSelection(results, area) {
       ];
       html += paragraph(parts.filter(Boolean).join(' '));
       html += paragraph(t('planInfo.pasture.rest', { days: params.pastureRestDays }), 'small muted');
-      html += parasiteParagraph(paragraph);
+      html += parasiteParagraph();
     } else {
       const liming = month === 2 ? ' ' + t('planInfo.pasture.liming') : '';
       html += paragraph(t('planInfo.pasture.winter', { month: monthName }) + liming);
@@ -108,30 +108,48 @@ function describePlanSelection(results, area) {
   );
 }
 
-/** Breaking the worm cycle on the pasture: rest, moves, mixed grazing and poultry. */
-function parasiteParagraph(paragraph) {
+/** Breaking the worm cycle on the pasture: a fold with one line per topic and group of animals. */
+function parasiteParagraph() {
   const parasites = parasiteCycleBreak(params);
   if (!parasites.ruminants && !parasites.poultry) return '';
   const percent = value => formatNumber(value * 100, 0);
-  const parts = [];
+  const lines = [];
   if (parasites.ruminants) {
-    parts.push(
-      t('planInfo.parasites.rest', {
-        days: params.pastureRestDays,
-        left: percent(parasites.larvaeLeft),
-        broken: percent(parasites.cycleBroken),
-      })
+    lines.push(
+      t(
+        params.pastureRestDays >= REST_DAYS_BREAKING_CYCLE
+          ? 'planInfo.parasites.restEnough'
+          : 'planInfo.parasites.rest',
+        {
+          days: params.pastureRestDays,
+          left: percent(parasites.larvaeLeft),
+          target: REST_DAYS_BREAKING_CYCLE,
+        }
+      )
     );
-    parts.push(
+    lines.push(
       t(parasites.reinfection ? 'planInfo.parasites.moveTooSlow' : 'planInfo.parasites.moveOk', {
         interval: moveIntervalPhrase(params.grazingMoveIntervalDays),
       })
     );
-    if (parasites.mixed) parts.push(t('planInfo.parasites.mixed'));
-    if (parasites.goatsWithSheep) parts.push(t('planInfo.parasites.goatsWithSheep'));
-    parts.push(t('planInfo.parasites.spring'));
+    if (parasites.mixed) lines.push(t('planInfo.parasites.mixed'));
+    if (parasites.goatsWithSheep) lines.push(t('planInfo.parasites.goatsWithSheep'));
+    lines.push(t('planInfo.parasites.spring'));
   }
-  if (parasites.poultryAfterCattle) parts.push(t('planInfo.parasites.hensAfterCattle'));
-  if (parasites.poultry) parts.push(t('planInfo.parasites.poultry'));
-  return paragraph(`<b>${t('planInfo.parasites.title')}</b> ` + parts.join(' '), 'small');
+  if (parasites.poultry)
+    lines.push(
+      (parasites.poultryAfterCattle
+        ? t('planInfo.parasites.hensAfterCattle')
+        : t('planInfo.parasites.poultryPrefix')) +
+        ' ' +
+        t('planInfo.parasites.poultry')
+    );
+  const summary = parasites.ruminants
+    ? t('planInfo.parasites.summary', { broken: percent(parasites.cycleBroken) })
+    : t('planInfo.parasites.title');
+  return element(
+    'details',
+    { class: 'parasites' },
+    element('summary', {}, summary) + lines.map(line => element('p', { class: 'small' }, line)).join('')
+  );
 }

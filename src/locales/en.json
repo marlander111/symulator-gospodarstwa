@@ -2743,15 +2743,18 @@
       "liming": "At the end of the month liming or fertilising according to the soil test."
     },
     "parasites": {
-      "title": "Breaking the parasite cycle.",
-      "rest": "With a rest of {days} days about {left}% of the infective larvae of stomach and gut worms from the last grazing are left in a paddock, so the cycle is about {broken}% broken (in summer; larvae live longer in the cold). A good target is at least 85–90%, about 60 days of rest in summer.",
-      "moveOk": "Moving {interval}: the animals leave before the eggs in the dung hatch into infective larvae (about 5–7 days in summer).",
-      "moveTooSlow": "Moving {interval} is too slow: after 4–5 days the eggs in the dung hatch into infective larvae and the herd reinfects itself in the same paddock.",
-      "mixed": "Cattle and sheep share few worm species and eat each other’s larvae, which lowers the pressure by about 40%.",
-      "goatsWithSheep": "Goats and sheep share the same parasites, so grazing them together does not lower the pressure.",
-      "spring": "In spring start on paddocks cut for hay the year before or grazed by another species; lambs and calves in their first season are the most susceptible, so check dung (FAMACHA in sheep) instead of worming them all.",
-      "hensAfterCattle": "Hens 3–4 days behind the cattle scratch the dung pats apart and eat fly and worm larvae.",
-      "poultry": "Eggs of poultry parasites (roundworms, caecal worms) survive many months in the soil: move the coop every 3–7 days and do not come back to the same spot in the same season."
+      "title": "Breaking the parasite cycle",
+      "summary": "Breaking the parasite cycle: about {broken}%",
+      "rest": "Rest: after {days} days about {left}% of the infective larvae of stomach and gut worms are left in a paddock. Regenerative graziers count the cycle as broken after about {target} days of warm, sunny weather; larvae live longer in the cold.",
+      "restEnough": "Rest: {days} days in warm, sunny weather is enough for regenerative graziers to count the cycle as broken (about {left}% of larvae left). In cool, wet weather larvae live longer.",
+      "moveOk": "Moves: moving {interval}, so the animals leave before the eggs in the dung hatch into infective larvae (about 5–7 days in summer).",
+      "moveTooSlow": "Moves: moving {interval} is too slow: after 4–5 days the eggs in the dung hatch into infective larvae and the herd reinfects itself in the same paddock.",
+      "mixed": "Cattle and sheep: they share few worm species and eat each other’s larvae, which lowers the pressure by about 40%.",
+      "goatsWithSheep": "Goats and sheep: they share the same parasites, so grazing them together does not lower the pressure.",
+      "spring": "Young stock and spring: start on paddocks cut for hay the year before or grazed by another species; lambs and calves in their first season are the most susceptible, so check dung (FAMACHA in sheep) instead of worming them all.",
+      "hensAfterCattle": "Poultry: hens 3–4 days behind the cattle scratch the dung pats apart and eat fly and worm larvae.",
+      "poultry": "Eggs of poultry parasites (roundworms, caecal worms) survive many months in the soil: move the coop every 3–7 days and do not come back to the same spot in the same season.",
+      "poultryPrefix": "Poultry:"
     },
     "meadow": {
       "title": "Hay meadow · {hectares} ha",
