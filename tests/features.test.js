@@ -371,3 +371,29 @@ test('grain through the whole lactation adds milk and grain and saves a little f
   assert.ok(grain.warnings.some(warning => warning.key === 'lactationGrain'));
   assert.ok(!grass.warnings.some(warning => warning.key === 'lactationGrain'));
 });
+
+test('the monthly grass balance follows the growth curve and feeds the hay balance', () => {
+  const herd = { dairyCows: 4, sheep: 10, pastureHa: 4 };
+  const results = simulate(herd);
+  const byMonth = month => results.grassMonths.months.find(item => item.month === month);
+  const [may, august, october] = [4, 7, 9].map(byMonth);
+  assert.ok(may.growthPerHaDay > august.growthPerHaDay && august.growthPerHaDay > october.growthPerHaDay);
+  assert.ok(may.restDays < august.restDays && august.restDays <= october.restDays, 'rest follows the growth');
+  for (const item of results.grassMonths.months)
+    if (item.cut > 0) assert.ok(item.month >= 4 && item.month <= 6, 'hay is cut in May–July only');
+  assert.ok(
+    Math.abs(results.hayFromPasture - results.grassMonths.hayMade - results.grassMonths.lateGrazing) < 1e-9
+  );
+  assert.ok(Math.abs(results.grazingDeficit - results.grassMonths.hayFed) < 1e-9);
+
+  // even when the pasture covers the herd over the year, the autumn needs hay
+  assert.ok(results.grazingSurplus > 0 && results.grassMonths.hayFed > 0);
+
+  // dry summers slow July down more than wet ones
+  const julyToMay = location => {
+    const months = simulate({ ...herd, location }).grassMonths.months;
+    const growth = month => months.find(item => item.month === month).growthPerHaDay;
+    return growth(6) / growth(4);
+  };
+  assert.ok(julyToMay('mountains') > julyToMay('wielkopolska'));
+});

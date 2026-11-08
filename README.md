@@ -14,6 +14,7 @@ Język: polski (domyślnie) albo angielski, przełącznik na górze strony. Wyb�
 - Rasy krów mlecznych i mięsnych, systemy chowu bydła (alkierz, mieszany, cały rok na zewnątrz), nabiał (sery, twaróg, śmietana, masło), ziarno dla krów przez całą laktację (więcej mleka za więcej ziarna), mleko kozie, świnie pastwiskowe i kozy na osobnych, wydzielonych częściach pastwiska (widocznych na planie), jazdy konne, psy stróżujące, wędliny i przetwory.
 - Żywność dla domu odejmowana od sprzedaży według liczby osób, pasza kupowana zamiast własnej.
 - Bilans pasz z własnych pól: siano, ziarno, słoma, pastwisko; klasy gleby, płodozmian, międzyplony i poplony.
+- Miesięczny bilans trawy: krzywa wzrostu runi według regionu, wiosenna nadwyżka na siano, letnia i jesienna luka, odpoczynek kwater i wielkość kwatery w każdym miesiącu (Voisin, Salatin, Judy, Brown).
 - Czas pracy rodziny w miesiącach na tle limitu tygodniowego.
 - Przepływy gotówki miesiąc po miesiącu i budżet domu.
 - Co się opłaca z hektara i z godziny, co dołożyć dalej i które założenia najbardziej zmieniają wynik.

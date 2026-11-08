@@ -49,6 +49,7 @@ function render() {
   renderInvestments(results);
   renderComparison();
   renderFarmPlan(results);
+  renderGrassMonths(results);
   renderRotation(results);
   renderNitrogen(results);
   renderCalendar(results);

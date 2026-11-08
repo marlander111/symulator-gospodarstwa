@@ -81,9 +81,19 @@ function computeForageBalance(params, results) {
 
   const grazingSupply = pastureProduction + meadowGrazing + coverCropForage;
   const grazingSurplus = grazingSupply - grazingNeed;
-  const hayFromPasture = Math.max(0, grazingSurplus) * 0.7;
+  // month by month: the spring surplus is cut for hay, the summer and autumn gaps are fed hay
+  const grassMonths = computeMonthlyGrass(params, {
+    pastureProduction,
+    meadowGrazing,
+    coverCropForage,
+    grazingNeed,
+    herdHa: herdPastureHa,
+    grazingPlan: results.grazingPlan,
+  });
+  // hay cut in spring, and stockpiled grass grazed after the season instead of hay
+  const hayFromPasture = grassMonths.hayMade + grassMonths.lateGrazing;
   const haySupply = meadowHay + cloverHay + hayFromPasture;
-  const grazingDeficit = Math.max(0, -grazingSurplus);
+  const grazingDeficit = grassMonths.hayFed;
   // a paddock of their own that grows too little for the pigs or goats is made up with hay
   const hayNeedTotal = winterNeed + grazingDeficit + ownPaddocks.deficit;
   // roughage bought on purpose covers this part of the need, the rest has to come from the fields
@@ -99,6 +109,8 @@ function computeForageBalance(params, results) {
     grazingSupply,
     grazingSurplus,
     hayFromPasture,
+    grassMonths,
+    grazingDeficit,
     haySupply,
     hayNeedTotal,
     ownPaddocks,

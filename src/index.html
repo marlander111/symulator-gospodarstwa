@@ -10,6 +10,7 @@
 <header class="wrap top">
   <div class="eyebrow" data-i18n="page.header.eyebrow"></div>
   <h1 data-i18n="app.title"></h1>
+  <p class="keywords" data-i18n="page.header.keywords"></p>
   <p class="lead" data-i18n="page.header.lead"></p>
   <div class="loc-row">
     <label class="loc-pick"><span data-i18n="page.location.label"></span> <select id="location-select" class="clickable"></select></label>
@@ -54,6 +55,7 @@
     <nav class="jump" aria-labelledby="jump-label">
       <span class="lab" id="jump-label" data-i18n="page.jump.label"></span>
       <a class="btn clickable" href="#farm-plan" data-i18n="page.jump.plan"></a>
+      <a class="btn clickable" href="#grass-months" data-i18n="page.jump.grassMonths"></a>
       <a class="btn clickable" href="#rotation" data-i18n="page.jump.rotation"></a>
       <a class="btn clickable" href="#nitrogen" data-i18n="page.jump.nitrogen"></a>
       <a class="btn clickable" href="#money" data-i18n="page.jump.money"></a>
@@ -63,6 +65,7 @@
       <a class="btn clickable" href="#infrastructure" data-i18n="page.jump.infrastructure"></a>
       <a class="btn clickable" href="#stages" data-i18n="page.jump.startup"></a>
       <a class="btn clickable" href="#calendar" data-i18n="page.jump.calendar"></a>
+      <a class="btn clickable" href="#assumptions" data-i18n="page.jump.assumptions"></a>
     </nav>
 
     <div class="panel">
@@ -87,6 +90,19 @@
         <details class="note fold"><summary data-i18n="page.farmPlan.notes.buildingsTitle"></summary><div data-i18n-html="page.farmPlan.notes.buildings"></div></details>
         <details class="note fold"><summary data-i18n="page.farmPlan.notes.waterAndFencingTitle"></summary><div data-i18n-html="page.farmPlan.notes.waterAndFencing"></div></details>
         <details class="note fold"><summary data-i18n="plan.grazing.noteTitle"></summary><div id="grazing-note" aria-live="polite"></div></details>
+      </div>
+    </div>
+
+    <div class="panel" id="grass-months">
+      <div class="panel-h"><h2 data-i18n="page.grassMonths.title"></h2></div>
+      <p class="intro" data-i18n="page.grassMonths.intro"></p>
+      <div id="grass-months-summary"></div>
+      <svg class="chart" id="grass-months-chart" viewBox="0 0 640 250" role="img" data-i18n-attr="aria-label:page.grassMonths.chartLabel"></svg>
+      <div class="legend" id="grass-months-legend"></div>
+      <div class="tw"><table id="grass-months-table"></table></div>
+      <div class="notes">
+        <details class="note fold"><summary data-i18n="page.grassMonths.notes.regenerativeTitle"></summary><div data-i18n-html="page.grassMonths.notes.regenerative"></div></details>
+        <details class="note fold"><summary data-i18n="page.grassMonths.notes.methodTitle"></summary><div data-i18n-html="page.grassMonths.notes.method"></div></details>
       </div>
     </div>
 
