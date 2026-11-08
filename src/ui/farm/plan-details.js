@@ -135,7 +135,9 @@ function parasiteParagraph() {
     if (parasites.mixed) lines.push(t('planInfo.parasites.mixed'));
     if (parasites.goatsWithSheep) lines.push(t('planInfo.parasites.goatsWithSheep'));
     lines.push(t('planInfo.parasites.spring'));
+    lines.push(t('planInfo.parasites.liverFluke'));
   }
+  if (params.pigs > 0) lines.push(t('planInfo.parasites.pigs'));
   if (parasites.poultry)
     lines.push(
       (parasites.poultryAfterCattle
