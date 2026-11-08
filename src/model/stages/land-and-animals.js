@@ -86,26 +86,50 @@ function computeHerdStructure(params) {
   };
 }
 
-// ---------- Livestock units (approximate conversion factors) ----------
+// ---------- Livestock units ----------
+
+/**
+ * Livestock units (DJP) per head as in the organic payment rules (Dz.U. 2023 poz. 481, annex 4),
+ * which also set the 0.5–1.5 DJP/ha of the crop-and-livestock bonus. Animals kept for part of the
+ * year count by their average presence: broilers in four batches, geese and turkeys about half a
+ * year, fatteners about seven months. Rabbits are not in the table: an orientation value.
+ */
+const LIVESTOCK_UNITS_PER_HEAD = {
+  dairyCows: 1,
+  replacementHeifers: 0.6, // between 0.3 (6–12 months) and 0.8 (over a year)
+  bull: 1.4,
+  sheep: 0.1,
+  goats: 0.15,
+  horses: 1.2, // large breeds; small breeds such as Hucul 0.6
+  sucklerCows: 1,
+  finishers: 0.9,
+  beefHeifers: 0.6,
+  poultry: 0.004, // hens, ducks, broilers, guinea fowl
+  geese: 0.008,
+  turkeys: 0.032,
+  pigs: 0.3,
+  rabbits: 0.02,
+};
 
 function computeLivestockUnits(params, results) {
   const { replacementHeifers, bulls, sucklerCows, finishers, beefHeifers, farmedHa, grasslandHa } = results;
+  const lu = LIVESTOCK_UNITS_PER_HEAD;
   const livestockUnitsByAnimal = {
-    dairyCows: params.dairyCows,
-    replacementHeifers: replacementHeifers * 0.6,
-    bull: bulls,
-    sheep: params.sheep * 0.1,
-    goats: params.goats * 0.1,
-    horses: params.horses * 0.8,
-    beefCattle: sucklerCows + finishers * 0.9 + beefHeifers * 0.6,
-    layingHens: params.layingHens * 0.014,
-    broilers: (params.broilers / 4) * 0.007,
-    geese: params.geese * 0.02 * 0.5,
-    ducks: (params.ducks / 2) * 0.004,
-    turkeys: params.turkeys * 0.6 * 0.03,
-    guineaFowl: params.guineaFowl * 0.5 * 0.004,
-    pigs: params.pigs * 0.3 * 0.6, // fatteners live about seven months of the year
-    rabbits: params.rabbits * 0.02,
+    dairyCows: params.dairyCows * lu.dairyCows,
+    replacementHeifers: replacementHeifers * lu.replacementHeifers,
+    bull: bulls * lu.bull,
+    sheep: params.sheep * lu.sheep,
+    goats: params.goats * lu.goats,
+    horses: params.horses * lu.horses,
+    beefCattle: sucklerCows * lu.sucklerCows + finishers * lu.finishers + beefHeifers * lu.beefHeifers,
+    layingHens: params.layingHens * lu.poultry,
+    broilers: (params.broilers / 4) * lu.poultry,
+    geese: params.geese * 0.5 * lu.geese,
+    ducks: (params.ducks / 2) * lu.poultry,
+    turkeys: params.turkeys * 0.5 * lu.turkeys,
+    guineaFowl: params.guineaFowl * 0.5 * lu.poultry,
+    pigs: params.pigs * (7 / 12) * lu.pigs,
+    rabbits: params.rabbits * lu.rabbits,
   };
   const units = livestockUnitsByAnimal;
   const livestockUnits = sumValues(units);

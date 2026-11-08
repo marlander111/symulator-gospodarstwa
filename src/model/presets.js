@@ -358,10 +358,10 @@ const PRESETS = [
       broilers: 325,
       ducks: 200,
       geese: 10,
-      sheep: 30,
+      sheep: 31,
       pastureHa: 3.5,
       meadowHa: 0,
-      cerealShare: 63,
+      cerealShare: 60,
     },
   },
   {

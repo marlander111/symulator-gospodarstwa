@@ -397,3 +397,10 @@ test('the monthly grass balance follows the growth curve and feeds the hay balan
   };
   assert.ok(julyToMay('mountains') > julyToMay('wielkopolska'));
 });
+
+test('livestock units follow the organic payment rules', () => {
+  const hens = simulate({ layingHens: 250, dairyCows: 0, sheep: 0, goats: 0, pigs: 0 });
+  assert.ok(Math.abs(hens.livestockUnitsByAnimal.layingHens - 1) < 1e-9, '250 hens are 1 DJP (0.004 each)');
+  const goats = simulate({ goats: 10 });
+  assert.ok(Math.abs(goats.livestockUnitsByAnimal.goats - 1.5) < 1e-9);
+});
