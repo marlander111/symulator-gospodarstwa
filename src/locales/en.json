@@ -3161,7 +3161,6 @@
   },
   "customers": {
     "title": "How many customers you need",
-    "intro": "Sales straight to households (without buyers and traders): about {sales} a year. Joel Salatin often says it is easier to find 10 customers who buy 100 things each than 100 customers who buy 10 things each. That is why a wide range for the same families pays off.",
     "familiesValue": "{count} families",
     "customersValue": "{count} customers",
     "loyal": "regular, taking a full basket (about {amount} PLN a month)",

@@ -3156,7 +3156,6 @@
   },
   "customers": {
     "title": "Ilu klientów potrzebujesz",
-    "intro": "Sprzedaż prosto do domów (bez skupu i handlarzy): ok. {sales} rocznie. Joel Salatin powtarza, że łatwiej znaleźć 10 klientów, którzy kupią po 100 rzeczy, niż 100 klientów, którzy kupią po 10. Dlatego opłaca się mieć szeroką ofertę dla tych samych rodzin.",
     "familiesValue": "{count} rodzin",
     "customersValue": "{count} klientów",
     "loyal": "stałych, biorących pełny koszyk (ok. {amount} zł miesięcznie)",

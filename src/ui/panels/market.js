@@ -86,7 +86,6 @@ function renderCustomers(market) {
   );
   container.innerHTML =
     element('h3', { class: 'sub-h' }, t('customers.title')) +
-    element('p', { class: 'small' }, t('customers.intro', { sales: formatPln(market.householdSales) })) +
     cards +
     element('p', { class: 'small muted' }, t('customers.note', { perWeek: formatNumber(loyal / 4, 0) }));
 }
